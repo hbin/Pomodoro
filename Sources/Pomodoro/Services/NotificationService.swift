@@ -21,14 +21,17 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     }
 
     func authorizationStatus() async -> UNAuthorizationStatus {
-        let settings = await center.notificationSettings()
-        return settings.authorizationStatus
+        await withCheckedContinuation { continuation in
+            center.getNotificationSettings { settings in
+                continuation.resume(returning: settings.authorizationStatus)
+            }
+        }
     }
 
     func schedule(at date: Date, phase: Phase) async {
         cancel()
-        let settings = await center.notificationSettings()
-        guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
+        let status = await authorizationStatus()
+        guard status == .authorized || status == .provisional else {
             return
         }
         let interval = date.timeIntervalSinceNow
