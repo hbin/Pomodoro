@@ -22,3 +22,15 @@ Download the latest `Pomodoro.dmg` from GitHub Releases, open it, and drag
 **Pomodoro** into **Applications**.
 
 Pomodoro requires macOS 15 or later.
+
+## Versioning
+
+The public version and internal build live in `Resources/Info.plist`.
+Bump them before packaging a release:
+
+```sh
+./scripts/bump-version.sh patch  # bug fixes and small adjustments
+./scripts/bump-version.sh minor  # new features
+./scripts/bump-version.sh major  # stable or breaking releases
+./scripts/bump-version.sh build  # build number only
+```
