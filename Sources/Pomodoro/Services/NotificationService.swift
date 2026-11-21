@@ -1,6 +1,6 @@
 import Foundation
 import PomodoroCore
-import UserNotifications
+@preconcurrency import UserNotifications
 
 @MainActor
 final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
