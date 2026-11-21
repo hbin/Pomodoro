@@ -7,7 +7,7 @@ struct PopoverRootView: View {
     @Environment(\.colorScheme) private var scheme
 
     static let width: CGFloat = 380
-    static let height: CGFloat = 572
+    static let height: CGFloat = 544
 
     var body: some View {
         ZStack {
@@ -126,7 +126,7 @@ struct TimerPopoverView: View {
                 }
                 .padding(.horizontal, 2)
             } else {
-                Text("No tasks · no scores · just time")
+                Text("Enjoy the rhythm of focused time.")
                     .font(Typo.sans(9.7))
                     .foregroundStyle(palette.mutedInk.opacity(0.78))
             }
