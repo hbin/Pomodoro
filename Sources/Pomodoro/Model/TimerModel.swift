@@ -382,24 +382,6 @@ final class TimerModel: ObservableObject {
         }
     }
 
-    func resetEverything() {
-        engine = TimerEngine()
-        snapshot = engine.state
-        now = Date()
-        chimeEnabled = true
-        tickEnabled = false
-        showMenuBarMinutes = true
-        themePreference = .system
-        firstRunTipDismissed = true
-        isFirstRun = false
-        lastTickSecond = nil
-        errorMessage = nil
-        notifications.cancel()
-        save()
-        updateMenuBar(force: true)
-        onAppearanceChange?(themePreference)
-    }
-
     func dismissError() {
         errorMessage = nil
     }

@@ -7,7 +7,6 @@ struct SettingsView: View {
     let onQuit: () -> Void
     let onClose: () -> Void
     @Environment(\.colorScheme) private var scheme
-    @State private var confirmingReset = false
 
     private var palette: Palette { Palette.forScheme(scheme) }
 
@@ -96,33 +95,6 @@ struct SettingsView: View {
                         .padding(.top, 1)
                 }
 
-                sectionLabel("RESET")
-                    .padding(.top, 18)
-                Hairline()
-                    .padding(.top, 7)
-
-                if confirmingReset {
-                    resetConfirmation
-                        .padding(.top, 8)
-                } else {
-                    HStack(spacing: 10) {
-                        VStack(alignment: .leading, spacing: 1) {
-                            Text("Reset timer and preferences")
-                                .font(Typo.sans(12, weight: "Medium"))
-                                .foregroundStyle(palette.ink.opacity(0.86))
-                            Text("Clears the current interval and rhythm.")
-                                .font(Typo.sans(9.7))
-                                .foregroundStyle(palette.mutedInk)
-                        }
-                        Spacer()
-                        Button("Reset…") {
-                            confirmingReset = true
-                        }
-                        .buttonStyle(QuietTextButtonStyle(color: palette.tomato))
-                    }
-                    .padding(.top, 10)
-                }
-
                 if let error = model.errorMessage {
                     ErrorNote(message: error, onDismiss: model.dismissError)
                         .padding(.top, 10)
@@ -181,39 +153,6 @@ struct SettingsView: View {
                 .accessibilityLabel("\(preference.title) theme")
                 .accessibilityAddTraits(isSelected ? [.isSelected] : [])
             }
-        }
-    }
-
-    private var resetConfirmation: some View {
-        VStack(alignment: .leading, spacing: 7) {
-            HStack(spacing: 8) {
-                Text("Reset timer and preferences?")
-                    .font(Typo.sans(11.5, weight: "DemiBold"))
-                    .foregroundStyle(palette.ink)
-                Spacer(minLength: 2)
-                Button("Cancel") {
-                    confirmingReset = false
-                }
-                .buttonStyle(QuietTextButtonStyle())
-                Button("Reset") {
-                    confirmingReset = false
-                    model.resetEverything()
-                }
-                .buttonStyle(QuietTextButtonStyle(color: palette.tomato))
-            }
-            Text("The current interval will be discarded. This can’t be undone.")
-                .font(Typo.sans(9.7))
-                .foregroundStyle(palette.mutedInk)
-        }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 8)
-        .background {
-            RoundedRectangle(cornerRadius: 9, style: .continuous)
-                .fill(palette.tomato.opacity(0.07))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 9, style: .continuous)
-                        .strokeBorder(palette.tomato.opacity(0.18), lineWidth: 0.8)
-                }
         }
     }
 
