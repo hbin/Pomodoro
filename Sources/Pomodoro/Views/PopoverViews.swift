@@ -29,7 +29,6 @@ struct PopoverRootView: View {
         }
         .frame(width: Self.width, height: Self.height)
         .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
-        .preferredColorScheme(LaunchAppearance.colorScheme(for: model.themePreference))
     }
 
     @ViewBuilder
@@ -171,11 +170,6 @@ struct TimerPopoverView: View {
                     .font(Typo.sans(10.7))
                     .foregroundStyle(palette.mutedInk)
             }
-
-            Text(model.isBreak ? "BREAK IN PROGRESS" : "FOCUS IN PROGRESS")
-                .font(Typo.label(8.7))
-                .tracking(1.8)
-                .foregroundStyle(palette.mutedInk.opacity(0.76))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

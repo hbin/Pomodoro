@@ -151,7 +151,6 @@ struct SettingsView: View {
         .onAppear {
             model.refreshNotificationStatus()
         }
-        .preferredColorScheme(LaunchAppearance.colorScheme(for: model.themePreference))
     }
 
     private var appearancePicker: some View {
