@@ -292,7 +292,6 @@ Settings stays intentionally small:
 - Tick sound on/off; default off.
 - Show remaining minutes in the menu bar on/off.
 - Notification status and a way to open the relevant macOS settings.
-- Reset timer and preferences, with an inline confirmation.
 - Version information.
 
 There are no duration presets to configure. Per-interval duration changes live
@@ -539,7 +538,6 @@ No task, project, note, or session-history data is stored.
 - The settings control switches the popover to Settings instead of opening a
   separate window.
 - Settings `Done` returns to the timer in the same popover.
-- Reset confirmation stays inline in the popover.
 - Quitting and relaunching restores a running or paused interval.
 
 ### Timer
@@ -607,6 +605,33 @@ No task, project, note, or session-history data is stored.
 - Iowan Old Style and Avenir Next, with system fallbacks.
 
 ## 16. Roadmap
+
+### Rotating footer taglines
+
+**Status:** Future consideration; version one uses one fixed tagline.
+
+**Intent:** Let the idle-state footer surface a curated set of calm,
+non-gamified lines without turning the timer into a marketing surface.
+
+Approved direction:
+
+- `Enjoy the rhythm of focused time.`
+- `Find your focus rhythm.`
+- `Settle into your focus rhythm.`
+- `Just time, your rhythm.`
+
+Guardrails if this work is promoted:
+
+- Rotate at most once per app launch, and never while the popover is open.
+- Use no animation or attention-grabbing transition.
+- Keep each line short enough to remain on one line at the current footer size.
+- Keep the copy non-judgmental and free of tasks, scores, streak pressure, or
+  implicit productivity ratings.
+- Rotation is local-only and requires no network access or account data.
+- Allow the feature to be disabled, falling back to the current fixed tagline.
+
+Possible increment: choose deterministically from a bundled copy list once per
+app launch.
 
 ### Project and task tracking
 
