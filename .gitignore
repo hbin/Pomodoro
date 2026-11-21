@@ -1,4 +1,5 @@
 .build/
 build/
+dist/
 .DS_Store
 Resources/AppIcon-1024.png

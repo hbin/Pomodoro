@@ -3,6 +3,8 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CONFIG="${1:-debug}"
+UNIVERSAL="${UNIVERSAL:-0}"
+SIGN_IDENTITY="${SIGN_IDENTITY:--}"
 APP_NAME="Pomodoro"
 APP="$ROOT/build/$APP_NAME.app"
 
@@ -17,9 +19,19 @@ if [[ ! -f "$ROOT/Resources/AppIcon.icns" ]]; then
     swift "$ROOT/scripts/make-icon.swift" "$ROOT"
 fi
 
-echo "Building $CONFIG…"
-swift build -c "$CONFIG" --disable-sandbox
-BIN_PATH="$(swift build -c "$CONFIG" --disable-sandbox --show-bin-path)"
+BUILD_ARGS=(-c "$CONFIG" --disable-sandbox)
+if [[ "$UNIVERSAL" == "1" ]]; then
+    BUILD_ARGS+=(--arch arm64 --arch x86_64)
+fi
+
+ARCH_LABEL=""
+if [[ "$UNIVERSAL" == "1" ]]; then
+    ARCH_LABEL=" (universal)"
+fi
+
+echo "Building $CONFIG$ARCH_LABEL…"
+swift build "${BUILD_ARGS[@]}"
+BIN_PATH="$(swift build "${BUILD_ARGS[@]}" --show-bin-path)"
 
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
@@ -27,15 +39,28 @@ cp "$BIN_PATH/$APP_NAME" "$APP/Contents/MacOS/$APP_NAME"
 cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
 cp "$ROOT/Resources/AppIcon.icns" "$APP/Contents/Resources/AppIcon.icns"
 
-echo "Signing locally (ad hoc)…"
-codesign \
+if [[ "$SIGN_IDENTITY" == "-" ]]; then
+    echo "Signing locally (ad hoc)…"
+    SIGN_ARGS=(--timestamp=none)
+else
+    echo "Signing with $SIGN_IDENTITY…"
+    SIGN_ARGS=(--options runtime --timestamp)
+fi
+
+if ! codesign \
     --force \
-    --sign - \
+    --sign "$SIGN_IDENTITY" \
     --entitlements "$ROOT/Resources/Pomodoro.entitlements" \
-    --timestamp=none \
-    "$APP" >/dev/null 2>&1 || {
-        echo "Sandbox signing failed; signing without entitlements."
-        codesign --force --sign - --timestamp=none "$APP" >/dev/null
-    }
+    "${SIGN_ARGS[@]}" \
+    "$APP" >/dev/null 2>&1; then
+    if [[ "$SIGN_IDENTITY" != "-" ]]; then
+        echo "Signing with $SIGN_IDENTITY failed." >&2
+        exit 1
+    fi
+    echo "Sandbox signing failed; signing without entitlements."
+    codesign --force --sign - --timestamp=none "$APP" >/dev/null
+fi
+
+codesign --verify --strict "$APP"
 
 echo "Built $APP"
