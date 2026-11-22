@@ -46,15 +46,19 @@ Bump them before packaging a release:
 
 Releases are built and published automatically by GitHub Actions. Pushing a
 version tag starts the release workflow, which builds a universal app,
-packages `Pomodoro.dmg`, and publishes it with generated release notes and a
-SHA-256 checksum.
+packages `Pomodoro.dmg`, and publishes it with a generated summary, the full
+changelog, and a SHA-256 checksum.
+
+The annotated tag subject becomes the release summary. Keep it to one concise,
+user-facing sentence. If the tag uses the default `Pomodoro X.Y.Z` message, the
+workflow falls back to a capped list of commit subjects.
 
 ```sh
 ./scripts/bump-version.sh patch
 VERSION=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Resources/Info.plist)
 git add Resources/Info.plist
 git commit -m "Bump version to $VERSION"
-git tag -a "v$VERSION" -m "Pomodoro $VERSION"
+git tag -a "v$VERSION" -m "Describe this release in one concise sentence."
 git push origin main "v$VERSION"
 ```
 

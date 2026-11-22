@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Check out the tag
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Validate the version tag
         run: |
@@ -114,13 +116,64 @@ jobs:
           set -euo pipefail
 
           FILES=(dist/Pomodoro.dmg dist/Pomodoro.dmg.sha256)
+          PREVIOUS_TAG="$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)"
+          TAG_SUMMARY="$(git for-each-ref --format='%(contents:subject)' "refs/tags/$GITHUB_REF_NAME" | head -n 1)"
+
+          if [[ -n "$PREVIOUS_TAG" ]]; then
+            COMMITS="$(git log "$PREVIOUS_TAG..$GITHUB_REF_NAME" --no-merges --pretty='- %s' \
+              | grep -vE '^- (Bump version to|Release v)' || true)"
+            GENERATED_NOTES="$(gh api \
+              --method POST \
+              "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+              -f "tag_name=$GITHUB_REF_NAME" \
+              -f "previous_tag_name=$PREVIOUS_TAG" \
+              --jq .body)"
+          else
+            COMMITS="$(git log "$GITHUB_REF_NAME" --no-merges --pretty='- %s' \
+              | grep -vE '^- (Bump version to|Release v)' || true)"
+            GENERATED_NOTES="$(gh api \
+              --method POST \
+              "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+              -f "tag_name=$GITHUB_REF_NAME" \
+              --jq .body)"
+          fi
+
+          SUMMARY_TEXT=""
+          if [[ -n "$TAG_SUMMARY" && ! "$TAG_SUMMARY" =~ ^(Pomodoro|Release)[[:space:]]+v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            SUMMARY_TEXT="$TAG_SUMMARY"
+          elif [[ -n "$COMMITS" ]]; then
+            COMMIT_COUNT="$(printf '%s\n' "$COMMITS" | sed '/^$/d' | wc -l | tr -d ' ')"
+            if (( COMMIT_COUNT > 5 )); then
+              COMMITS="$(printf '%s\n- …and %s more changes' \
+                "$(printf '%s\n' "$COMMITS" | head -n 5)" \
+                "$((COMMIT_COUNT - 5))")"
+            fi
+          fi
+
+          NOTES_FILE="$RUNNER_TEMP/release-notes.md"
+          {
+            echo "## Summary"
+            echo
+            if [[ -n "$SUMMARY_TEXT" ]]; then
+              echo "$SUMMARY_TEXT"
+            elif [[ -n "$COMMITS" ]]; then
+              echo "This release includes:"
+              echo
+              printf '%s\n' "$COMMITS"
+            else
+              echo "Maintenance release with no user-facing changes."
+            fi
+            echo
+            printf '%s\n' "$GENERATED_NOTES"
+          } > "$NOTES_FILE"
 
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
             gh release upload "$GITHUB_REF_NAME" "${FILES[@]}" --clobber
+            gh release edit "$GITHUB_REF_NAME" --notes-file "$NOTES_FILE"
           else
             gh release create "$GITHUB_REF_NAME" "${FILES[@]}" \
               --title "Pomodoro $VERSION" \
-              --generate-notes \
+              --notes-file "$NOTES_FILE" \
               --verify-tag
           fi
 
