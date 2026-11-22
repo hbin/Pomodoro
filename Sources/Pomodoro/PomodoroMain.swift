@@ -8,11 +8,7 @@ struct PomodoroMain {
         let delegate = AppDelegate()
         application.delegate = delegate
         application.setActivationPolicy(.accessory)
-        if CommandLine.arguments.contains("--force-dark") {
-            application.appearance = NSAppearance(named: .darkAqua)
-        } else if CommandLine.arguments.contains("--force-light") {
-            application.appearance = NSAppearance(named: .aqua)
-        }
+        application.appearance = LaunchAppearance.override
         withExtendedLifetime(delegate) {
             application.run()
         }

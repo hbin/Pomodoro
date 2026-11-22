@@ -3,18 +3,18 @@ import SwiftUI
 import PomodoroCore
 
 enum LaunchAppearance {
-    private static var colorSchemeOverride: ColorScheme? {
-        if CommandLine.arguments.contains("--force-dark") { return .dark }
-        if CommandLine.arguments.contains("--force-light") { return .light }
+    static var override: NSAppearance? {
+        if CommandLine.arguments.contains("--force-dark") {
+            return NSAppearance(named: .darkAqua)
+        }
+        if CommandLine.arguments.contains("--force-light") {
+            return NSAppearance(named: .aqua)
+        }
         return nil
     }
 
-    static func colorScheme(for preference: ThemePreference) -> ColorScheme? {
-        colorSchemeOverride ?? preference.colorScheme
-    }
-
     static func appearance(for preference: ThemePreference) -> NSAppearance? {
-        guard let scheme = colorScheme(for: preference) else { return nil }
+        guard let scheme = preference.colorScheme else { return nil }
         return NSAppearance(named: scheme == .dark ? .darkAqua : .aqua)
     }
 }

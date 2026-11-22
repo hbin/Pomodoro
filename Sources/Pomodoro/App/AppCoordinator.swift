@@ -35,7 +35,9 @@ final class AppCoordinator: NSObject {
     }
 
     func start() {
-        applyAppearance(model.themePreference)
+        if LaunchAppearance.override == nil {
+            applyAppearance(model.themePreference)
+        }
         buildMainMenu()
         model.activate()
         statusItem.update(model.menuBarDescriptor)

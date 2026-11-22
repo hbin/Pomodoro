@@ -1,5 +1,41 @@
 import SwiftUI
 
+struct AppIconMark: View {
+    @Environment(\.colorScheme) private var scheme
+    var accent: Color?
+    var size: CGFloat = 28
+
+    var body: some View {
+        Group {
+            if let icon = NSApp.applicationIconImage {
+                Image(nsImage: icon)
+                    .resizable()
+                    .interpolation(.high)
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: size * 0.23, style: .continuous)
+                    )
+                    .overlay {
+                        RoundedRectangle(cornerRadius: size * 0.23, style: .continuous)
+                            .strokeBorder(
+                                .black.opacity(scheme == .dark ? 0.28 : 0.10),
+                                lineWidth: 0.7
+                            )
+                            .padding(size * 0.055)
+                    }
+                    .shadow(
+                        color: .black.opacity(scheme == .dark ? 0.30 : 0.12),
+                        radius: 1.2,
+                        y: 0.8
+                    )
+            } else {
+                MiniDial(accent: accent, size: size)
+            }
+        }
+        .frame(width: size, height: size)
+        .accessibilityHidden(true)
+    }
+}
+
 struct PrimaryInstrumentButtonStyle: ButtonStyle {
     var color: Color
     var textColor: Color = .white
@@ -186,16 +222,39 @@ struct MiniDial: View {
                 .padding(3.6)
             Canvas { context, canvasSize in
                 let center = CGPoint(x: canvasSize.width / 2, y: canvasSize.height / 2)
-                let angle = Angle.degrees(-58)
-                let radius = size * 0.28
-                var path = Path()
-                path.move(to: center)
-                path.addLine(to: CGPoint(
-                    x: center.x + cos(angle.radians) * radius,
-                    y: center.y + sin(angle.radians) * radius
+                let dialRadius = size * 0.36
+                let tickRadius = size * 0.27
+
+                var ticks = Path()
+                for hour in stride(from: 0, to: 12, by: 3) {
+                    let angle = Angle.degrees(Double(hour) * 30 - 90)
+                    let start = CGPoint(
+                        x: center.x + cos(angle.radians) * tickRadius,
+                        y: center.y + sin(angle.radians) * tickRadius
+                    )
+                    let end = CGPoint(
+                        x: center.x + cos(angle.radians) * dialRadius,
+                        y: center.y + sin(angle.radians) * dialRadius
+                    )
+                    ticks.move(to: start)
+                    ticks.addLine(to: end)
+                }
+                context.stroke(
+                    ticks,
+                    with: .color(palette.ink.opacity(0.48)),
+                    style: StrokeStyle(lineWidth: 0.8, lineCap: .round)
+                )
+
+                let handAngle = Angle.degrees(60)
+                let handRadius = size * 0.29
+                var hand = Path()
+                hand.move(to: center)
+                hand.addLine(to: CGPoint(
+                    x: center.x + cos(handAngle.radians) * handRadius,
+                    y: center.y + sin(handAngle.radians) * handRadius
                 ))
                 context.stroke(
-                    path,
+                    hand,
                     with: .color(accent ?? palette.tomato),
                     style: StrokeStyle(lineWidth: 1.5, lineCap: .round)
                 )
@@ -254,7 +313,7 @@ struct PopoverHeader: View {
     var body: some View {
         let palette = Palette.forScheme(scheme)
         HStack(spacing: 8) {
-            MiniDial(accent: accent)
+            AppIconMark(accent: accent)
             Text("POMODORO")
                 .font(Typo.label(10))
                 .tracking(2.5)

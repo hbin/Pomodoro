@@ -357,9 +357,10 @@ final class TimerModel: ObservableObject {
     }
 
     func setThemePreference(_ preference: ThemePreference) {
-        guard themePreference != preference else { return }
-        themePreference = preference
-        save()
+        if themePreference != preference {
+            themePreference = preference
+            save()
+        }
         onAppearanceChange?(preference)
     }
 
