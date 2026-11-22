@@ -153,13 +153,14 @@ without improving the timer experience.
   it again.
 - The status item uses a large monochrome dial that fills the 22-point canvas.
   Its resting outline stays legible beside system menu-bar icons.
-- The dial's outline becomes a bold remaining-time arc while the hand moves
-  counterclockwise as the interval counts down.
+- The dial's outline becomes a bold remaining-time arc that starts at 12
+  o'clock, while the hand moves counterclockwise as the interval counts down.
+- During a break, a cup replaces the hand inside the same progress dial.
 - While running, it also shows the remaining whole minutes, for example `18m`.
 - While paused, the hand becomes a centered pause mark, the remaining time
   stays visible, and the item keeps a fixed width.
-- After completion, the dial closes into a full ring until the completion state
-  is dismissed.
+- When the interval completes, the remaining-time arc empties, the hand returns
+  to its starting position, and the resting ring turns gray.
 - No launch-at-login item is installed.
 
 ### 7.2 First run
@@ -442,12 +443,16 @@ Break intervals use the same geometry with the sage accent.
 
 ### 9.7 Icons
 
-- App icon: bone rounded-square field, tomato dial, brass hand and pivot.
+- App icon: bone rounded-square field, tomato dial, and a brass hand pointing
+  to the 25-minute mark, with a brass pivot.
 - Menu-bar icon: grand monochrome dial that fills the 22-point canvas, with a
   readable resting outline and bold elapsed-progress arc.
 - Active menu bar: icon plus remaining whole minutes.
+- Break menu bar: the same progress dial and minutes with a cup in place of the
+  focus hand.
 - Paused menu bar: same time plus a centered pause mark inside the dial.
-- Completed menu bar: a closed progress ring and no minute label.
+- Completed menu bar: the hand at its starting position, a gray resting ring,
+  and no minute label.
 - No red badge, exclamation mark, or alarm-style iconography.
 
 ## 10. Accessibility

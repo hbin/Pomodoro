@@ -6,6 +6,7 @@ enum MenuBarIconFactory {
     static func image(
         progress: Double,
         isPaused: Bool,
+        isBreak: Bool = false,
         showsRemainingTime: Bool = false
     ) -> NSImage {
         let image = NSImage(size: pointSize)
@@ -15,6 +16,7 @@ enum MenuBarIconFactory {
                     scale: scale,
                     progress: progress,
                     isPaused: isPaused,
+                    isBreak: isBreak,
                     showsRemainingTime: showsRemainingTime
                 )
             )
@@ -27,6 +29,7 @@ enum MenuBarIconFactory {
         scale: CGFloat,
         progress: Double,
         isPaused: Bool,
+        isBreak: Bool,
         showsRemainingTime: Bool
     ) -> NSBitmapImageRep {
         let pixelWidth = Int(pointSize.width * scale)
@@ -51,6 +54,7 @@ enum MenuBarIconFactory {
         draw(
             progress: progress,
             isPaused: isPaused,
+            isBreak: isBreak,
             showsRemainingTime: showsRemainingTime
         )
         NSGraphicsContext.restoreGraphicsState()
@@ -60,16 +64,18 @@ enum MenuBarIconFactory {
     private static func draw(
         progress: Double,
         isPaused: Bool,
+        isBreak: Bool,
         showsRemainingTime: Bool
     ) {
         let center = CGPoint(x: 11, y: 11)
         let radius: CGFloat = 8.4
         let elapsedProgress = min(max(progress, 0), 1)
         let dialProgress = if showsRemainingTime {
-            elapsedProgress >= 1 ? 1 : 1 - elapsedProgress
+            1 - elapsedProgress
         } else {
             elapsedProgress
         }
+        let startAngle = CGFloat(90)
         let darkInk = NSColor.black.withAlphaComponent(0.96)
         let faintInk = NSColor.black.withAlphaComponent(0.55)
 
@@ -85,7 +91,6 @@ enum MenuBarIconFactory {
         track.stroke()
 
         if dialProgress > 0 {
-            let startAngle = CGFloat(60)
             let endAngle = startAngle - CGFloat(dialProgress) * 360
             let arc = NSBezierPath()
             arc.appendArc(
@@ -116,10 +121,12 @@ enum MenuBarIconFactory {
                 )
                 bar.fill()
             }
+        } else if isBreak {
+            drawBreakGlyph(centeredAt: center)
         } else {
             let degrees = showsRemainingTime
-                ? 60 + CGFloat(elapsedProgress) * 360
-                : 60 - CGFloat(elapsedProgress) * 360
+                ? startAngle + CGFloat(elapsedProgress) * 360
+                : startAngle - CGFloat(elapsedProgress) * 360
             let angle = degrees * .pi / 180
             let hand = NSBezierPath()
             hand.move(to: center)
@@ -141,5 +148,24 @@ enum MenuBarIconFactory {
             NSColor.black.withAlphaComponent(0.98).setFill()
             pivot.fill()
         }
+    }
+
+    private static func drawBreakGlyph(centeredAt center: CGPoint) {
+        let configuration = NSImage.SymbolConfiguration(pointSize: 8, weight: .semibold)
+        guard let source = NSImage(
+            systemSymbolName: "cup.and.saucer",
+            accessibilityDescription: nil
+        ), let symbol = source.withSymbolConfiguration(configuration) else {
+            return
+        }
+        symbol.isTemplate = true
+        let size = symbol.size
+        let rect = NSRect(
+            x: center.x - size.width / 2,
+            y: center.y - size.height / 2,
+            width: size.width,
+            height: size.height
+        )
+        symbol.draw(in: rect, from: .zero, operation: .sourceOver, fraction: 1)
     }
 }

@@ -137,9 +137,11 @@ func drawIcon(size: CGFloat) {
     handShadow.shadowOffset = NSSize(width: 0, height: -4)
     handShadow.set()
 
+    let defaultIntervalMinutes: CGFloat = 25
+    let handAngle = 90 - defaultIntervalMinutes / 60 * 360
     let hand = NSBezierPath()
     hand.move(to: center)
-    hand.line(to: point(center, 196, 56))
+    hand.line(to: point(center, 196, handAngle))
     hand.lineCapStyle = .round
     hand.lineWidth = 27
     color(0xC9A16E).setStroke()
