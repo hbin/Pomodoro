@@ -59,6 +59,11 @@ The feed URL is:
 https://github.com/hbin/Pomodoro/releases/latest/download/appcast.xml
 ```
 
+Sparkle must be able to read this feed and the ZIP without authentication.
+GitHub Releases on a private repository do not provide public download URLs, so
+the repository must be public or the feed and update archive must be hosted at
+a public URL.
+
 The EdDSA public key is stored as `SUPublicEDKey` in `Resources/Info.plist`.
 Debug bundles remove both `SUFeedURL` and `SUPublicEDKey`, so local debug builds
 show updates as unavailable.
