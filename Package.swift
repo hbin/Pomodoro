@@ -10,13 +10,19 @@ let package = Package(
         .executable(name: "Pomodoro", targets: ["Pomodoro"]),
         .library(name: "PomodoroCore", targets: ["PomodoroCore"])
     ],
+    dependencies: [
+        .package(url: "https://github.com/sparkle-project/Sparkle", exact: "2.10.1")
+    ],
     targets: [
         .target(
             name: "PomodoroCore"
         ),
         .executableTarget(
             name: "Pomodoro",
-            dependencies: ["PomodoroCore"]
+            dependencies: [
+                "PomodoroCore",
+                .product(name: "Sparkle", package: "Sparkle")
+            ]
         ),
         .testTarget(
             name: "PomodoroCoreTests",

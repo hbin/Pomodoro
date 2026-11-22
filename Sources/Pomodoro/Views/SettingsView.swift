@@ -4,14 +4,17 @@ import UserNotifications
 
 struct SettingsView: View {
     @ObservedObject var model: TimerModel
+    @ObservedObject var updates: UpdateController
     let onQuit: () -> Void
     let onClose: () -> Void
     @Environment(\.colorScheme) private var scheme
+    @State private var showsUpdatePanel = false
 
     private var palette: Palette { Palette.forScheme(scheme) }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        ZStack(alignment: .bottomLeading) {
+            VStack(alignment: .leading, spacing: 0) {
                 Text("Settings")
                     .font(Typo.serif(29))
                     .foregroundStyle(palette.ink)
@@ -21,17 +24,17 @@ struct SettingsView: View {
                     .padding(.top, 2)
 
                 sectionLabel("APPEARANCE")
-                    .padding(.top, 16)
+                    .padding(.top, 13)
                 Hairline()
-                    .padding(.top, 7)
+                    .padding(.top, 4)
 
                 appearancePicker
                     .padding(.top, 8)
 
                 sectionLabel("SOUND")
-                    .padding(.top, 18)
+                    .padding(.top, 13)
                 Hairline()
-                    .padding(.top, 7)
+                    .padding(.top, 4)
 
                 settingRow(
                     title: "Completion chime",
@@ -43,7 +46,7 @@ struct SettingsView: View {
                 )
 
                 Hairline()
-                    .padding(.vertical, 9)
+                    .padding(.vertical, 6)
 
                 settingRow(
                     title: "Tick sound",
@@ -55,9 +58,9 @@ struct SettingsView: View {
                 )
 
                 sectionLabel("MENU BAR")
-                    .padding(.top, 18)
+                    .padding(.top, 13)
                 Hairline()
-                    .padding(.top, 7)
+                    .padding(.top, 4)
 
                 settingRow(
                     title: "Show remaining minutes",
@@ -69,9 +72,9 @@ struct SettingsView: View {
                 )
 
                 sectionLabel("NOTIFICATIONS")
-                    .padding(.top, 18)
+                    .padding(.top, 13)
                 Hairline()
-                    .padding(.top, 7)
+                    .padding(.top, 4)
 
                 HStack(spacing: 8) {
                     Circle()
@@ -100,13 +103,21 @@ struct SettingsView: View {
                         .padding(.top, 10)
                 }
 
-                Spacer(minLength: 10)
+                Spacer(minLength: 4)
 
                 Hairline()
                 HStack(spacing: 6) {
-                    Text(versionText)
-                        .font(Typo.sans(9.5))
-                        .foregroundStyle(palette.mutedInk.opacity(0.8))
+                    HStack(spacing: 4) {
+                        Text(versionText)
+                            .font(Typo.sans(9.5))
+                            .foregroundStyle(palette.mutedInk.opacity(0.8))
+                        UpdateDot(
+                            hasUpdate: updates.hasUpdate,
+                            isExpanded: showsUpdatePanel
+                        ) {
+                            showsUpdatePanel.toggle()
+                        }
+                    }
                     Spacer()
                     Button("Done") {
                         onClose()
@@ -117,9 +128,31 @@ struct SettingsView: View {
                     }
                     .buttonStyle(QuietTextButtonStyle())
                 }
-                .padding(.top, 9)
+                .padding(.top, 7)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+
+            if showsUpdatePanel {
+                UpdatePanel(
+                    updates: updates,
+                    onInstall: {
+                        showsUpdatePanel = false
+                        updates.installUpdate()
+                    },
+                    onCheck: {
+                        showsUpdatePanel = false
+                        updates.checkForUpdates()
+                    },
+                    onClose: {
+                        showsUpdatePanel = false
+                    }
+                )
+                .frame(width: 304)
+                .padding(.bottom, 42)
+                .zIndex(1)
+            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             model.refreshNotificationStatus()
         }
@@ -198,6 +231,6 @@ struct SettingsView: View {
                 .controlSize(.small)
                 .accessibilityLabel(title)
         }
-        .padding(.top, 10)
+        .padding(.top, 7)
     }
 }

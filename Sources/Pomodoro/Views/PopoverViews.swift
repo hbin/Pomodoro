@@ -4,10 +4,16 @@ import SwiftUI
 
 struct PopoverRootView: View {
     @ObservedObject var model: TimerModel
+    @ObservedObject var updates: UpdateController
     @Environment(\.colorScheme) private var scheme
 
     static let width: CGFloat = 380
     static let height: CGFloat = 544
+    static let settingsHeight: CGFloat = 460
+
+    static func contentHeight(showingSettings: Bool) -> CGFloat {
+        showingSettings ? settingsHeight : height
+    }
 
     var body: some View {
         ZStack {
@@ -16,6 +22,7 @@ struct PopoverRootView: View {
                 if model.isShowingSettings {
                     SettingsView(
                         model: model,
+                        updates: updates,
                         onQuit: { NSApp.terminate(nil) },
                         onClose: model.closeSettings
                     )
@@ -27,7 +34,10 @@ struct PopoverRootView: View {
             .padding(.top, 19)
             .padding(.bottom, 18)
         }
-        .frame(width: Self.width, height: Self.height)
+        .frame(
+            width: Self.width,
+            height: Self.contentHeight(showingSettings: model.isShowingSettings)
+        )
         .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
     }
 

@@ -48,6 +48,74 @@ jobs:
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
           echo "BUILD=$BUILD" >> "$GITHUB_ENV"
 
+      - name: Check the Sparkle signing key
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          if [[ -z "${SPARKLE_PRIVATE_KEY:-}" ]]; then
+            echo "::error::SPARKLE_PRIVATE_KEY repository secret is required."
+            exit 1
+          fi
+
+      - name: Generate release notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          PREVIOUS_TAG="$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)"
+          TAG_SUMMARY="$(git for-each-ref --format='%(contents:subject)' "refs/tags/$GITHUB_REF_NAME" | head -n 1)"
+
+          if [[ -n "$PREVIOUS_TAG" ]]; then
+            COMMITS="$(git log "$PREVIOUS_TAG..$GITHUB_REF_NAME" --no-merges --pretty='- %s' \
+              | grep -vE '^- (Bump version to|Release v)' || true)"
+            GENERATED_NOTES="$(gh api \
+              --method POST \
+              "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+              -f "tag_name=$GITHUB_REF_NAME" \
+              -f "previous_tag_name=$PREVIOUS_TAG" \
+              --jq .body)"
+          else
+            COMMITS="$(git log "$GITHUB_REF_NAME" --no-merges --pretty='- %s' \
+              | grep -vE '^- (Bump version to|Release v)' || true)"
+            GENERATED_NOTES="$(gh api \
+              --method POST \
+              "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+              -f "tag_name=$GITHUB_REF_NAME" \
+              --jq .body)"
+          fi
+
+          SUMMARY_TEXT=""
+          if [[ -n "$TAG_SUMMARY" && ! "$TAG_SUMMARY" =~ ^(Pomodoro|Release)[[:space:]]+v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            SUMMARY_TEXT="$TAG_SUMMARY"
+          elif [[ -n "$COMMITS" ]]; then
+            COMMIT_COUNT="$(printf '%s\n' "$COMMITS" | sed '/^$/d' | wc -l | tr -d ' ')"
+            if (( COMMIT_COUNT > 5 )); then
+              COMMITS="$(printf '%s\n- …and %s more changes' \
+                "$(printf '%s\n' "$COMMITS" | head -n 5)" \
+                "$((COMMIT_COUNT - 5))")"
+            fi
+          fi
+
+          NOTES_FILE="$RUNNER_TEMP/Pomodoro-$VERSION.md"
+          {
+            echo "## Summary"
+            echo
+            if [[ -n "$SUMMARY_TEXT" ]]; then
+              echo "$SUMMARY_TEXT"
+            elif [[ -n "$COMMITS" ]]; then
+              echo "This release includes:"
+              echo
+              printf '%s\n' "$COMMITS"
+            else
+              echo "Maintenance release with no user-facing changes."
+            fi
+            echo
+            printf '%s\n' "$GENERATED_NOTES"
+          } > "$NOTES_FILE"
+
+          echo "NOTES_FILE=$NOTES_FILE" >> "$GITHUB_ENV"
+
       - name: Import Developer ID certificate
         if: env.MACOS_CERTIFICATE != ''
         run: |
@@ -91,6 +159,30 @@ jobs:
         run: |
           CONFIG=release UNIVERSAL=1 ./scripts/package-dmg.sh
 
+      - name: Generate the signed appcast
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+
+          KEY_FILE="$RUNNER_TEMP/sparkle-private-key"
+          trap 'rm -f "$KEY_FILE"' EXIT
+          umask 077
+          printf '%s' "$SPARKLE_PRIVATE_KEY" > "$KEY_FILE"
+          chmod 600 "$KEY_FILE"
+
+          if [[ ! -s "$KEY_FILE" ]]; then
+            echo "::error::The Sparkle private key is empty."
+            exit 1
+          fi
+
+          ./scripts/make-appcast.sh \
+            --version "$VERSION" \
+            --zip "dist/Pomodoro-$VERSION.zip" \
+            --notes "$NOTES_FILE" \
+            --key-file "$KEY_FILE" \
+            --output "dist/appcast.xml"
+
       - name: Notarize the disk image
         if: env.SIGN_IDENTITY != '' && env.APPLE_ID != '' && env.APPLE_TEAM_ID != '' && env.APPLE_APP_PASSWORD != ''
         run: |
@@ -108,6 +200,7 @@ jobs:
         run: |
           cd dist
           shasum -a 256 Pomodoro.dmg > Pomodoro.dmg.sha256
+          shasum -a 256 "Pomodoro-$VERSION.zip" > "Pomodoro-$VERSION.zip.sha256"
 
       - name: Publish the GitHub release
         env:
@@ -115,57 +208,13 @@ jobs:
         run: |
           set -euo pipefail
 
-          FILES=(dist/Pomodoro.dmg dist/Pomodoro.dmg.sha256)
-          PREVIOUS_TAG="$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)"
-          TAG_SUMMARY="$(git for-each-ref --format='%(contents:subject)' "refs/tags/$GITHUB_REF_NAME" | head -n 1)"
-
-          if [[ -n "$PREVIOUS_TAG" ]]; then
-            COMMITS="$(git log "$PREVIOUS_TAG..$GITHUB_REF_NAME" --no-merges --pretty='- %s' \
-              | grep -vE '^- (Bump version to|Release v)' || true)"
-            GENERATED_NOTES="$(gh api \
-              --method POST \
-              "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
-              -f "tag_name=$GITHUB_REF_NAME" \
-              -f "previous_tag_name=$PREVIOUS_TAG" \
-              --jq .body)"
-          else
-            COMMITS="$(git log "$GITHUB_REF_NAME" --no-merges --pretty='- %s' \
-              | grep -vE '^- (Bump version to|Release v)' || true)"
-            GENERATED_NOTES="$(gh api \
-              --method POST \
-              "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
-              -f "tag_name=$GITHUB_REF_NAME" \
-              --jq .body)"
-          fi
-
-          SUMMARY_TEXT=""
-          if [[ -n "$TAG_SUMMARY" && ! "$TAG_SUMMARY" =~ ^(Pomodoro|Release)[[:space:]]+v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            SUMMARY_TEXT="$TAG_SUMMARY"
-          elif [[ -n "$COMMITS" ]]; then
-            COMMIT_COUNT="$(printf '%s\n' "$COMMITS" | sed '/^$/d' | wc -l | tr -d ' ')"
-            if (( COMMIT_COUNT > 5 )); then
-              COMMITS="$(printf '%s\n- …and %s more changes' \
-                "$(printf '%s\n' "$COMMITS" | head -n 5)" \
-                "$((COMMIT_COUNT - 5))")"
-            fi
-          fi
-
-          NOTES_FILE="$RUNNER_TEMP/release-notes.md"
-          {
-            echo "## Summary"
-            echo
-            if [[ -n "$SUMMARY_TEXT" ]]; then
-              echo "$SUMMARY_TEXT"
-            elif [[ -n "$COMMITS" ]]; then
-              echo "This release includes:"
-              echo
-              printf '%s\n' "$COMMITS"
-            else
-              echo "Maintenance release with no user-facing changes."
-            fi
-            echo
-            printf '%s\n' "$GENERATED_NOTES"
-          } > "$NOTES_FILE"
+          FILES=(
+            dist/Pomodoro.dmg
+            dist/Pomodoro.dmg.sha256
+            "dist/Pomodoro-$VERSION.zip"
+            "dist/Pomodoro-$VERSION.zip.sha256"
+            dist/appcast.xml
+          )
 
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
             gh release upload "$GITHUB_REF_NAME" "${FILES[@]}" --clobber
@@ -177,6 +226,10 @@ jobs:
               --verify-tag
           fi
 
+      - name: Remove the temporary Sparkle key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sparkle-private-key"
+
       - name: Write the workflow summary
         run: |
           {
@@ -184,6 +237,8 @@ jobs:
             echo
             echo "- Build: \`$BUILD\`"
             echo "- Disk image: \`Pomodoro.dmg\`"
+            echo "- Update archive: \`Pomodoro-$VERSION.zip\`"
+            echo "- Appcast: \`appcast.xml\`"
             if [[ -n "${SIGN_IDENTITY:-}" ]]; then
               echo "- Signing: \`$SIGN_IDENTITY\`"
             else

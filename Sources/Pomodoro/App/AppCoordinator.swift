@@ -2,16 +2,19 @@ import AppKit
 import PomodoroCore
 
 @MainActor
-final class AppCoordinator: NSObject {
+final class AppCoordinator: NSObject, NSMenuItemValidation {
     private let model: TimerModel
     private let statusItem: StatusItemController
     private let popover: PopoverController
+    private let updates: UpdateController
 
     override init() {
         let model = TimerModel()
+        let updates = UpdateController()
         self.model = model
         self.statusItem = StatusItemController()
-        self.popover = PopoverController(model: model)
+        self.updates = updates
+        self.popover = PopoverController(model: model, updates: updates)
         super.init()
 
         statusItem.onClick = { [weak self] in
@@ -56,6 +59,8 @@ final class AppCoordinator: NSObject {
                 self?.showPopover()
             }
         }
+
+        updates.start()
     }
 
     func shutdown() {
@@ -92,6 +97,15 @@ final class AppCoordinator: NSObject {
         )
         about.target = NSApp
         appMenu.addItem(about)
+
+        let checkForUpdates = NSMenuItem(
+            title: "Check for Updates…",
+            action: #selector(checkForUpdatesFromMenu(_:)),
+            keyEquivalent: ""
+        )
+        checkForUpdates.target = self
+        checkForUpdates.isEnabled = updates.canCheckForUpdates
+        appMenu.addItem(checkForUpdates)
         appMenu.addItem(.separator())
 
         let settingsItem = NSMenuItem(
@@ -124,6 +138,15 @@ final class AppCoordinator: NSObject {
         )
         settingsItem.target = self
         menu.addItem(settingsItem)
+
+        let checkForUpdates = NSMenuItem(
+            title: "Check for Updates…",
+            action: #selector(checkForUpdatesFromMenu(_:)),
+            keyEquivalent: ""
+        )
+        checkForUpdates.target = self
+        checkForUpdates.isEnabled = updates.canCheckForUpdates
+        menu.addItem(checkForUpdates)
         menu.addItem(.separator())
 
         let quit = NSMenuItem(
@@ -136,11 +159,24 @@ final class AppCoordinator: NSObject {
         return menu
     }
 
+    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        if menuItem.action == #selector(checkForUpdatesFromMenu(_:)) {
+            return updates.canCheckForUpdates
+        }
+        return true
+    }
+
     @objc
     private func openSettingsFromMenu() {
         model.openSettings()
         if !popover.isShown {
             showPopover()
         }
+    }
+
+    @objc
+    private func checkForUpdatesFromMenu(_ sender: Any?) {
+        popover.close()
+        updates.checkForUpdates()
     }
 }
