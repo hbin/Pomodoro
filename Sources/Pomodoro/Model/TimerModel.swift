@@ -35,6 +35,8 @@ final class TimerModel: ObservableObject {
     private let sounds: SoundPlayer
     private var engine: TimerEngine
     private var ticker: Timer?
+    private var wakeObservers: [NSObjectProtocol] = []
+    private var timerActivity: NSObjectProtocol?
     private var lastMenuBarDescriptor: MenuBarDescriptor?
     private var lastTickSecond: Int?
     private var lastTickDate: Date?
@@ -76,6 +78,8 @@ final class TimerModel: ObservableObject {
 
     func activate() {
         startTicker()
+        startObservingWake()
+        syncTimerActivity()
         refreshNotificationStatus()
         updateMenuBar(force: true)
         if engine.state.runState == .running {
@@ -101,6 +105,35 @@ final class TimerModel: ObservableObject {
         }
         RunLoop.main.add(timer, forMode: .common)
         ticker = timer
+    }
+
+    private func restartTicker() {
+        ticker?.invalidate()
+        ticker = nil
+        tickerStarted = false
+        startTicker()
+    }
+
+    private func startObservingWake() {
+        guard wakeObservers.isEmpty else { return }
+        let center = NSWorkspace.shared.notificationCenter
+        let names = [
+            NSWorkspace.didWakeNotification,
+            NSWorkspace.screensDidWakeNotification
+        ]
+        wakeObservers = names.map { name in
+            center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+                MainActor.assumeIsolated {
+                    self?.recoverAfterWake()
+                }
+            }
+        }
+    }
+
+    private func recoverAfterWake() {
+        restartTicker()
+        tick()
+        updateMenuBar(force: true)
     }
 
     private func tick() {
@@ -475,6 +508,7 @@ final class TimerModel: ObservableObject {
     }
 
     private func save() {
+        syncTimerActivity()
         let persisted = PersistedState(
             timer: engine.state,
             chimeEnabled: chimeEnabled,
@@ -487,6 +521,19 @@ final class TimerModel: ObservableObject {
             try store.save(persisted)
         } catch {
             errorMessage = "Timer state couldn’t be saved to disk."
+        }
+    }
+
+    private func syncTimerActivity() {
+        if engine.state.runState == .running {
+            guard timerActivity == nil else { return }
+            timerActivity = ProcessInfo.processInfo.beginActivity(
+                options: [.userInitiatedAllowingIdleSystemSleep],
+                reason: "Pomodoro countdown is running"
+            )
+        } else if let timerActivity {
+            ProcessInfo.processInfo.endActivity(timerActivity)
+            self.timerActivity = nil
         }
     }
 

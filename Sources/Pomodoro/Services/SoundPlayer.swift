@@ -1,71 +1,52 @@
-import AppKit
 import AVFoundation
+import Foundation
 
-@MainActor
-final class SoundPlayer {
-    private let engine = AVAudioEngine()
-    private let chimeNode = AVAudioPlayerNode()
-    private let tickNode = AVAudioPlayerNode()
-    private let sampleRate: Double = 44_100
-    private var isConfigured = false
-    private var chimeBuffer: AVAudioPCMBuffer?
-    private var tickBuffer: AVAudioPCMBuffer?
+final class SoundPlayer: @unchecked Sendable {
+    private let queue = DispatchQueue(
+        label: "com.hb.pomodoro.sound",
+        qos: .userInitiated
+    )
+    private let chimeData: Data
+    private let tickData: Data
+    private var activePlayers: [AVAudioPlayer] = []
 
     init() {
-        chimeBuffer = Self.makeChimeBuffer(sampleRate: sampleRate)
-        tickBuffer = Self.makeTickBuffer(sampleRate: sampleRate)
+        chimeData = Self.makeChimeData(sampleRate: 44_100)
+        tickData = Self.makeTickData(sampleRate: 44_100)
     }
 
     func playChime() {
-        configureIfNeeded()
-        guard let chimeBuffer else { return }
-        chimeNode.stop()
-        chimeNode.scheduleBuffer(chimeBuffer, at: nil, options: [], completionHandler: nil)
-        chimeNode.play()
+        play(chimeData, volume: 0.72)
     }
 
     func playTick() {
-        configureIfNeeded()
-        guard let tickBuffer else { return }
-        tickNode.stop()
-        tickNode.scheduleBuffer(tickBuffer, at: nil, options: [], completionHandler: nil)
-        tickNode.play()
+        play(tickData, volume: 0.32)
     }
 
-    private func configureIfNeeded() {
-        guard !isConfigured else {
-            if !engine.isRunning {
-                try? engine.start()
+    private func play(_ data: Data, volume: Float) {
+        queue.async { [weak self] in
+            guard let self,
+                  let player = try? AVAudioPlayer(data: data) else {
+                return
             }
-            return
-        }
-        guard let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1) else {
-            return
-        }
-        engine.attach(chimeNode)
-        engine.attach(tickNode)
-        engine.connect(chimeNode, to: engine.mainMixerNode, format: format)
-        engine.connect(tickNode, to: engine.mainMixerNode, format: format)
-        chimeNode.volume = 0.72
-        tickNode.volume = 0.32
-        engine.mainMixerNode.outputVolume = 1
-        do {
-            try engine.start()
-            isConfigured = true
-        } catch {
-            isConfigured = false
+            player.volume = volume
+            player.prepareToPlay()
+            guard player.play() else { return }
+            activePlayers.append(player)
+            if activePlayers.count > 4 {
+                activePlayers.removeFirst(activePlayers.count - 4)
+            }
+            queue.asyncAfter(deadline: .now() + player.duration + 0.1) { [weak self, weak player] in
+                guard let self, let player else { return }
+                activePlayers.removeAll { $0 === player }
+            }
         }
     }
 
-    private static func makeChimeBuffer(sampleRate: Double) -> AVAudioPCMBuffer? {
+    private static func makeChimeData(sampleRate: Double) -> Data {
         let duration = 0.98
-        guard let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1),
-              let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(duration * sampleRate)),
-              let samples = buffer.floatChannelData?[0] else {
-            return nil
-        }
-        buffer.frameLength = buffer.frameCapacity
-        let frameCount = Int(buffer.frameLength)
+        let frameCount = Int(duration * sampleRate)
+        var samples = [Float](repeating: 0, count: frameCount)
         let notes: [(start: Double, frequency: Double, duration: Double, gain: Double)] = [
             (0.0, 587.33, 0.58, 0.9),
             (0.26, 880.0, 0.66, 0.8)
@@ -92,18 +73,13 @@ final class SoundPlayer {
             }
             samples[index] = Float(value * 0.32)
         }
-        return buffer
+        return makeWAVData(samples: samples, sampleRate: Int(sampleRate))
     }
 
-    private static func makeTickBuffer(sampleRate: Double) -> AVAudioPCMBuffer? {
+    private static func makeTickData(sampleRate: Double) -> Data {
         let duration = 0.055
-        guard let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1),
-              let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(duration * sampleRate)),
-              let samples = buffer.floatChannelData?[0] else {
-            return nil
-        }
-        buffer.frameLength = buffer.frameCapacity
-        let frameCount = Int(buffer.frameLength)
+        let frameCount = Int(duration * sampleRate)
+        var samples = [Float](repeating: 0, count: frameCount)
         var generator = SystemRandomNumberGenerator()
 
         for index in 0..<frameCount {
@@ -114,6 +90,44 @@ final class SoundPlayer {
             let noise = Double.random(in: -1...1, using: &generator) * 0.18
             samples[index] = Float((tone + overtone + noise) * envelope * 0.20)
         }
-        return buffer
+        return makeWAVData(samples: samples, sampleRate: Int(sampleRate))
+    }
+
+    private static func makeWAVData(samples: [Float], sampleRate: Int) -> Data {
+        let bytesPerSample = 2
+        let dataSize = samples.count * bytesPerSample
+        var data = Data(capacity: 44 + dataSize)
+
+        data.append(contentsOf: Array("RIFF".utf8))
+        appendLE(UInt32(36 + dataSize), to: &data)
+        data.append(contentsOf: Array("WAVE".utf8))
+        data.append(contentsOf: Array("fmt ".utf8))
+        appendLE(UInt32(16), to: &data)
+        appendLE(UInt16(1), to: &data)
+        appendLE(UInt16(1), to: &data)
+        appendLE(UInt32(sampleRate), to: &data)
+        appendLE(UInt32(sampleRate * bytesPerSample), to: &data)
+        appendLE(UInt16(bytesPerSample), to: &data)
+        appendLE(UInt16(16), to: &data)
+        data.append(contentsOf: Array("data".utf8))
+        appendLE(UInt32(dataSize), to: &data)
+
+        for sample in samples {
+            let clamped = min(max(sample, -1), 1)
+            let value = Int16((clamped * Float(Int16.max)).rounded())
+            appendLE(UInt16(bitPattern: value), to: &data)
+        }
+
+        return data
+    }
+
+    private static func appendLE(_ value: UInt16, to data: inout Data) {
+        var value = value.littleEndian
+        withUnsafeBytes(of: &value) { data.append(contentsOf: $0) }
+    }
+
+    private static func appendLE(_ value: UInt32, to data: inout Data) {
+        var value = value.littleEndian
+        withUnsafeBytes(of: &value) { data.append(contentsOf: $0) }
     }
 }

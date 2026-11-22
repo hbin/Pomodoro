@@ -199,6 +199,22 @@ final class TimerEngineTests: XCTestCase {
         XCTAssertEqual(engine.state.completedFocusCount, 1)
     }
 
+    func testRefreshAfterWakeCompletesExpiredIntervalOnce() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+        engine.startFocus(minutes: 25)
+
+        clock.advance(90)
+        XCTAssertNil(engine.refresh())
+        XCTAssertEqual(engine.displaySeconds(), 1410)
+
+        clock.advance(1500)
+        XCTAssertEqual(engine.refresh(), .completed(.focus))
+        XCTAssertEqual(engine.state.completedFocusCount, 1)
+        XCTAssertNil(engine.refresh())
+        XCTAssertEqual(engine.state.completedFocusCount, 1)
+    }
+
     func testRestorePausedPreservesRemainder() {
         let clock = TestClock()
         let state = TimerState(
