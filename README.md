@@ -32,11 +32,6 @@ Download the latest `Pomodoro.dmg` from
 [Releases](https://github.com/hbin/Pomodoro/releases/latest), open it, and drag
 **Pomodoro** into **Applications**.
 
-Builds through 0.1.3 cannot update themselves. If you are on 0.1.3, install the
-next release manually one time. Later releases check for updates automatically.
-Click the dot after the version in Settings to choose **Notify**, **Download**,
-or **Never**, or check manually with **Check for Updates…**.
-
 If macOS blocks the first launch, open Pomodoro once, then go to
 **System Settings → Privacy & Security** and choose **Open Anyway**.
 Alternatively, clear the quarantine flag in Terminal:
