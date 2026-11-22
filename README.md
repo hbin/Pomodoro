@@ -25,7 +25,6 @@
   <img src="docs/screenshots/black-theme.png" width="320" alt="Pomodoro in Black theme">
 </p>
 
-
 ## Install
 
 Download the latest `Pomodoro.dmg` from
