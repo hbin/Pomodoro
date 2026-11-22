@@ -5,7 +5,7 @@
 
 <p align="center">
   <strong>Free.</strong> A quiet focus timer for the macOS menu bar.<br>
-  Choose a duration, focus, and settle into a simple rhythm.
+  Choose a duration and settle into a simple focus rhythm.
 </p>
 
 <p align="center">
