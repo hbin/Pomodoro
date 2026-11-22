@@ -6,9 +6,13 @@ final class SoundPlayer: @unchecked Sendable {
         label: "com.hb.pomodoro.sound",
         qos: .userInitiated
     )
+    private let stateLock = NSLock()
     private let chimeData: Data
     private let tickData: Data
-    private var activePlayers: [AVAudioPlayer] = []
+    private var chimePlayer: AVAudioPlayer?
+    private var tickPlayer: AVAudioPlayer?
+    private var isTickPending = false
+    private var generation: UInt64 = 0
 
     init() {
         chimeData = Self.makeChimeData(sampleRate: 44_100)
@@ -16,31 +20,91 @@ final class SoundPlayer: @unchecked Sendable {
     }
 
     func playChime() {
-        play(chimeData, volume: 0.72)
+        stateLock.lock()
+        let requestGeneration = generation
+        stateLock.unlock()
+
+        queue.async { [weak self] in
+            guard let self, self.isCurrent(requestGeneration) else { return }
+            self.chimePlayer?.stop()
+            if self.chimePlayer == nil {
+                self.chimePlayer = try? AVAudioPlayer(data: self.chimeData)
+            }
+            guard let player = self.chimePlayer else { return }
+            player.currentTime = 0
+            player.volume = 0.72
+            player.prepareToPlay()
+            if !player.play() {
+                self.chimePlayer = nil
+            }
+        }
     }
 
     func playTick() {
-        play(tickData, volume: 0.32)
-    }
+        stateLock.lock()
+        guard !isTickPending else {
+            stateLock.unlock()
+            return
+        }
+        isTickPending = true
+        let requestGeneration = generation
+        stateLock.unlock()
 
-    private func play(_ data: Data, volume: Float) {
         queue.async { [weak self] in
-            guard let self,
-                  let player = try? AVAudioPlayer(data: data) else {
-                return
+            guard let self else { return }
+            defer { self.finishTickRequest() }
+            guard self.isCurrent(requestGeneration) else { return }
+            if self.tickPlayer == nil {
+                self.tickPlayer = try? AVAudioPlayer(data: self.tickData)
             }
-            player.volume = volume
+            guard let player = self.tickPlayer else { return }
+            player.stop()
+            player.currentTime = 0
+            player.volume = 0.32
             player.prepareToPlay()
-            guard player.play() else { return }
-            activePlayers.append(player)
-            if activePlayers.count > 4 {
-                activePlayers.removeFirst(activePlayers.count - 4)
-            }
-            queue.asyncAfter(deadline: .now() + player.duration + 0.1) { [weak self, weak player] in
-                guard let self, let player else { return }
-                activePlayers.removeAll { $0 === player }
+            if !player.play() {
+                self.tickPlayer = nil
             }
         }
+    }
+
+    func prepareForSleep() {
+        stateLock.lock()
+        generation &+= 1
+        stateLock.unlock()
+
+        queue.async { [weak self] in
+            self?.stopPlayers()
+        }
+    }
+
+    func resumeAfterWake() {
+        stateLock.lock()
+        generation &+= 1
+        stateLock.unlock()
+
+        queue.async { [weak self] in
+            self?.stopPlayers()
+        }
+    }
+
+    private func isCurrent(_ requestGeneration: UInt64) -> Bool {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        return requestGeneration == generation
+    }
+
+    private func finishTickRequest() {
+        stateLock.lock()
+        isTickPending = false
+        stateLock.unlock()
+    }
+
+    private func stopPlayers() {
+        tickPlayer?.stop()
+        tickPlayer = nil
+        chimePlayer?.stop()
+        chimePlayer = nil
     }
 
     private static func makeChimeData(sampleRate: Double) -> Data {

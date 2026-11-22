@@ -35,11 +35,12 @@ final class TimerModel: ObservableObject {
     private let sounds: SoundPlayer
     private var engine: TimerEngine
     private var ticker: Timer?
-    private var wakeObservers: [NSObjectProtocol] = []
+    private var powerObservers: [NSObjectProtocol] = []
     private var timerActivity: NSObjectProtocol?
     private var lastMenuBarDescriptor: MenuBarDescriptor?
     private var lastTickSecond: Int?
     private var lastTickDate: Date?
+    private var lastWakeRecovery: Date?
     private var hasRequestedAuthorization = false
     private var tickerStarted = false
     private var needsInitialSave = false
@@ -78,7 +79,7 @@ final class TimerModel: ObservableObject {
 
     func activate() {
         startTicker()
-        startObservingWake()
+        startObservingPowerEvents()
         syncTimerActivity()
         refreshNotificationStatus()
         updateMenuBar(force: true)
@@ -114,23 +115,45 @@ final class TimerModel: ObservableObject {
         startTicker()
     }
 
-    private func startObservingWake() {
-        guard wakeObservers.isEmpty else { return }
+    private func startObservingPowerEvents() {
+        guard powerObservers.isEmpty else { return }
         let center = NSWorkspace.shared.notificationCenter
         let names = [
+            NSWorkspace.willSleepNotification,
             NSWorkspace.didWakeNotification,
+            NSWorkspace.screensDidSleepNotification,
             NSWorkspace.screensDidWakeNotification
         ]
-        wakeObservers = names.map { name in
+        powerObservers = names.map { name in
             center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
                 MainActor.assumeIsolated {
-                    self?.recoverAfterWake()
+                    guard let self else { return }
+                    if name == NSWorkspace.willSleepNotification
+                        || name == NSWorkspace.screensDidSleepNotification {
+                        self.prepareForSleep()
+                    } else {
+                        self.recoverAfterWake()
+                    }
                 }
             }
         }
     }
 
+    private func prepareForSleep() {
+        lastTickSecond = nil
+        lastTickDate = nil
+        sounds.prepareForSleep()
+    }
+
     private func recoverAfterWake() {
+        let date = Date()
+        if let lastWakeRecovery, date.timeIntervalSince(lastWakeRecovery) < 2 {
+            return
+        }
+        lastWakeRecovery = date
+        sounds.resumeAfterWake()
+        lastTickSecond = nil
+        lastTickDate = nil
         restartTicker()
         tick()
         updateMenuBar(force: true)
