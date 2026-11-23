@@ -17,14 +17,27 @@ struct PopoverRootView: View {
 
     @State private var idleMode: IdleMode = LaunchIdleMode.override ?? .focus
 
+    /// The mode that owns the ambient light. Idle follows the selector, a
+    /// running or paused interval follows its phase, and a completed interval
+    /// follows the next interval offered by the completion screen.
+    private var activeMode: IdleMode {
+        if model.isIdle {
+            return idleMode
+        }
+        if model.isCompleted {
+            return IdleMode(phase: model.completionOffer.phase)
+        }
+        return IdleMode(phase: model.phase)
+    }
+
     private var ambient: AmbientPose {
-        AmbientPose.forMode(idleMode)
+        AmbientPose.forMode(activeMode)
     }
 
     private var ambientAccent: Color {
         let palette = Palette.forScheme(scheme)
-        if model.isIdle {
-            return idleMode.glowColor(in: palette)
+        if model.isIdle || model.isCompleted {
+            return activeMode.glowColor(in: palette)
         }
         if model.phase == .longBreak {
             return palette.brass
@@ -401,31 +414,50 @@ struct CompletionPopoverView: View {
     @Environment(\.colorScheme) private var scheme
 
     private var palette: Palette { Palette.forScheme(scheme) }
-    private var accent: Color { palette.accent(for: model.phase) }
+    private var offer: CompletionOffer { model.completionOffer }
+    private var offerMode: IdleMode { IdleMode(phase: offer.phase) }
+    private var accent: Color { palette.accent(for: offer.phase) }
+
+    private var bodyText: String {
+        model.phase.isBreak
+            ? L10n.string("completion.body.break_ready")
+            : L10n.string("completion.body.focus_done")
+    }
+
+    private var actionTitle: String {
+        offer.phase == .focus
+            ? L10n.format("timer.action.start", offer.minutes)
+            : L10n.format("timer.action.start_break", offer.minutes)
+    }
+
+    private var actionHint: String {
+        offer.phase == .focus
+            ? L10n.string("timer.a11y.start_hint")
+            : L10n.string("timer.a11y.start_break_hint")
+    }
 
     var body: some View {
         VStack(spacing: 0) {
             PopoverHeader(accent: accent, onSettings: model.openSettings)
 
-            Text(
-                model.isBreak
-                    ? L10n.string("completion.title.break")
-                    : L10n.string("completion.title.focus")
-            )
-            .font(Typo.serif(34))
-            .foregroundStyle(palette.ink)
-            .padding(.top, 26)
+            Text(offerMode.title)
+                .font(Typo.serif(34))
+                .foregroundStyle(palette.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.78)
+                .padding(.top, 26)
 
             DialView(
-                timeText: "00:00",
-                caption: L10n.string("timer.caption.complete"),
-                progress: 1,
+                timeText: offer.timeText,
+                caption: L10n.string("timer.caption.ready"),
+                progress: 0,
                 accent: accent,
                 size: 215,
-                accessibilityLabel: model.isBreak
-                    ? L10n.string("completion.title.break")
-                    : L10n.string("completion.title.focus"),
-                accessibilityValue: L10n.string("completion.a11y.complete"),
+                handProgress: Double(offer.minutes) / 60.0,
+                accessibilityLabel: offer.phase.isBreak
+                    ? L10n.string("timer.a11y.break_dial")
+                    : L10n.string("timer.a11y.focus_dial"),
+                accessibilityValue: L10n.format("timer.a11y.ready_value", offer.minutes),
                 ambient: ambient,
                 handColor: accent
             )
@@ -433,38 +465,25 @@ struct CompletionPopoverView: View {
 
             Spacer(minLength: 8)
 
-            Text(
-                model.isBreak
-                    ? L10n.string("completion.body.break_ready")
-                    : L10n.string("completion.body.focus_done")
-            )
-            .font(Typo.sans(10.7))
-            .foregroundStyle(palette.mutedInk)
-            .frame(height: 28, alignment: .bottom)
+            Text(bodyText)
+                .font(Typo.sans(10.7))
+                .foregroundStyle(palette.mutedInk)
+                .lineLimit(1)
+                .minimumScaleFactor(0.9)
+                .frame(maxWidth: .infinity, minHeight: 28, alignment: .bottom)
 
-            if model.isBreak {
-                Button {
+            Button {
+                if offer.phase == .focus {
                     model.startAnother()
-                } label: {
-                    PrimaryButtonLabel(
-                        title: L10n.string("completion.action.start_another"),
-                        icon: "play.fill"
-                    )
-                }
-                .buttonStyle(PrimaryCTAButtonStyle(height: 49))
-                .padding(.top, 20)
-            } else {
-                Button {
+                } else {
                     model.takeBreak()
-                } label: {
-                    PrimaryButtonLabel(
-                        title: L10n.format("completion.action.take_break", model.recommendedBreakMinutes),
-                        icon: "play.fill"
-                    )
                 }
-                .buttonStyle(PrimaryCTAButtonStyle(height: 49))
-                .padding(.top, 20)
+            } label: {
+                PrimaryButtonLabel(title: actionTitle, icon: "play.fill")
             }
+            .buttonStyle(PrimaryCTAButtonStyle(height: 49))
+            .accessibilityHint(actionHint)
+            .padding(.top, 20)
 
             Button(L10n.string("completion.action.done")) {
                 model.doneForNow()

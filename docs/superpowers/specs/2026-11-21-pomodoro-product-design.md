@@ -10,8 +10,9 @@
 
 Later changes amend this spec: see
 `2026-11-22-minimal-update-indicator.md`,
-`2026-11-23-four-language-localization.md`, and
-`2026-11-23-in-app-language-picker.md`. Statements below about local-only
+`2026-11-23-four-language-localization.md`,
+`2026-11-23-in-app-language-picker.md`, and
+`2026-11-24-guided-next-step-design.md`. Statements below about local-only
 delivery and no network requests describe the original v1 scope.
 
 ## 1. Summary
@@ -76,7 +77,7 @@ Version one does not include:
 - Accounts, sync, cloud storage, or network requests.
 - AI features.
 - Multiple concurrent timers.
-- Automatic focus/break cycles.
+- Automatic focus/break countdown cycles.
 - Launch at login.
 - A global keyboard shortcut.
 - iOS, iPadOS, Windows, or web versions.
@@ -96,8 +97,8 @@ reaches zero.
 
 ### Guide, do not drive
 
-The app may offer the next break or focus step. It never starts a transition
-automatically.
+The app may move the completion screen to the next break or focus step. It
+never starts a countdown automatically.
 
 ### Classic rhythm, light flexibility
 
@@ -265,20 +266,24 @@ When the focus interval reaches zero:
    is not frontmost.
 3. If the popover is visible, the completion state and chime replace the notification
    so the user is not alerted twice.
-4. The popover changes to a calm completion state.
+4. The popover moves automatically to the recommended break's ready screen.
 
-The completion state contains:
+The focus-completion ready screen contains:
 
-- `Focus complete`.
-- A primary action for the appropriate break:
-  - `Take a 5-minute break` normally.
-  - `Take a 15-minute break` after every fourth completed focus interval.
+- `Take a short break` or `Take a long break`.
+- A dial at `05:00` or `15:00` with the `READY` caption and the break accent.
+- `Focus complete. Ready for a break?`.
+- A primary action `Start 5-minute break` or `Start 15-minute break`:
+  - the 5-minute break normally;
+  - the 15-minute break after every fourth completed focus interval.
 - A quiet `Done for now` action that returns to the idle state.
 
 The break is part of the rhythm, so the completion state does not offer a
 second focus. Starting one without a break is still possible by choosing
 `Done for now` and pressing Start again; the app neither advertises nor blocks
 that path.
+
+No countdown starts until the user chooses.
 
 No task completion is recorded or requested.
 
@@ -295,8 +300,15 @@ No task completion is recorded or requested.
 - Break copy is supportive and non-judgmental, for example `Step away` and
   `Break`.
 - The user may end or skip a break early.
-- No focus or break transition starts automatically.
-- When a break ends, the popover offers `Start another focus` and `Done for now`.
+- No countdown starts automatically.
+- When a break reaches zero, the popover moves automatically to the focus
+  ready screen:
+  - `Ready to focus`;
+  - a `25:00` dial with the `READY` caption;
+  - `Break complete. Ready for another focus?`;
+  - a primary `Start 25-minute focus` action;
+  - a quiet `Done for now` action.
+- No countdown starts until the user chooses.
 - Break sessions are not stored.
 
 ### 7.8 Settings
@@ -337,8 +349,9 @@ on the idle screen.
 
 ### Focus complete
 
-- Popover shows the recommended break; `Done for now` is the only other action.
-- Nothing begins until the user chooses.
+- Popover automatically shows the recommended break ready to start.
+- `Done for now` is the only other action.
+- Nothing counts down until the user chooses.
 
 ### Break running
 
@@ -349,7 +362,9 @@ on the idle screen.
 
 ### Break complete
 
-- `Start another focus` and `Done for now`.
+- Popover automatically shows the next focus ready to start.
+- `Start 25-minute focus` and `Done for now`.
+- Nothing counts down until the user chooses.
 
 ### Notifications unavailable
 
@@ -601,10 +616,14 @@ No task, project, note, or session-history data is stored.
 
 - Natural completion plays the chime once when enabled.
 - A notification appears once when authorized and appropriate.
-- The completion state offers the recommended break without a second modal.
+- Focus completion automatically shows the recommended break's duration and a
+  Start break action without a second modal.
 - A long break is offered after every fourth completed focus interval.
-- No transition starts automatically.
-- Break completion offers another focus or the idle state.
+- No countdown starts automatically.
+- Break completion automatically shows the next focus ready to start; `Done for
+  now` remains the idle path.
+- The completion dial shows the next interval's duration with `READY`, not
+  `00:00` with `COMPLETE`.
 
 ### Simplicity
 
@@ -626,7 +645,7 @@ No task, project, note, or session-history data is stored.
 - Standalone timer with no tasks, projects, or history.
 - Classic 25/5 rhythm with 15/25/45 focus choices.
 - Long break after every four completed focus intervals.
-- Manual guided transitions.
+- Guided transitions that present the next interval without starting it.
 - Quiet analog visual direction.
 - Chime plus notification.
 - Optional tick sound, off by default.

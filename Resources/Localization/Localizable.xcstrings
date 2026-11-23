@@ -20,12 +20,12 @@
       }
     },
     "announcements.break_complete" : {
-      "comment" : "VoiceOver announcement after a break finishes. Native review pending.",
+      "comment" : "VoiceOver announcement after a break finishes, pointing at the next focus. Native review pending.",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Break complete." } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息完成。" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息完成。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了。" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Break complete. Ready for another focus." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息完成。可以开始下一次专注。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息完成。可以開始下一次專注。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了。次の集中を始められます。" } }
       }
     },
     "announcements.break_skipped" : {
@@ -146,21 +146,21 @@
       }
     },
     "completion.body.break_ready" : {
-      "comment" : "Completion body shown after a break finishes. Native review pending.",
+      "comment" : "Completion body shown on the focus-ready screen after a break finishes. Native review pending.",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start another focus whenever you’re ready." } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "准备好后，随时开始下一次专注。" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "準備好後，隨時開始下一次專注。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "準備ができたら、次の集中を始めましょう。" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Break complete. Ready for another focus?" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息完成。准备好开始下一次专注了吗？" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息完成。準備好開始下一次專注了嗎？" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了。次の集中を始めますか？" } }
       }
     },
     "completion.body.focus_done" : {
-      "comment" : "Completion body shown after focus finishes. Native review pending.",
+      "comment" : "Completion body shown on the break-ready screen after focus finishes. Native review pending.",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Nothing starts until you choose." } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "在你选择之前，不会自动开始。" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "在你選擇之前，不會自動開始。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "選ぶまで何も始まりません。" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus complete. Ready for a break?" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注完成。准备好休息了吗？" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注完成。準備好休息了嗎？" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了。休憩しますか？" } }
       }
     },
     "completion.title.break" : {

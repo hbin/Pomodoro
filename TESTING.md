@@ -33,14 +33,19 @@ automated tests.
 - [ ] Starting a focus uses an absolute end date and displays the full duration.
 - [ ] Pause freezes the remaining time; resume schedules the remaining time.
 - [ ] Pausing at zero completes the interval once without double-counting.
-- [ ] Natural completion increments the focus count and offers the next action.
+- [ ] Natural completion increments the focus count and moves the popover to the
+      recommended break ready to start.
+- [ ] The focus-completion screen shows the recommended 5- or 15-minute break,
+      its duration on the dial with `READY`, and a Start break action; no
+      countdown starts.
 - [ ] Ending a focus early does not advance the focus count or long-break rhythm.
 - [ ] Ending a focus early asks for confirmation before discarding the interval;
       ending a break does not.
 - [ ] The fourth completed focus recommends a 15-minute long break.
 - [ ] Declining an offered long break with `Done for now` resets the rhythm
       before the next focus.
-- [ ] Completing a break offers another focus interval.
+- [ ] Completing a break moves the popover to the 25-minute focus ready screen
+      with `Start 25-minute focus`; no countdown starts.
 - [ ] Starting a short or long break from idle uses the 5- or 15-minute
       duration and preserves the completed focus count and rhythm.
 
@@ -64,6 +69,13 @@ automated tests.
 ### Popover and menu bar
 
 - [ ] Idle, running, paused, completed, and break states render correctly.
+- [ ] The completion screen shows the next interval's duration with `READY`, not
+      `00:00` with `COMPLETE`.
+- [ ] The completion ambient light follows the next interval: break offer sage
+      or brass, focus offer tomato; starting the offered interval keeps that
+      pose.
+- [ ] The completion primary starts the offered break or focus and schedules
+      its notification; `Done for now` returns to idle.
 - [ ] The mode dots and arrows appear only while idle and are hidden while any
       interval is running, paused, or completed.
 - [ ] Selecting a break dot and pressing Start begins the existing break
@@ -124,6 +136,8 @@ automated tests.
 ### Notifications and sound
 
 - [ ] Notification permission states are represented correctly.
+- [ ] Focus- and break-completion notifications name the next step and fire
+      once when the popover is closed.
 - [ ] Starting, pausing, resuming, ending, and switching language keep the
       pending notification consistent with the timer.
 - [ ] Chime and ticking settings behave as labeled.

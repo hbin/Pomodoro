@@ -13,6 +13,11 @@
 | Parent roadmap | `2026-11-23-interaction-milestones-design.md` (main repository) |
 | Visual study | [Ambient motion](../../design/ambient-motion.md) |
 
+> **Amended 2026-11-24:** The completion presentation now moves directly to the
+> recommended break's ready screen. The direct-break behavior in this spec is
+> unchanged; see
+> [`2026-11-24-guided-next-step-design.md`](2026-11-24-guided-next-step-design.md).
+
 ## Contents
 
 1. [Summary](#1-summary)

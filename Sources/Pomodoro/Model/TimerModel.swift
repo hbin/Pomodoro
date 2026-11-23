@@ -13,6 +13,18 @@ struct MenuBarDescriptor: Equatable {
     var progress: Double
 }
 
+/// The interval offered by the completion screen. A completed focus offers
+/// the recommended break; a completed break offers the next focus. The offer
+/// is presentation-only: no countdown starts until the user chooses.
+struct CompletionOffer: Equatable {
+    var phase: Phase
+    var minutes: Int
+
+    var timeText: String {
+        String(format: "%02d:00", minutes)
+    }
+}
+
 private enum TimerModelError: Equatable {
     case recovery(StateRecoveryIssue)
     case saveFailed
@@ -216,6 +228,19 @@ final class TimerModel: ObservableObject {
     var completedFocusCount: Int { snapshot.completedFocusCount }
     var activeLanguage: AppLanguage { languagePreference.effectiveLanguage }
     var errorMessage: String? { error?.message }
+
+    /// The next interval shown by the completion screen. While a completed
+    /// interval is on screen, `phase` still names the interval that just
+    /// finished; this offer derives the guided next step without starting it.
+    var completionOffer: CompletionOffer {
+        if snapshot.phase.isBreak {
+            return CompletionOffer(phase: .focus, minutes: snapshot.selectedFocusMinutes)
+        }
+        return CompletionOffer(
+            phase: recommendedBreakPhase,
+            minutes: recommendedBreakMinutes
+        )
+    }
 
     var remainingSeconds: TimeInterval {
         engine.remaining(at: now)

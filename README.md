@@ -5,7 +5,8 @@
 
 <p align="center">
   <strong>Free.</strong> A quiet focus timer for the macOS menu bar.<br>
-  Choose focus or a break, then press Start.
+  Choose focus or a break, then press Start. When an interval ends, the next
+  step is ready; nothing starts without you.
 </p>
 
 <p align="center">

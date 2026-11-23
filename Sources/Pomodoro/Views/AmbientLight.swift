@@ -10,6 +10,14 @@ enum IdleMode: Int, CaseIterable, Identifiable {
 
     var id: Int { rawValue }
 
+    init(phase: Phase) {
+        switch phase {
+        case .focus: self = .focus
+        case .shortBreak: self = .shortBreak
+        case .longBreak: self = .longBreak
+        }
+    }
+
     var minutes: Int {
         switch self {
         case .focus: 25
