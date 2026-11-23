@@ -231,6 +231,24 @@ Bump them before packaging a release:
 ./scripts/bump-version.sh build  # build number only
 ```
 
+### README screenshots
+
+`docs/screenshots` is refreshed only when preparing a release, not with each UI
+change. Quit any running instance first, since `open` activates an existing
+instance and ignores the launch arguments. Then rebuild the app and launch the
+idle popover in both themes:
+
+```sh
+./scripts/build-app.sh debug
+open build/Pomodoro.app --args --open-popover --force-light
+open build/Pomodoro.app --args --open-popover --force-dark
+```
+
+Capture the popover window with ⇧⌘4 then Space and replace
+`docs/screenshots/light-theme.png` and `docs/screenshots/black-theme.png`. The
+committed files are 380×506; downscale a Retina capture with `sips -z 506 380`
+before replacing them.
+
 ## Automated releases
 
 Releases are built and published automatically by GitHub Actions. Pushing a

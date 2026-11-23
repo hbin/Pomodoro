@@ -112,8 +112,9 @@ nested components in the required order, and verifies entitlements.
   pending notifications when the preference changes.
 - There are no UI snapshot tests. For visual changes, build the app, launch it,
   and inspect the affected states in both themes.
-- If the home popover UI changes, explicitly tell the user to update the README
-  accordingly before finishing.
+- Do not regenerate the README screenshots with each UI change. Refresh
+  `docs/screenshots` only when preparing a release, and tell the user the
+  screenshots are stale instead of updating them mid-cycle.
 
 ## Dependencies and platform services
 
