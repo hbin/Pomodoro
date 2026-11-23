@@ -90,6 +90,7 @@ automated tests.
       themes; light mode uses the deeper mode accents.
 - [ ] Settings uses the plain card background; no ambient rim, glow, or shade
       is visible there.
+- [ ] The Settings back control returns to the timer without closing the popover.
 - [ ] Changing the mode animates the light over 850 ms; with Reduce Motion
       enabled the pose updates without movement.
 - [ ] Reduce Transparency keeps the ambient layers legible and does not

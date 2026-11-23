@@ -352,13 +352,13 @@
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@のテーマ" } }
       }
     },
-    "settings.done" : {
-      "comment" : "Quiet button that closes Settings. Native review pending.",
+    "settings.back" : {
+      "comment" : "Back button on the settings page. Native review pending.",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "完成" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Back" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "返回" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "返回" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "戻る" } }
       }
     },
     "settings.language.detail" : {

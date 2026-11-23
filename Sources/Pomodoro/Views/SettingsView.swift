@@ -17,10 +17,30 @@ struct SettingsView: View {
             VStack(alignment: .leading, spacing: 0) {
                 ScrollView(.vertical) {
                     VStack(alignment: .leading, spacing: 0) {
-                        Text(L10n.string("settings.title"))
-                            .font(Typo.serif(29))
-                            .foregroundStyle(palette.ink)
-                            .frame(minHeight: Typo.lineHeight(29), alignment: .leading)
+                        HStack(alignment: .center, spacing: 8) {
+                            Text(L10n.string("settings.title"))
+                                .font(Typo.serif(29))
+                                .foregroundStyle(palette.ink)
+                                .frame(minHeight: Typo.lineHeight(29), alignment: .leading)
+                            Spacer(minLength: 8)
+                            Button {
+                                onClose()
+                            } label: {
+                                Image(systemName: "chevron.left")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .frame(width: 32, height: 32)
+                                    .foregroundStyle(palette.mutedInk)
+                                    .background { Circle().fill(palette.plaque.opacity(0.42)) }
+                                    .overlay {
+                                        Circle().strokeBorder(
+                                            palette.brass.opacity(0.30),
+                                            lineWidth: 1
+                                        )
+                                    }
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(L10n.string("settings.back"))
+                        }
                         Text(L10n.string("settings.subtitle"))
                             .font(Typo.sans(10.7))
                             .foregroundStyle(palette.mutedInk)
@@ -138,10 +158,6 @@ struct SettingsView: View {
                         }
                     }
                     Spacer()
-                    Button(L10n.string("settings.done")) {
-                        onClose()
-                    }
-                    .buttonStyle(QuietTextButtonStyle(color: palette.ink))
                     Button(L10n.string("settings.quit")) {
                         onQuit()
                     }

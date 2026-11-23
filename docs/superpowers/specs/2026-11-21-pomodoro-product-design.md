@@ -303,8 +303,8 @@ No task completion is recorded or requested.
 
 Settings stays intentionally small:
 
-- Opens inside the menu-bar popover. `Done` returns to the timer while leaving
-  the popover open.
+- Opens inside the menu-bar popover. A back control in the title row returns
+  to the timer while leaving the popover open.
 - Completion chime on/off.
 - Tick sound on/off; default off.
 - Show remaining minutes in the menu bar on/off.
@@ -570,7 +570,7 @@ No task, project, note, or session-history data is stored.
 - Clicking elsewhere dismisses the popover without an immediate reopen.
 - The settings control switches the popover to Settings instead of opening a
   separate window.
-- Settings `Done` returns to the timer in the same popover.
+- The Settings back control returns to the timer in the same popover.
 - Quitting and relaunching restores a running or paused interval.
 
 ### Timer
