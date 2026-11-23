@@ -1,0 +1,158 @@
+# Pomodoro Development Guide
+
+This file contains durable instructions for AI coding agents working in this
+repository. Keep it focused on how to develop and verify this project. Put
+user-facing documentation in `README.md` and detailed workflow notes in
+`DEVELOP.md`.
+
+## Project overview
+
+Pomodoro is a native macOS 15+ menu-bar focus timer built with Swift 6 and
+SwiftPM. The app has no Dock presence and is composed of two main targets:
+
+- `Sources/PomodoroCore`: UI-independent timer state, timer behavior, and
+  persistence.
+- `Sources/Pomodoro`: the AppKit/SwiftUI application shell, menu-bar
+  integration, timer orchestration, notifications, sounds, themes, and Sparkle
+  updates.
+- `Tests/PomodoroCoreTests`: deterministic XCTest coverage for the core.
+- `Resources`: bundle metadata, entitlements, and the app icon.
+- `scripts`: local build, packaging, versioning, icon, and appcast helpers.
+- `docs/superpowers/specs`: product and design specifications. Read the
+  relevant spec before changing an existing designed flow.
+
+There is no checked-in Xcode project. Add Swift files to the appropriate
+SwiftPM target and let SwiftPM discover them.
+
+## Requirements
+
+- macOS 15 or later
+- Xcode 16 or later with the Swift 6 toolchain
+- Network access for the initial dependency resolution
+
+Commands are intended to run from the repository root.
+
+## Common commands
+
+```sh
+# Run all tests
+swift test
+
+# Build without creating the app bundle
+swift build
+
+# Resolve dependencies after changing Package.swift
+swift package resolve
+
+# Build and validate a locally signed debug app bundle
+./scripts/build-app.sh debug
+open build/Pomodoro.app
+
+# Build an optimized local app
+./scripts/build-app.sh release
+
+# Test release packaging, including the universal build
+UNIVERSAL=1 ./scripts/package-dmg.sh
+```
+
+Use `./scripts/build-app.sh` rather than hand-assembling or modifying an app
+bundle. The script copies resources and Sparkle, repairs runtime paths, signs
+nested components in the required order, and verifies entitlements.
+
+## Architecture and invariants
+
+### Timer core
+
+- `TimerEngine` is the source of truth for timer behavior. Keep it free of
+  AppKit, SwiftUI, notifications, sounds, and persistence side effects.
+- Timing is based on an absolute `endDate` and an injectable `now` closure.
+  Do not replace it with a counter that decrements on every UI tick.
+- The app ticker should call `refresh()` and reconcile restored, sleeping, or
+  woken state rather than independently calculating remaining time.
+- Preserve the rhythm rules: only naturally completed focus intervals advance
+  `completedFocusCount`; ending early does not. The fourth completed focus
+  recommends a long break.
+- New timer behavior needs deterministic tests using `TestClock`. Do not use
+  wall-clock sleeps or depend on the real current time in tests.
+
+### App layer
+
+- `TimerModel` is the `@MainActor` bridge between `TimerEngine`, `StateStore`,
+  platform services, and SwiftUI. Route UI actions through it and publish
+  committed engine state as immutable snapshots.
+- Keep platform integration in its existing ownership areas: app lifecycle in
+  `App/`, notifications and sound in `Services/`, and presentation in `Views/`.
+- The app is menu-bar-only (`LSUIElement`). Do not add a normal Dock/window
+  lifecycle unless the task explicitly requires it.
+- Preserve sleep/wake handling, notification cancellation/rescheduling, and
+  energy-conscious ticking.
+
+### Persistence
+
+- `StateStore` writes ISO 8601 JSON atomically to the app sandbox's
+  `~/Library/Containers/com.hb.pomodoro/Data/Library/Application Support/Pomodoro/state.json`.
+- Decoding intentionally supplies defaults for missing fields so older state
+  files remain readable. Preserve that backward-compatibility behavior.
+- Corrupt state must continue to be backed up and recovered from rather than
+  overwritten silently.
+- Tests must use temporary directories and clean them up.
+
+### UI
+
+- Centralize colors and typography through `Palette`, `Typo`, and the shared
+  components in `Theme.swift`. Avoid introducing unrelated one-off colors or
+  fonts.
+- Verify changes in both Light and Black themes and with reduced transparency.
+- The app supports these launch arguments for focused UI checks:
+  `--open-popover`, `--open-settings`, `--force-light`, and `--force-dark`.
+- There are no UI snapshot tests. For visual changes, build the app, launch it,
+  and inspect the affected states in both themes.
+- If the home popover UI changes, explicitly tell the user to update the README
+  accordingly before finishing.
+
+## Dependencies and platform services
+
+- Sparkle is pinned to exactly `2.10.1`. Keep the exact dependency and commit
+  the matching `Package.resolved` whenever dependency resolution changes.
+- Do not change Sparkle's feed URL behavior, EdDSA key handling, or the
+  required `appcast.xml` asset name without updating the release workflow and
+  documentation together.
+- Never print, copy into the repository, or commit a Sparkle private key.
+  Debug bundles intentionally omit `SUFeedURL` and `SUPublicEDKey`; release
+  bundles require both.
+- Avoid adding dependencies for small utilities. If a dependency is necessary,
+  explain why, update `Package.resolved` through SwiftPM, and document any
+  release or signing impact.
+
+## Testing and completion checks
+
+- Run `swift test` before claiming a code change is complete.
+- Add or update tests in `Tests/PomodoroCoreTests` for changes to timer,
+  rhythm, persistence, or recovery behavior.
+- Run `./scripts/build-app.sh debug` for app-level or UI changes. This also
+  checks signing and required entitlements.
+- Do not describe a visual change as verified unless the built app was
+  launched and inspected.
+- Keep unrelated test or build failures separate from the current change
+  rather than fixing them incidentally.
+
+## Versions, generated files, and releases
+
+- Normal feature and bug-fix work should not change
+  `CFBundleShortVersionString` or `CFBundleVersion` in `Resources/Info.plist`.
+- Use `scripts/bump-version.sh` for release version changes. A release tag must
+  be exactly `v` plus the `CFBundleShortVersionString`.
+- Releases are tag-driven through `.github/workflows/release.yml`. Do not
+  create or push a release tag unless explicitly requested.
+- Do not edit or commit generated output in `.build/`, `build/`, or `dist/`.
+- Do not hand-edit `Package.resolved`; regenerate it with SwiftPM.
+- Update `DEVELOP.md` when commands, tooling, signing, or release behavior
+  changes. Update `README.md` for user-visible installation or product changes.
+
+## Change discipline
+
+- Make the smallest coherent change that solves the requested problem and
+  follow the surrounding Swift style.
+- Preserve existing accessibility, appearance, notification, persistence, and
+  update behavior unless the task explicitly changes them.
+- Do not commit, push, tag, or publish unless explicitly requested.
