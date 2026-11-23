@@ -27,6 +27,12 @@ popover and stays out of the way otherwise.
 
 ## 2. Intent and why
 
+Pomodoro assists the practice of the Pomodoro Technique rather than offering a
+general-purpose countdown. That stance decides two things elsewhere in this
+spec: the break after each focus interval is part of the rhythm rather than an
+optional extra, and the focus-completion state offers that break instead of
+another focus.
+
 The user wants the benefit of a Pomodoro timer without adopting another
 productivity system. Existing apps often bundle timers with task management,
 reporting, or gamification. Those layers add setup and mental overhead before
@@ -267,8 +273,12 @@ The completion state contains:
 - A primary action for the appropriate break:
   - `Take a 5-minute break` normally.
   - `Take a 15-minute break` after every fourth completed focus interval.
-- A secondary `Start another` action.
 - A quiet `Done for now` action that returns to the idle state.
+
+The break is part of the rhythm, so the completion state does not offer a
+second focus. Starting one without a break is still possible by choosing
+`Done for now` and pressing Start again; the app neither advertises nor blocks
+that path.
 
 No task completion is recorded or requested.
 
@@ -327,7 +337,7 @@ on the idle screen.
 
 ### Focus complete
 
-- Popover shows the recommended break and the option to start another interval.
+- Popover shows the recommended break; `Done for now` is the only other action.
 - Nothing begins until the user chooses.
 
 ### Break running

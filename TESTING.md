@@ -36,7 +36,8 @@ automated tests.
 - [ ] Natural completion increments the focus count and offers the next action.
 - [ ] Ending a focus early does not advance the focus count or long-break rhythm.
 - [ ] The fourth completed focus recommends a 15-minute long break.
-- [ ] Skipping a long break or starting another focus resets the rhythm.
+- [ ] Declining an offered long break with `Done for now` resets the rhythm
+      before the next focus.
 - [ ] Completing a break offers another focus interval.
 - [ ] Starting a short or long break from idle uses the 5- or 15-minute
       duration and preserves the completed focus count and rhythm.
