@@ -132,6 +132,9 @@ These arguments use the same mechanism as the per-app language setting in
 system-language path described in the README. The macOS language is captured
 at launch; external macOS language changes apply after reopening the app.
 
+Use `--idle-mode=short` or `--idle-mode=long` with `--open-popover` to inspect
+the idle break modes; the default is `focus`.
+
 ## Auto-updates
 
 Pomodoro uses Sparkle 2.10.1 through SwiftPM. The exact dependency and

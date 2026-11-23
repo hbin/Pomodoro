@@ -396,12 +396,6 @@ final class TimerModel: ObservableObject {
         updateMenuBar(force: true)
     }
 
-    func dismissFirstRunTip() {
-        firstRunTipDismissed = true
-        isFirstRun = false
-        save()
-    }
-
     func openSettings() {
         isShowingSettings = true
     }

@@ -10,12 +10,15 @@ struct DialView: View {
     var handProgress = 0.0
     let accessibilityLabel: String
     let accessibilityValue: String
+    let ambient: AmbientPose
+    let handColor: Color
 
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.colorSchemeContrast) private var contrast
 
     private var palette: Palette { Palette.forScheme(scheme) }
+    private var travelScale: CGFloat { scheme == .dark ? 1.3 : 1.0 }
 
     var body: some View {
         let rimWidth: CGFloat = max(6, size * 0.031)
@@ -29,21 +32,23 @@ struct DialView: View {
         ZStack {
             Circle()
                 .fill(palette.boneTop)
-                .shadow(color: .black.opacity(scheme == .dark ? 0.35 : 0.13), radius: 6, y: 3)
-
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [
-                            palette.plaque,
-                            palette.boneTop,
-                            palette.paper.opacity(0.72)
-                        ],
-                        center: UnitPoint(x: 0.42, y: 0.34),
-                        startRadius: 4,
-                        endRadius: size * 0.62
-                    )
+                .shadow(
+                    color: .black.opacity(scheme == .dark ? 0.35 : 0.13),
+                    radius: 6,
+                    x: ambient.dialShadowX * travelScale,
+                    y: 3
                 )
+
+            AmbientCircleFace(
+                center: ambient.dialCenter,
+                colors: [
+                    palette.plaque,
+                    palette.boneTop,
+                    palette.paper.opacity(0.72)
+                ],
+                startRadius: 4,
+                endRadius: size * 0.62
+            )
                 .padding(faceInset)
                 .overlay {
                     Circle()
@@ -114,6 +119,7 @@ struct DialView: View {
 
         }
         .frame(width: size, height: size)
+        .animation(reduceMotion ? nil : AmbientMotion.curve, value: ambient)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(accessibilityLabel))
         .accessibilityValue(Text(accessibilityValue))
@@ -136,31 +142,58 @@ struct DialView: View {
             context.addFilter(.shadow(color: .black.opacity(0.16), radius: 1.5, x: 0.5, y: 1))
             context.stroke(
                 path,
-                with: .color(accent),
+                with: .color(handColor),
                 style: StrokeStyle(lineWidth: max(2.6, size * 0.014), lineCap: .round)
             )
         }
         .frame(width: size, height: size)
-        .animation(reduceMotion ? nil : .linear(duration: 0.22), value: handProgress)
+        .animation(
+            reduceMotion ? nil : (showsCountdown ? .linear(duration: 0.22) : .easeInOut(duration: 0.7)),
+            value: handProgress
+        )
         .accessibilityHidden(true)
     }
 
     private func plaque(diameter: CGFloat) -> some View {
         ZStack {
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [palette.plaque, palette.boneTop],
-                        center: UnitPoint(x: 0.42, y: 0.32),
-                        startRadius: 2,
+            AmbientCircleFace(
+                center: ambient.plaqueCenter,
+                colors: [palette.plaque, palette.boneTop],
+                startRadius: 2,
+                endRadius: diameter * 0.62
+            )
+                .overlay {
+                    AmbientCircleFace(
+                        center: ambient.plaqueCenter,
+                        colors: [
+                            Color.white.opacity(scheme == .dark ? 0.14 : 0.42),
+                            .clear
+                        ],
+                        startRadius: 0,
                         endRadius: diameter * 0.62
                     )
-                )
+                }
+                .overlay {
+                    AmbientCircleFace(
+                        center: ambient.plaqueShadeCenter,
+                        colors: [
+                            Color.black.opacity(scheme == .dark ? 0.14 : 0.05),
+                            .clear
+                        ],
+                        startRadius: 0,
+                        endRadius: diameter * 0.62
+                    )
+                }
                 .overlay {
                     Circle()
                         .strokeBorder(palette.ink.opacity(0.035), lineWidth: 0.8)
                 }
-                .shadow(color: .black.opacity(scheme == .dark ? 0.32 : 0.10), radius: 4, y: 2)
+                .shadow(
+                    color: .black.opacity(scheme == .dark ? 0.32 : 0.10),
+                    radius: 4,
+                    x: ambient.plaqueShadowX * travelScale,
+                    y: 2
+                )
 
             VStack(spacing: diameter * 0.045) {
                 Text(timeText)

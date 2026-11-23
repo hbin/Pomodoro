@@ -61,18 +61,39 @@ automated tests.
 ### Popover and menu bar
 
 - [ ] Idle, running, paused, completed, and break states render correctly.
-- [ ] The short- and long-break buttons appear only while idle and are hidden
-      while any interval is running, paused, or completed.
-- [ ] Both break buttons start the existing break state, menu-bar
-      treatment, notification, and completion flow.
-- [ ] Duration selection, start, pause, resume, end early, skip, and done actions work.
+- [ ] The mode dots and arrows appear only while idle and are hidden while any
+      interval is running, paused, or completed.
+- [ ] Selecting a break dot and pressing Start begins the existing break
+      state, menu-bar treatment, notification, and completion flow.
+- [ ] The idle mode dots and arrows select Focus 25, Short break 5, and
+      Long break 15; the primary starts the selected mode.
+- [ ] All three mode dots use the mode accent at full opacity; only the active
+      dot is wider. A single current-mode label below the dots names the mode;
+      the 32-point arrows expose hover help and announce the current mode.
+- [ ] The primary Start uses the leaf-green fill with a centered label and a
+      trailing play glyph; light uses ink text and dark uses white, without a
+      colored glow.
+- [ ] The idle ambient light follows the selected mode dot: Focus upper left,
+      Short break overhead, Long break upper right.
+- [ ] The idle pointer points at the selected duration: 25m at five o'clock,
+      5m at one o'clock, 15m at three o'clock.
+- [ ] Switching idle modes does not recolor the pointer.
+- [ ] Starting a focus or break keeps the dial and primary in place; the status
+      line appears in the mode row below the dial.
+- [ ] Settings uses the plain card background; no ambient rim, glow, or shade
+      is visible there.
+- [ ] Changing the mode animates the light over 850 ms; with Reduce Motion
+      enabled the pose updates without movement.
+- [ ] Reduce Transparency keeps the ambient layers legible and does not
+      wash out the mode controls.
+- [ ] Mode selection, start, pause, resume, end early, skip, and done actions work.
 - [ ] The menu-bar icon, optional minutes, progress, and paused/completed states
       match the timer state.
 - [ ] Completing a break returns the menu-bar icon to the resting focus dial.
 - [ ] Left-click opens the popover and right-click opens the menu.
 - [ ] Settings, About, Check for Updates, and Quit work from their menus.
-- [ ] The first-run tip, notification status, and saved-state error messages
-      are understandable and dismissible.
+- [ ] Notification status and saved-state error messages are understandable
+      and dismissible.
 - [ ] Light, Black, and System appearances are checked.
 - [ ] Reduced Transparency is checked and does not make content unreadable.
 - [ ] VoiceOver labels and announcements are meaningful for the main timer actions.

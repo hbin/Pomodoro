@@ -8,16 +8,37 @@ struct PopoverRootView: View {
     @Environment(\.colorScheme) private var scheme
 
     static let width: CGFloat = 380
-    static let height: CGFloat = 580
+    static let height: CGFloat = 506
     static let settingsHeight: CGFloat = 520
 
     static func contentHeight(showingSettings: Bool) -> CGFloat {
         showingSettings ? settingsHeight : height
     }
 
+    @State private var idleMode: IdleMode = LaunchIdleMode.override ?? .focus
+
+    private var ambient: AmbientPose {
+        AmbientPose.forMode(idleMode)
+    }
+
+    private var ambientAccent: Color {
+        let palette = Palette.forScheme(scheme)
+        if model.isIdle {
+            return idleMode.glowColor(in: palette)
+        }
+        if model.phase == .longBreak {
+            return palette.brass
+        }
+        return palette.accent(for: model.phase)
+    }
+
     var body: some View {
         ZStack {
-            PopoverBackground()
+            PopoverBackground(
+                pose: ambient,
+                accent: ambientAccent,
+                showsAmbient: !model.isShowingSettings
+            )
             Group {
                 if model.isShowingSettings {
                     SettingsView(
@@ -39,30 +60,56 @@ struct PopoverRootView: View {
             height: Self.contentHeight(showingSettings: model.isShowingSettings)
         )
         .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
+        .onAppear {
+            if let override = LaunchIdleMode.override {
+                idleMode = override
+            } else {
+                normalizeIdleSelection()
+            }
+        }
+        .onChange(of: model.isIdle) { _, isIdle in
+            if isIdle {
+                normalizeIdleSelection()
+            }
+        }
+    }
+
+    private func normalizeIdleSelection() {
+        guard model.isIdle else { return }
+        idleMode = .focus
+        if model.selectedFocusMinutes != 25 {
+            model.selectFocusMinutes(25)
+        }
     }
 
     @ViewBuilder
     private var content: some View {
         if model.isCompleted {
-            CompletionPopoverView(model: model)
+            CompletionPopoverView(model: model, ambient: ambient)
         } else {
-            TimerPopoverView(model: model)
+            TimerPopoverView(model: model, ambient: ambient, idleMode: $idleMode)
         }
     }
 }
 
 struct TimerPopoverView: View {
     @ObservedObject var model: TimerModel
+    let ambient: AmbientPose
+    @Binding var idleMode: IdleMode
     @Environment(\.colorScheme) private var scheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var confirmingEnd = false
 
     private var palette: Palette { Palette.forScheme(scheme) }
     private var accent: Color {
-        model.isIdle ? palette.tomato : palette.accent(for: model.phase)
+        if model.isIdle {
+            return idleMode.isBreak ? palette.sage : palette.tomato
+        }
+        return palette.accent(for: model.phase)
     }
 
     private var title: String {
-        if model.isIdle { return L10n.string("timer.title.idle") }
+        if model.isIdle { return idleMode.title }
         if model.isPaused { return L10n.string("timer.title.paused") }
         if model.isBreak { return L10n.string("timer.title.break") }
         return L10n.string("timer.title.running")
@@ -72,6 +119,26 @@ struct TimerPopoverView: View {
         model.isIdle ? L10n.string("timer.caption.ready") : model.readoutCaption
     }
 
+    private var idleTime: String {
+        String(format: "%02d:00", idleMode.minutes)
+    }
+
+    private var activeStatusText: String {
+        if let endsAt = model.endsAtText, !model.isPaused {
+            return L10n.format("timer.status.ends_at", endsAt)
+        }
+        return L10n.format("timer.status.paused_remaining", model.timeText)
+    }
+
+    private var activeStatus: some View {
+        Text(activeStatusText)
+            .font(Typo.sans(10.7))
+            .foregroundStyle(palette.mutedInk)
+            .lineLimit(1)
+            .minimumScaleFactor(0.9)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             PopoverHeader(accent: accent, onSettings: model.openSettings)
@@ -79,46 +146,26 @@ struct TimerPopoverView: View {
             Text(title)
                 .font(Typo.serif(34))
                 .foregroundStyle(palette.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.78)
+                .padding(.top, 26)
+
+            dialRow
                 .padding(.top, 20)
 
-            DialView(
-                timeText: model.timeText,
-                caption: dialCaption,
-                progress: model.isIdle ? 0 : model.progress,
-                accent: accent,
-                size: 215,
-                showsCountdown: !model.isIdle,
-                handProgress: model.dialHandProgress,
-                accessibilityLabel: model.isBreak
-                    ? L10n.string("timer.a11y.break_dial")
-                    : L10n.string("timer.a11y.focus_dial"),
-                accessibilityValue: model.isIdle
-                    ? L10n.format("timer.a11y.ready_value", model.selectedFocusMinutes)
-                    : model.isPaused
-                        ? L10n.format("timer.a11y.paused_value", model.timeText)
-                        : L10n.format("timer.a11y.running_value", model.timeText)
-            )
-            .padding(.top, 11)
+            Spacer(minLength: 8)
 
             Group {
                 if model.isIdle {
-                    intervalPicker
+                    modeSelector
                 } else {
                     activeStatus
                 }
             }
-            .frame(height: 54)
-            .padding(.top, 16)
+            .frame(height: 28, alignment: .bottom)
 
             controls
-            .padding(.top, 17)
-
-            if model.isIdle {
-                breakActions
-                    .padding(.top, 8)
-            }
-
-            Spacer(minLength: 8)
+            .padding(.top, 20)
 
             if let error = model.errorMessage {
                 ErrorNote(message: error, onDismiss: model.dismissError)
@@ -129,68 +176,111 @@ struct TimerPopoverView: View {
                 Text(L10n.string("timer.tip.keeps_running"))
                     .font(Typo.sans(9.7))
                     .foregroundStyle(palette.mutedInk.opacity(0.78))
-            } else if !model.firstRunTipDismissed {
-                HStack(spacing: 7) {
-                    Text(L10n.string("timer.tip.first_run"))
-                        .font(Typo.sans(9.7))
-                        .foregroundStyle(palette.mutedInk)
-                    Spacer(minLength: 2)
-                    Button {
-                        model.dismissFirstRunTip()
-                    } label: {
-                        Image(systemName: "xmark")
-                    }
-                    .buttonStyle(IconButtonStyle(size: 19))
-                    .accessibilityLabel(L10n.string("timer.tip.dismiss"))
-                }
-                .padding(.horizontal, 2)
+                    .padding(.top, 10)
             } else {
                 Text(L10n.string("timer.tip.rhythm"))
                     .font(Typo.sans(9.7))
                     .foregroundStyle(palette.mutedInk.opacity(0.78))
+                    .padding(.top, 10)
             }
         }
     }
 
-    private var intervalPicker: some View {
-        VStack(spacing: 7) {
-            HStack(spacing: 6) {
-                Text(L10n.string("timer.interval.label"))
-                    .font(Typo.label(8.7))
-                    .tracking(Typo.tracking(1.8))
-                    .foregroundStyle(palette.mutedInk)
-                Spacer()
-                Text(L10n.string("timer.interval.long_break_hint"))
-                    .font(Typo.sans(9.5))
-                    .foregroundStyle(palette.mutedInk.opacity(0.8))
+    private var dialRow: some View {
+        HStack(spacing: 0) {
+            if model.isIdle {
+                modeArrow(offset: -1)
             }
+            Spacer(minLength: 0)
+            DialView(
+                timeText: model.isIdle ? idleTime : model.timeText,
+                caption: dialCaption,
+                progress: model.isIdle ? 0 : model.progress,
+                accent: accent,
+                size: 215,
+                showsCountdown: !model.isIdle,
+                handProgress: model.isIdle ? idleMode.handProgress : model.dialHandProgress,
+                accessibilityLabel: (model.isIdle ? idleMode.isBreak : model.isBreak)
+                    ? L10n.string("timer.a11y.break_dial")
+                    : L10n.string("timer.a11y.focus_dial"),
+                accessibilityValue: model.isIdle
+                    ? L10n.format("timer.a11y.ready_value", idleMode.minutes)
+                    : model.isPaused
+                        ? L10n.format("timer.a11y.paused_value", model.timeText)
+                        : L10n.format("timer.a11y.running_value", model.timeText),
+                ambient: ambient,
+                handColor: model.isIdle ? palette.tomato : accent
+            )
+            Spacer(minLength: 0)
+            if model.isIdle {
+                modeArrow(offset: 1)
+            }
+        }
+    }
 
-            HStack(spacing: 8) {
-                ForEach(TimerEngine.focusChoices, id: \.self) { minutes in
-                    DurationChip(
-                        minutes: minutes,
-                        isSelected: model.selectedFocusMinutes == minutes
-                    ) {
-                        model.selectFocusMinutes(minutes)
+    private var modeSelector: some View {
+        VStack(spacing: 6) {
+            HStack(spacing: 6) {
+                ForEach(IdleMode.allCases) { mode in
+                    Button {
+                        idleMode = mode
+                    } label: {
+                        Capsule()
+                            .fill(accent)
+                            .frame(width: mode == idleMode ? 14 : 5, height: 5)
+                            .frame(height: 12)
+                            .contentShape(Rectangle())
                     }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(mode.accessibilityLabel)
+                    .accessibilityAddTraits(mode == idleMode ? [.isSelected] : [])
                 }
             }
+            Text(idleMode.selectorLabel)
+                .font(Typo.sans(9, weight: "DemiBold"))
+                .tracking(0.12)
+                .textCase(.uppercase)
+                .lineLimit(1)
+                .foregroundStyle(accent)
         }
+        .frame(height: 28)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.3), value: idleMode)
     }
 
-    private var activeStatus: some View {
-        VStack(spacing: 3) {
-            if let endsAt = model.endsAtText, !model.isPaused {
-                Text(L10n.format("timer.status.ends_at", endsAt))
-                    .font(Typo.sans(10.7))
-                    .foregroundStyle(palette.mutedInk)
-            } else {
-                Text(L10n.format("timer.status.paused_remaining", model.timeText))
-                    .font(Typo.sans(10.7))
-                    .foregroundStyle(palette.mutedInk)
-            }
+    private func modeArrow(offset: Int) -> some View {
+        Button {
+            idleMode = idleMode.shifted(by: offset)
+        } label: {
+            Image(systemName: offset < 0 ? "chevron.left" : "chevron.right")
+                .font(.system(size: 12.5, weight: .semibold))
+                .frame(width: 32, height: 32)
+                .foregroundStyle(palette.mutedInk)
+                .background {
+                    Circle()
+                        .fill(palette.plaque.opacity(0.42))
+                }
+                .overlay {
+                    Circle()
+                        .strokeBorder(palette.brass.opacity(0.30), lineWidth: 1)
+                }
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .buttonStyle(.plain)
+        .shadow(
+            color: .black.opacity(0.14),
+            radius: 6,
+            x: ambient.dialShadowX * (scheme == .dark ? 1.3 : 1.0),
+            y: 3
+        )
+        .accessibilityLabel(
+            L10n.string(offset < 0 ? "timer.action.previous_mode" : "timer.action.next_mode")
+        )
+        .accessibilityValue(idleMode.selectorLabel)
+        .help(
+            L10n.string(offset < 0 ? "timer.action.previous_mode" : "timer.action.next_mode")
+        )
+        .animation(reduceMotion ? nil : AmbientMotion.curve, value: ambient)
     }
 
     @ViewBuilder
@@ -211,36 +301,23 @@ struct TimerPopoverView: View {
     private var primaryButton: some View {
         Button {
             if model.isIdle {
-                model.startFocus()
+                if idleMode == .focus {
+                    model.selectFocusMinutes(25)
+                    model.startFocus()
+                } else {
+                    model.startBreak(idleMode.phase)
+                }
             } else {
                 model.togglePause()
             }
         } label: {
-            HStack(spacing: 8) {
-                Text(primaryButtonTitle)
-                    .lineLimit(1)
-                Spacer()
-                Image(systemName: primaryButtonIcon)
-                    .font(.system(size: 10, weight: .semibold))
-            }
-            .padding(.horizontal, 16)
-        }
-        .buttonStyle(
-            PrimaryInstrumentButtonStyle(
-                color: primaryButtonColor,
-                textColor: primaryButtonTextColor,
-                height: 49
+            PrimaryButtonLabel(
+                title: primaryButtonTitle,
+                icon: primaryButtonIcon
             )
-        )
+        }
+        .buttonStyle(PrimaryCTAButtonStyle(height: 49))
         .accessibilityHint(primaryButtonHint)
-    }
-
-    private var primaryButtonColor: Color {
-        model.isIdle ? palette.leaf : accent
-    }
-
-    private var primaryButtonTextColor: Color {
-        model.isIdle ? palette.onLeaf : .white
     }
 
     private var endButton: some View {
@@ -287,34 +364,9 @@ struct TimerPopoverView: View {
         .frame(height: 49)
     }
 
-    private var breakActions: some View {
-        HStack(spacing: 8) {
-            breakButton(
-                phase: .shortBreak,
-                title: L10n.format("timer.break.short_with_minutes", 5)
-            )
-            breakButton(
-                phase: .longBreak,
-                title: L10n.format("timer.break.long_with_minutes", 15)
-            )
-        }
-    }
-
-    private func breakButton(phase: Phase, title: String) -> some View {
-        Button {
-            model.startBreak(phase)
-        } label: {
-            Text(title)
-                .lineLimit(1)
-                .minimumScaleFactor(0.9)
-        }
-        .buttonStyle(OutlineButtonStyle(height: 42))
-        .accessibilityLabel(title)
-    }
-
     private var primaryButtonTitle: String {
         if model.isIdle {
-            return L10n.format("timer.action.start", model.selectedFocusMinutes)
+            return idleMode.primaryLabel
         }
         return model.isPaused
             ? L10n.string("timer.action.resume")
@@ -330,7 +382,11 @@ struct TimerPopoverView: View {
 
     private var primaryButtonHint: String {
         if model.isIdle {
-            return L10n.string("timer.a11y.start_hint")
+            return L10n.string(
+                idleMode.isBreak
+                    ? "timer.a11y.start_break_hint"
+                    : "timer.a11y.start_hint"
+            )
         }
         return model.isPaused
             ? L10n.string("timer.a11y.resume_hint")
@@ -340,6 +396,7 @@ struct TimerPopoverView: View {
 
 struct CompletionPopoverView: View {
     @ObservedObject var model: TimerModel
+    let ambient: AmbientPose
     @Environment(\.colorScheme) private var scheme
 
     private var palette: Palette { Palette.forScheme(scheme) }
@@ -349,33 +406,31 @@ struct CompletionPopoverView: View {
         VStack(spacing: 0) {
             PopoverHeader(accent: accent, onSettings: model.openSettings)
 
-            Text(L10n.string("timer.caption.complete"))
-                .font(Typo.label(8.7))
-                .tracking(Typo.tracking(2.1))
-                .foregroundStyle(palette.mutedInk)
-                .padding(.top, 22)
-
             Text(
                 model.isBreak
                     ? L10n.string("completion.title.break")
                     : L10n.string("completion.title.focus")
             )
-            .font(Typo.serif(32))
+            .font(Typo.serif(34))
             .foregroundStyle(palette.ink)
-            .padding(.top, 3)
+            .padding(.top, 26)
 
             DialView(
                 timeText: "00:00",
                 caption: L10n.string("timer.caption.complete"),
                 progress: 1,
                 accent: accent,
-                size: 168,
+                size: 215,
                 accessibilityLabel: model.isBreak
                     ? L10n.string("completion.title.break")
                     : L10n.string("completion.title.focus"),
-                accessibilityValue: L10n.string("completion.a11y.complete")
+                accessibilityValue: L10n.string("completion.a11y.complete"),
+                ambient: ambient,
+                handColor: accent
             )
-            .padding(.top, 12)
+            .padding(.top, 20)
+
+            Spacer(minLength: 8)
 
             Text(
                 model.isBreak
@@ -384,60 +439,61 @@ struct CompletionPopoverView: View {
             )
             .font(Typo.sans(10.7))
             .foregroundStyle(palette.mutedInk)
-            .padding(.top, 7)
-
-            Spacer(minLength: 10)
+            .frame(height: 28, alignment: .bottom)
 
             if model.isBreak {
                 Button {
                     model.startAnother()
                 } label: {
-                    HStack(spacing: 8) {
-                        Text(L10n.string("completion.action.start_another"))
-                            .lineLimit(1)
-                        Spacer()
-                        Image(systemName: "play.fill").font(.system(size: 10, weight: .semibold))
-                    }
-                    .padding(.horizontal, 16)
-                }
-                .buttonStyle(
-                    PrimaryInstrumentButtonStyle(
-                        color: palette.leaf,
-                        textColor: palette.onLeaf,
-                        height: 48
+                    PrimaryButtonLabel(
+                        title: L10n.string("completion.action.start_another"),
+                        icon: "play.fill"
                     )
-                )
+                }
+                .buttonStyle(PrimaryCTAButtonStyle(height: 49))
+                .padding(.top, 20)
             } else {
                 Button {
                     model.takeBreak()
                 } label: {
-                    HStack(spacing: 8) {
-                        Text(L10n.format("completion.action.take_break", model.recommendedBreakMinutes))
-                            .lineLimit(1)
-                        Spacer()
-                        Image(systemName: "play.fill").font(.system(size: 10, weight: .semibold))
-                    }
-                    .padding(.horizontal, 16)
+                    PrimaryButtonLabel(
+                        title: L10n.format("completion.action.take_break", model.recommendedBreakMinutes),
+                        icon: "play.fill"
+                    )
                 }
-                .buttonStyle(PrimaryInstrumentButtonStyle(color: palette.deepAccent(for: .shortBreak), height: 48))
-
-                Button(L10n.string("completion.action.start_another")) {
-                    model.startAnother()
-                }
-                .buttonStyle(OutlineButtonStyle(height: 41))
-                .padding(.top, 8)
+                .buttonStyle(PrimaryCTAButtonStyle(height: 49))
+                .padding(.top, 20)
             }
 
             Button(L10n.string("completion.action.done")) {
                 model.doneForNow()
             }
             .buttonStyle(QuietTextButtonStyle())
-            .padding(.top, 5)
+            .padding(.top, 10)
 
             if let error = model.errorMessage {
                 ErrorNote(message: error, onDismiss: model.dismissError)
                     .padding(.top, 5)
             }
+        }
+    }
+}
+
+private struct PrimaryButtonLabel: View {
+    let title: String
+    let icon: String
+
+    var body: some View {
+        ZStack {
+            Text(title)
+                .lineLimit(1)
+                .frame(maxWidth: .infinity, alignment: .center)
+            HStack {
+                Spacer(minLength: 0)
+                Image(systemName: icon)
+                    .font(.system(size: 10, weight: .semibold))
+            }
+            .padding(.trailing, 15)
         }
     }
 }

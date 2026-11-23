@@ -66,7 +66,7 @@ struct Palette {
                 deepTomato: Color(hex: 0xB85340),
                 brass: Color(hex: 0xC39A66),
                 lightBrass: Color(hex: 0x6D573C),
-                leaf: Color(hex: 0x5C8E50),
+                leaf: Color(hex: 0x2F6B3A),
                 onLeaf: .white,
                 sage: Color(hex: 0x94A284),
                 deepSage: Color(hex: 0x5E6B52)
@@ -83,7 +83,7 @@ struct Palette {
             deepTomato: Color(hex: 0xA53D2E),
             brass: Color(hex: 0xB48A58),
             lightBrass: Color(hex: 0xDCC29B),
-            leaf: Color(hex: 0x74965F),
+            leaf: Color(hex: 0x7C9F5C),
             onLeaf: Color(hex: 0x2B2520),
             sage: Color(hex: 0x7F8C72),
             deepSage: Color(hex: 0x5F6B52)
@@ -320,25 +320,82 @@ struct InstrumentFace: View {
 struct PopoverBackground: View {
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    let pose: AmbientPose
+    let accent: Color
+    var showsAmbient = true
 
     var body: some View {
         let palette = Palette.forScheme(scheme)
+        let isDark = scheme == .dark
+        let travel: CGFloat = isDark ? 1.3 : 1.0
+
         ZStack {
-            LinearGradient(
-                colors: [palette.boneTop, palette.bone, palette.paper.opacity(0.92)],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            if !reduceTransparency {
-                RadialGradient(
-                    colors: [palette.tomato.opacity(0.045), .clear],
-                    center: UnitPoint(x: 0.2, y: 0.0),
-                    startRadius: 2,
-                    endRadius: 330
+            if showsAmbient {
+                AmbientPaper(
+                    angle: isDark ? 180 : pose.paperAngle,
+                    colors: [palette.boneTop, palette.bone, palette.paper.opacity(0.92)]
+                )
+
+                if !reduceTransparency {
+                    RadialGradient(
+                        colors: [Color.white.opacity(isDark ? 0.035 : 0.12), .clear],
+                        center: UnitPoint(x: 0.5, y: -0.05),
+                        startRadius: 0,
+                        endRadius: 250
+                    )
+
+                    Ellipse()
+                        .fill(
+                            RadialGradient(
+                                colors: [accent.opacity(isDark ? 0.16 : 0.10), .clear],
+                                center: .center,
+                                startRadius: 0,
+                                endRadius: 140
+                            )
+                        )
+                        .frame(width: 300, height: 220)
+                        .blur(radius: 26)
+                        .offset(x: pose.glowX * travel, y: -64)
+
+                    Ellipse()
+                        .fill(
+                            RadialGradient(
+                                colors: [Color.white.opacity(isDark ? 0.16 : 0.32), .clear],
+                                center: .center,
+                                startRadius: 0,
+                                endRadius: 80
+                            )
+                        )
+                        .frame(width: 240, height: 90)
+                        .blur(radius: 14)
+                        .offset(x: pose.rimX * travel, y: -34)
+
+                    Ellipse()
+                        .fill(
+                            RadialGradient(
+                                colors: [Color.black.opacity(isDark ? 0.22 : 0.07), .clear],
+                                center: .center,
+                                startRadius: 0,
+                                endRadius: 110
+                            )
+                        )
+                        .frame(width: 300, height: 200)
+                        .blur(radius: 28)
+                        .offset(x: pose.shadeX * travel, y: 190)
+                }
+            } else {
+                LinearGradient(
+                    colors: [palette.boneTop, palette.bone, palette.paper.opacity(0.92)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
                 )
             }
+
             PaperGrain(opacity: 0.4)
         }
+        .animation(reduceMotion || !showsAmbient ? nil : AmbientMotion.curve, value: pose)
     }
 }
 

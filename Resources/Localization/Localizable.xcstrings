@@ -686,6 +686,15 @@
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を終了する前に確認します" } }
       }
     },
+    "timer.action.next_mode" : {
+      "comment" : "Arrow that selects the next idle mode. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Next mode" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "下一个模式" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "下一個模式" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "次のモード" } }
+      }
+    },
     "timer.action.pause" : {
       "comment" : "Primary button title while running. Native review pending.",
       "localizations" : {
@@ -693,6 +702,15 @@
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂停" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "暫停" } },
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止" } }
+      }
+    },
+    "timer.action.previous_mode" : {
+      "comment" : "Arrow that selects the previous idle mode. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Previous mode" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "上一个模式" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "上一個模式" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "前のモード" } }
       }
     },
     "timer.action.resume" : {
@@ -711,6 +729,15 @@
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "开始 %lld 分钟专注" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "開始 %lld 分鐘專注" } },
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分間の集中を開始" } }
+      }
+    },
+    "timer.action.start_break" : {
+      "comment" : "Primary button when an idle break mode is selected; %lld is the break length in minutes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start %lld-minute break" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "开始 %lld 分钟休息" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "開始 %lld 分鐘休息" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分間の休憩を開始" } }
       }
     },
     "timer.a11y.break_dial" : {
@@ -785,6 +812,15 @@
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@、実行中" } }
       }
     },
+    "timer.a11y.start_break_hint" : {
+      "comment" : "Accessibility hint for starting the selected break mode. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Starts a break interval in this popover" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "在此窗口中开始一段休息" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "在此視窗中開始一段休息" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画面で休憩を開始します" } }
+      }
+    },
     "timer.a11y.start_hint" : {
       "comment" : "Accessibility hint for the start-focus action. Native review pending.",
       "localizations" : {
@@ -810,6 +846,33 @@
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "短休息 · %lld 分钟" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "短休息 · %lld 分鐘" } },
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩 · %lld分" } }
+      }
+    },
+    "timer.mode.focus" : {
+      "comment" : "Mode selector label for the focus option. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中" } }
+      }
+    },
+    "timer.mode.long_break" : {
+      "comment" : "Mode selector label for the long break option. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Long break" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "长休息" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "長休息" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩" } }
+      }
+    },
+    "timer.mode.short_break" : {
+      "comment" : "Mode selector label for the short break option. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Short break" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "短休息" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "短休息" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩" } }
       }
     },
     "timer.caption.complete" : {
@@ -875,24 +938,6 @@
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "続ける" } }
       }
     },
-    "timer.interval.label" : {
-      "comment" : "Label above the focus-length chips. Native review pending.",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "INTERVAL" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "时长" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "時長" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "時間" } }
-      }
-    },
-    "timer.interval.long_break_hint" : {
-      "comment" : "Hint next to the focus-length chips explaining the four-focus rhythm. Native review pending.",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "long break after 4" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "每 4 次后长休息" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "每 4 次後長休息" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "4回後に長めの休憩" } }
-      }
-    },
     "timer.status.ends_at" : {
       "comment" : "Status line showing when the current interval ends; %@ is a system-formatted time. Native review pending.",
       "localizations" : {
@@ -911,24 +956,6 @@
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止 · 残り %@" } }
       }
     },
-    "timer.tip.dismiss" : {
-      "comment" : "Accessibility label for dismissing the first-run tip. Native review pending.",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dismiss tip" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关闭提示" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "關閉提示" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ヒントを閉じる" } }
-      }
-    },
-    "timer.tip.first_run" : {
-      "comment" : "First-run tip explaining the menu-bar dial. Native review pending.",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "The dial lives in your menu bar. Click it anytime." } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "表盘就在菜单栏中，随时点击即可。" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "錶盤就在選單列中，隨時點擊即可。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ダイヤルはメニューバーにあります。クリックで開きます。" } }
-      }
-    },
     "timer.tip.keeps_running" : {
       "comment" : "Footer tip shown while an interval is active. Native review pending.",
       "localizations" : {
@@ -939,7 +966,7 @@
       }
     },
     "timer.tip.rhythm" : {
-      "comment" : "Idle footer tip after the first-run tip is dismissed. Native review pending.",
+      "comment" : "Idle footer tip. Native review pending.",
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Enjoy the rhythm of focused time." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "享受专注的节奏。" } },
@@ -965,6 +992,15 @@
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中の準備" } }
       }
     },
+    "timer.title.long_break" : {
+      "comment" : "Idle title when the long break mode is selected. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Take a long break" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "好好休息一下" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "好好休息一下" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩を取りましょう" } }
+      }
+    },
     "timer.title.paused" : {
       "comment" : "Popover title while paused. Native review pending.",
       "localizations" : {
@@ -981,6 +1017,15 @@
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注进行中" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注進行中" } },
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中しています" } }
+      }
+    },
+    "timer.title.short_break" : {
+      "comment" : "Idle title when the short break mode is selected. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Take a short break" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "短暂休息一下" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "短暫休息一下" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩を取りましょう" } }
       }
     },
     "updates.action.check_now" : {

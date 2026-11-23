@@ -36,34 +36,34 @@ struct AppIconMark: View {
     }
 }
 
-struct PrimaryInstrumentButtonStyle: ButtonStyle {
-    var color: Color
-    var textColor: Color = .white
+struct PrimaryCTAButtonStyle: ButtonStyle {
+    @Environment(\.colorScheme) private var scheme
     var height: CGFloat = 48
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
+        let palette = Palette.forScheme(scheme)
+        return configuration.label
             .font(Typo.sans(13.5, weight: "DemiBold"))
-            .foregroundStyle(textColor)
+            .foregroundStyle(palette.onLeaf)
             .frame(maxWidth: .infinity, minHeight: height)
             .background {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(
                         LinearGradient(
-                            colors: [color.opacity(0.96), color],
+                            colors: [palette.leaf.opacity(0.97), palette.leaf],
                             startPoint: .top,
                             endPoint: .bottom
                         )
                     )
                     .overlay {
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .strokeBorder(.white.opacity(0.18), lineWidth: 0.8)
+                            .strokeBorder(.white.opacity(0.16), lineWidth: 0.8)
                     }
-                    .shadow(color: color.opacity(configuration.isPressed ? 0.10 : 0.22), radius: 9, y: 4)
+                    .shadow(color: .black.opacity(0.18), radius: 8, y: 3)
             }
             .scaleEffect(configuration.isPressed && !reduceMotion ? 0.986 : 1)
-            .brightness(configuration.isPressed ? -0.03 : 0)
+            .brightness(configuration.isPressed ? 0.04 : 0)
             .animation(reduceMotion ? nil : .easeOut(duration: 0.12), value: configuration.isPressed)
     }
 }
@@ -86,30 +86,6 @@ struct InkButtonStyle: ButtonStyle {
             }
             .scaleEffect(configuration.isPressed && !reduceMotion ? 0.986 : 1)
             .brightness(configuration.isPressed ? 0.06 : 0)
-            .animation(reduceMotion ? nil : .easeOut(duration: 0.12), value: configuration.isPressed)
-    }
-}
-
-struct OutlineButtonStyle: ButtonStyle {
-    @Environment(\.colorScheme) private var scheme
-    var height: CGFloat = 46
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    func makeBody(configuration: Configuration) -> some View {
-        let palette = Palette.forScheme(scheme)
-        configuration.label
-            .font(Typo.sans(12.5, weight: "Medium"))
-            .foregroundStyle(palette.ink.opacity(0.88))
-            .frame(maxWidth: .infinity, minHeight: height)
-            .background {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(palette.plaque.opacity(configuration.isPressed ? 0.9 : 0.55))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .strokeBorder(palette.brass.opacity(0.5), lineWidth: 1)
-                    }
-            }
-            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.986 : 1)
             .animation(reduceMotion ? nil : .easeOut(duration: 0.12), value: configuration.isPressed)
     }
 }
@@ -172,38 +148,6 @@ struct IconButtonStyle: ButtonStyle {
             }
             .contentShape(Circle())
             .onHover { isHovering = $0 }
-    }
-}
-
-struct DurationChip: View {
-    let minutes: Int
-    let isSelected: Bool
-    let action: () -> Void
-    @Environment(\.colorScheme) private var scheme
-
-    var body: some View {
-        let palette = Palette.forScheme(scheme)
-        Button(action: action) {
-            Text(L10n.count("common.minutes_compact", minutes))
-                .font(Typo.sans(12.5, weight: isSelected ? "DemiBold" : "Medium"))
-                .foregroundStyle(isSelected ? palette.boneTop : palette.ink.opacity(0.8))
-                .frame(maxWidth: .infinity, minHeight: 36)
-                .background {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(isSelected ? palette.ink : palette.plaque.opacity(0.28))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                .strokeBorder(
-                                    isSelected ? palette.ink : palette.brass.opacity(0.42),
-                                    lineWidth: 1
-                                )
-                        }
-                }
-                .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(L10n.format("timer.a11y.focus_chip", minutes))
-        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
     }
 }
 

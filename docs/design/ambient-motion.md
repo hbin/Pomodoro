@@ -1,6 +1,6 @@
 # Ambient Motion
 
-- Status: Design exploration, not implemented
+- Status: Implemented in the native app for the idle interval tabs; this study remains the visual reference
 - Date: 2026-11-23
 - Scope: Idle timer mode switching for the fixed 25 / 5 / 15 interval direction
 
@@ -23,6 +23,9 @@ spotlight animation.
 
 The three position dots below the dial are ordered Pomodoro, Short Break, Long
 Break. The light direction follows that order: left, overhead, right.
+
+The native idle surface applies the same rule to its three mode dots:
+Focus 25 upper left, Short break 5 overhead, Long break 15 upper right.
 
 ## Black theme
 
@@ -55,8 +58,10 @@ Break. The light direction follows that order: left, overhead, right.
 - Mode switching is available only while idle. No ambient motion runs during an
   active or paused interval.
 
-The pointer rotates independently over 700 ms. The primary action changes color
-over 520 ms so the button does not lag behind the dial.
+The pointer rotates independently over 700 ms. On the idle surface it points at
+the selected duration's minute position on the 60-minute dial: 25 minutes at
+five o'clock, 5 at one o'clock, 15 at three o'clock. The primary action changes
+color over 520 ms so the button does not lag behind the dial.
 
 ## Theme treatment
 
@@ -80,7 +85,8 @@ over 520 ms so the button does not lag behind the dial.
   not muddy the paper.
 - Rotate the card's paper gradient with the mode: `163deg` for Pomodoro,
   `180deg` for Short Break, and `197deg` for Long Break. The centered `0.28`
-  top wash is symmetric and stays in every mode.
+  top wash is symmetric and stays in every mode. In the native app the same
+  angles apply to the Focus / Short break / Long break mode dots.
 - Move the dial face and plaque highlight to `30%` / `50%` / `70%`
   horizontally, with dial y `24%` / `14%` / `24%` and plaque y `22%` / `12%` /
   `22%`. The plaque carries a soft opposing shade so its raised face reads as
@@ -90,10 +96,44 @@ over 520 ms so the button does not lag behind the dial.
 - Preserve the enamel plaque, brass bezel, and letterpress title treatment from
   the refined Light palette.
 
+## Native implementation
+
+- `AmbientPose` maps the three `IdleMode` dots (Focus 25, Short break 5,
+  Long break 15) to the left / overhead / right pose.
+- Light rotates the card paper between `163deg` and `197deg`; Black keeps the
+  paper vertical and carries direction with the top rim, dial face, plaque,
+  and shade.
+- The light follows the selected mode dot. Starting a break does not animate
+  it.
+- The pointer uses the selected duration on the 60-minute dial and rotates
+  over 700 ms.
+- The native card uses 506 points.
+- All three mode dots use the mode accent at full opacity; only the active dot
+  is wider. A single current-mode label below the dots uses the mode accent;
+  the 32-point arrows expose hover help, announce the current mode, and use a
+  44-point hit area.
+- The native primary uses a leaf-green fill with a centered label and a
+  trailing play glyph; light uses ink text and dark uses white. The mode accent
+  stays in the dial, dots, and mode label; the button uses a clean highlight and
+  a subtle black shadow without a colored glow.
+- The ambient light is limited to the clock page; Settings uses the plain card
+  background.
+- The status line uses the mode row, so the dial and primary do not move between
+  idle and running.
+- The idle pointer keeps the tomato color; only the running phase accent
+  changes it.
+- Duration: 850 ms, `cubic-bezier(0.2, 0.78, 0.18, 1)`. Reduce Motion updates
+  the pose without movement. Reduce Transparency omits the translucent rim,
+  glow, and shade while keeping the opaque dial and paper.
+
+The native app was inspected at Focus 25, Short break 5, and Long break 15 in
+Light and Black. The committed `docs/screenshots/light-theme.png` and
+`black-theme.png` show the Focus 25 upper-left pose.
+
 ## Verification
 
-Run this from the visualization directory that contains the two preview HTML
-files. Capture settled stills at 2× with a 2500 ms virtual-time budget so the
+The measurements below cover the standalone study. Run this from the
+visualization directory that contains the two preview HTML files. Capture settled stills at 2× with a 2500 ms virtual-time budget so the
 850 ms transition is complete:
 
 ```sh
@@ -152,10 +192,11 @@ For the 720×678 GIFs, hold frames 7 / 49 / 96 use `topL 59:9:209:128`,
 
 ## Accessibility
 
-- When Reduce Motion is enabled, do not move the light or shadows. Crossfade the
-  mode content and colors instead.
+- When Reduce Motion is enabled, update the native light pose without movement;
+  the selected interval changes immediately. The standalone study crossfades
+  the mode content and colors instead.
 - The motion is supplementary. Every mode remains identifiable through its
-  label, duration, position dot, pointer, and primary action copy.
+  title, duration, mode label, pointer, and primary action copy.
 - A design-review toggle compared ambient motion on and off.
 - Motion stops when the timer is not idle.
 
@@ -174,5 +215,7 @@ For the 720×678 GIFs, hold frames 7 / 49 / 96 use `topL 59:9:209:128`,
 
 - Confirmed 2026-11-23: fixed 25 / 5 / 15 arrow-mode direction; implementation
   pending.
-- Decide whether ambient motion is on by default or exposed as a setting.
-- Confirm whether Long Break should keep the faint brass warmth or use sage only.
+- The native ambient light is always on in 0.4.0; decide whether to expose a
+  setting.
+- Confirm whether the design study's Long Break keeps the faint brass warmth or
+  uses sage only.

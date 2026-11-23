@@ -104,7 +104,8 @@ nested components in the required order, and verifies entitlements.
   fonts.
 - Verify changes in both Light and Black themes and with reduced transparency.
 - The app supports these launch arguments for focused UI checks:
-  `--open-popover`, `--open-settings`, `--force-light`, and `--force-dark`.
+  `--open-popover`, `--open-settings`, `--force-light`, `--force-dark`, and
+  `--idle-mode=focus|short|long`.
 - Runtime language is switchable in Settings. Use `L10n` for runtime copy
   instead of SwiftUI `Text("key")` literals so the interface updates without a
   relaunch; keep `Typo` language-aware and refresh menus, status-item copy, and
