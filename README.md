@@ -40,19 +40,6 @@ xattr -dr com.apple.quarantine /Applications/Pomodoro.app
 open /Applications/Pomodoro.app
 ```
 
-## Languages
-
-Pomodoro is available in English, 简体中文, 繁體中文, and 日本語.
-
-Open **Settings** from the menu-bar popover or the Pomodoro app menu, then use
-the **Language** menu under **Appearance**. Choose **System Default** or one of
-the four languages. The interface updates immediately, and your choice is
-remembered the next time Pomodoro opens.
-
-**System Default** follows the macOS app language. If you change Pomodoro's
-language in **System Settings → General → Language & Region → Applications**,
-reopen Pomodoro to pick up the new system selection.
-
 ## License
 
 Pomodoro is free to use, modify, and distribute, including for commercial
