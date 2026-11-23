@@ -76,6 +76,8 @@ automated tests.
       available in the language picker.
 - [ ] The home popover and completion states fit without clipping in all four
       languages.
+- [ ] Settings rows stay aligned across all four languages in both themes, with
+      no visible scrollbar.
 - [ ] Switching language updates the popover, menus, status-item copy, and
       typography immediately without restarting the timer.
 - [ ] A pending notification is rescheduled for the existing end date after a
