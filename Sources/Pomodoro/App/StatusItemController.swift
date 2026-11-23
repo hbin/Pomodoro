@@ -44,7 +44,7 @@ final class StatusItemController: NSObject {
         button.image = MenuBarIconFactory.image(
             progress: descriptor.progress,
             isPaused: descriptor.isPaused,
-            isBreak: descriptor.isBreak,
+            isBreak: descriptor.isBreak && !descriptor.isCompleted,
             showsRemainingTime: descriptor.isActive || descriptor.isCompleted
         )
         button.title = descriptor.showsRemainingMinutes

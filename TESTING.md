@@ -62,6 +62,7 @@ automated tests.
 - [ ] Duration selection, start, pause, resume, end early, skip, and done actions work.
 - [ ] The menu-bar icon, optional minutes, progress, and paused/completed states
       match the timer state.
+- [ ] Completing a break returns the menu-bar icon to the resting focus dial.
 - [ ] Left-click opens the popover and right-click opens the menu.
 - [ ] Settings, About, Check for Updates, and Quit work from their menus.
 - [ ] The first-run tip, notification status, and saved-state error messages
