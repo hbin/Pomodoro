@@ -9,7 +9,7 @@ struct PopoverRootView: View {
 
     static let width: CGFloat = 380
     static let height: CGFloat = 506
-    static let settingsHeight: CGFloat = 520
+    static let settingsHeight: CGFloat = 592
 
     static func contentHeight(showingSettings: Bool) -> CGFloat {
         showingSettings ? settingsHeight : height
@@ -224,6 +224,7 @@ struct TimerPopoverView: View {
                 ambient: ambient,
                 handColor: model.isIdle ? palette.tomato : accent
             )
+            .id(model.phase)
             Spacer(minLength: 0)
             if model.isIdle {
                 modeArrow(offset: 1)

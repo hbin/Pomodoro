@@ -87,6 +87,20 @@ struct SettingsView: View {
                             )
                         )
 
+                        sectionLabel(L10n.string("settings.section.focus"))
+                            .padding(.top, 13)
+                        Hairline()
+                            .padding(.top, 4)
+
+                        settingRow(
+                            title: L10n.string("settings.focus.auto_break.title"),
+                            detail: L10n.string("settings.focus.auto_break.detail"),
+                            isOn: Binding(
+                                get: { model.autoStartBreak },
+                                set: { model.setAutoStartBreak($0) }
+                            )
+                        )
+
                         sectionLabel(L10n.string("settings.section.menu_bar"))
                             .padding(.top, 13)
                         Hairline()

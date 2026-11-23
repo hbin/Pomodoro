@@ -9,12 +9,19 @@
 | Platform | macOS 15+ |
 | Amends | `2026-11-21-pomodoro-product-design.md` |
 
+> **Amended 2026-11-24:** The Auto-start break setting can start the
+> recommended break directly from the focus-completion ready state. It is on by
+> default; see
+> [`2026-11-24-auto-start-break-design.md`](2026-11-24-auto-start-break-design.md).
+
 ## 1. Summary
 
 When an interval reaches zero, the popover moves directly to the next
 interval's ready screen. A completed focus shows the recommended break; a
-completed break shows the next focus. The countdown never starts by itself, so
-the rhythm becomes automatic without taking the choice away from the user.
+completed break shows the next focus. By default the recommended break starts
+automatically with its countdown holding until the chime finishes, while the
+next focus always waits for the user. The Auto-start break setting can turn the
+automatic break start off.
 
 This replaces the former `00:00` / `COMPLETE` completion screen. The chime,
 notification, persistence, menu-bar completed treatment, and rhythm rules are
@@ -37,7 +44,11 @@ unchanged.
    the existing break notification.
 6. `Done for now` declines the break and returns to idle. Declining an offered
    long break resets the rhythm exactly as before.
-7. No countdown starts until the user chooses.
+7. No countdown starts until the user chooses, unless Auto-start break is on.
+   With that setting on, the running break screen appears immediately and its
+   countdown begins when the chime finishes; no ready screen or Start is
+   required. The fourth-focus long-break recommendation still applies. See
+   [`2026-11-24-auto-start-break-design.md`](2026-11-24-auto-start-break-design.md).
 
 ### 2.2 Break completes
 
@@ -52,13 +63,16 @@ unchanged.
 4. Starting another focus uses the existing start-another action.
 5. `Done for now` returns to idle. The completed focus count and rhythm are
    unchanged.
-6. No countdown starts until the user chooses.
+6. No countdown starts until the user chooses. Auto-start break does not apply
+   to break completion; the next focus always waits for Start.
 
 ### 2.3 Closed popover
 
 Closing the popover does not change the flow. The completion notification names
-the next step, and opening the popover shows the matching ready screen. Nothing
-counts down while the popover is closed.
+the next step, and opening the popover shows the matching ready screen. Without
+Auto-start break, nothing counts down while the popover is closed; with it, the
+popover goes directly to the running break at focus completion and the
+countdown begins after the completion chime.
 
 ### 2.4 Menu bar
 
@@ -67,7 +81,9 @@ feature does not add a menu-bar prompt or a new menu-bar state.
 
 ## 3. State model
 
-No persisted fields or schema migration are added.
+No timer-state fields or schema migration are added. The separate Auto-start
+break preference is stored in `PersistedState`; see the auto-start
+specification.
 
 - The completed interval keeps `runState == .completed`.
 - `phase` still names the interval that just finished.
@@ -111,10 +127,11 @@ presentation reads as the next mode, not as a second workflow.
 
 ## 6. Non-goals
 
-- Starting a focus or break countdown automatically.
+- Starting a focus countdown automatically, or starting a break countdown
+  without the explicit Auto-start break setting.
 - Opening the popover automatically when an interval ends.
 - Notification action buttons that start an interval.
-- New persisted fields or a new run state.
+- New timer-state fields or a new run state.
 - Changing focus or break durations, the long-break cadence, or the manual
   direct-break behavior.
 - Changing the menu-bar completed treatment.
@@ -122,13 +139,21 @@ presentation reads as the next mode, not as a second workflow.
 
 ## 7. Acceptance criteria
 
-- A naturally completed focus shows the recommended break ready to start.
+- A naturally completed focus shows the recommended break ready to start while
+  Auto-start break is off.
 - A naturally completed fourth focus shows the 15-minute long break ready to
-  start.
+  start while Auto-start break is off.
 - A naturally completed break shows the 25-minute focus ready to start.
+- Auto-start break is on by default; with it on, a focus completion goes
+  directly to the running break screen and its countdown begins when the chime
+  finishes.
 - Both ready screens show the next duration with `READY`, not `00:00` with
   `COMPLETE`.
-- No countdown starts without a Start action.
+- No countdown starts without a Start action while Auto-start break is off.
+- With Auto-start break on, the running break screen is visible during the
+  chime with its countdown held at full.
+- The break-ready flow remains the only focus-completion behavior while the
+  setting is off.
 - `Done for now` still returns to idle and preserves the existing long-break
   decline rule.
 - The chime, notification, menu-bar completed treatment, restoration, and

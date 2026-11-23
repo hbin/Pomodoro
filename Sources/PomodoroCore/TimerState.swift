@@ -86,6 +86,12 @@ public struct TimerEngine {
 
     public static let focusChoices = [15, 25, 45]
 
+    /// Allows a running interval's end date to sit slightly more than its total
+    /// duration in the future. Auto-start break uses this window to hold its
+    /// countdown until the completion chime ends; beyond it, a backwards clock
+    /// is clamped.
+    private static let clockDriftTolerance: TimeInterval = 2
+
     public init(
         state: TimerState = .initial,
         now: @escaping @Sendable () -> Date = { Date() }
@@ -185,7 +191,7 @@ public struct TimerEngine {
         if endDate <= date {
             return finish()
         }
-        if endDate.timeIntervalSince(date) > state.totalSeconds {
+        if endDate.timeIntervalSince(date) > state.totalSeconds + Self.clockDriftTolerance {
             state.endDate = date.addingTimeInterval(state.totalSeconds)
         }
         return nil
@@ -201,7 +207,7 @@ public struct TimerEngine {
         if date >= endDate {
             return finish()
         }
-        if endDate.timeIntervalSince(date) > state.totalSeconds {
+        if endDate.timeIntervalSince(date) > state.totalSeconds + Self.clockDriftTolerance {
             state.endDate = date.addingTimeInterval(state.totalSeconds)
         }
         return nil
@@ -246,13 +252,13 @@ public struct TimerEngine {
     }
 
     @discardableResult
-    public mutating func startRecommendedBreak() -> Date? {
+    public mutating func startRecommendedBreak(after delay: TimeInterval = 0) -> Date? {
         guard state.runState == .completed, state.phase == .focus else { return nil }
         let recommendation = recommendedBreak
         state.phase = recommendation.phase
         state.totalSeconds = TimeInterval(recommendation.minutes * 60)
         state.remainingSeconds = state.totalSeconds
-        state.endDate = now().addingTimeInterval(state.totalSeconds)
+        state.endDate = now().addingTimeInterval(max(0, delay) + state.totalSeconds)
         state.runState = .running
         return state.endDate
     }

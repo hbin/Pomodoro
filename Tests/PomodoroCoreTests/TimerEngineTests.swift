@@ -129,6 +129,37 @@ final class TimerEngineTests: XCTestCase {
         XCTAssertEqual(engine.state.runState, .running)
     }
 
+    func testStartRecommendedBreakAfterChimeDelayKeepsFullCountdown() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+        engine.startFocus(minutes: 25)
+        clock.advance(1500)
+        XCTAssertEqual(engine.refresh(), .completed(.focus))
+
+        let end = engine.startRecommendedBreak(after: 1)
+
+        XCTAssertEqual(end, clock.date.addingTimeInterval(301))
+        XCTAssertEqual(engine.state.runState, .running)
+        XCTAssertEqual(engine.state.phase, .shortBreak)
+        XCTAssertEqual(engine.state.totalSeconds, 300)
+        XCTAssertEqual(engine.displaySeconds(), 300)
+
+        clock.advance(0.2)
+        XCTAssertNil(engine.refresh())
+        XCTAssertEqual(engine.state.endDate, end)
+        XCTAssertEqual(engine.displaySeconds(), 300)
+
+        clock.advance(0.3)
+        XCTAssertEqual(engine.remaining(), 300, accuracy: 0.001)
+        XCTAssertEqual(engine.progress(), 0, accuracy: 0.0001)
+
+        clock.advance(0.5)
+        XCTAssertEqual(engine.displaySeconds(), 300)
+
+        clock.advance(1)
+        XCTAssertEqual(engine.displaySeconds(), 299)
+    }
+
     func testStartingShortBreakDirectlyFromIdle() {
         let clock = TestClock()
         var engine = makeEngine(clock)
@@ -377,6 +408,7 @@ final class PersistenceTests: XCTestCase {
         state.tickEnabled = true
         state.chimeEnabled = false
         state.showMenuBarMinutes = false
+        state.autoStartBreak = true
         state.themePreference = .dark
         state.firstRunTipDismissed = true
 
@@ -445,6 +477,47 @@ final class PersistenceTests: XCTestCase {
         XCTAssertEqual(result.state.timer.selectedFocusMinutes, 15)
         XCTAssertTrue(result.state.chimeEnabled)
         XCTAssertFalse(result.state.tickEnabled)
+        XCTAssertTrue(result.state.autoStartBreak)
         XCTAssertEqual(result.state.themePreference, .system)
+    }
+
+    func testDecodingLegacyStateUsesAutoStartBreakDefault() throws {
+        let store = StateStore(directory: directory)
+        let json = """
+        {
+          "timer": {
+            "selectedFocusMinutes": 25,
+            "phase": "focus",
+            "runState": "idle",
+            "totalSeconds": 1500,
+            "remainingSeconds": 1500,
+            "completedFocusCount": 2
+          },
+          "chimeEnabled": true,
+          "tickEnabled": false,
+          "showMenuBarMinutes": true,
+          "themePreference": "system",
+          "firstRunTipDismissed": true
+        }
+        """
+        try Data(json.utf8).write(to: store.stateURL)
+
+        let result = store.load()
+
+        XCTAssertNil(result.recoveryIssue)
+        XCTAssertTrue(result.state.autoStartBreak)
+        XCTAssertEqual(result.state.timer.completedFocusCount, 2)
+    }
+
+    func testExplicitAutoStartBreakOffSurvivesRoundTrip() throws {
+        let store = StateStore(directory: directory)
+        var state = PersistedState()
+        state.autoStartBreak = false
+
+        try store.save(state)
+        let result = store.load()
+
+        XCTAssertNil(result.recoveryIssue)
+        XCTAssertFalse(result.state.autoStartBreak)
     }
 }

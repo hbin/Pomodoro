@@ -11,8 +11,9 @@
 Later changes amend this spec: see
 `2026-11-22-minimal-update-indicator.md`,
 `2026-11-23-four-language-localization.md`,
-`2026-11-23-in-app-language-picker.md`, and
-`2026-11-24-guided-next-step-design.md`. Statements below about local-only
+`2026-11-23-in-app-language-picker.md`,
+`2026-11-24-guided-next-step-design.md`, and
+`2026-11-24-auto-start-break-design.md`. Statements below about local-only
 delivery and no network requests describe the original v1 scope.
 
 ## 1. Summary
@@ -77,7 +78,8 @@ Version one does not include:
 - Accounts, sync, cloud storage, or network requests.
 - AI features.
 - Multiple concurrent timers.
-- Automatic focus/break countdown cycles.
+- Automatic focus/break countdown cycles, except for the Auto-start break after
+  focus.
 - Launch at login.
 - A global keyboard shortcut.
 - iOS, iPadOS, Windows, or web versions.
@@ -98,7 +100,8 @@ reaches zero.
 ### Guide, do not drive
 
 The app may move the completion screen to the next break or focus step. It
-never starts a countdown automatically.
+starts the recommended break after focus by default, but it never starts a
+focus automatically. The Auto-start break setting can be turned off.
 
 ### Classic rhythm, light flexibility
 
@@ -266,7 +269,8 @@ When the focus interval reaches zero:
    is not frontmost.
 3. If the popover is visible, the completion state and chime replace the notification
    so the user is not alerted twice.
-4. The popover moves automatically to the recommended break's ready screen.
+4. Unless Auto-start break is on, the popover moves automatically to the
+   recommended break's ready screen.
 
 The focus-completion ready screen contains:
 
@@ -283,7 +287,11 @@ second focus. Starting one without a break is still possible by choosing
 `Done for now` and pressing Start again; the app neither advertises nor blocks
 that path.
 
-No countdown starts until the user chooses.
+No countdown starts until the user chooses, unless Settings → Focus →
+Auto-start break is on. With that option on, the popover goes directly to the
+running break screen; the break's end date includes the chime, so the countdown
+stays at full until the chime finishes. The option is on by default and never
+applies to the focus after a break.
 
 No task completion is recorded or requested.
 
@@ -300,7 +308,8 @@ No task completion is recorded or requested.
 - Break copy is supportive and non-judgmental, for example `Step away` and
   `Break`.
 - The user may end or skip a break early.
-- No countdown starts automatically.
+- The next focus never starts automatically; Auto-start break applies only to
+  the focus-to-break transition.
 - When a break reaches zero, the popover moves automatically to the focus
   ready screen:
   - `Ready to focus`;
@@ -319,6 +328,9 @@ Settings stays intentionally small:
   to the timer while leaving the popover open.
 - Completion chime on/off.
 - Tick sound on/off; default off.
+- Auto-start break on/off; default on. When on, a completed focus goes directly
+  to the running break; the break's end date includes the chime, so the
+  countdown stays at full until the chime finishes.
 - Show remaining minutes in the menu bar on/off.
 - Notification status and a way to open the relevant macOS settings.
 - Version information.
@@ -351,7 +363,9 @@ on the idle screen.
 
 - Popover automatically shows the recommended break ready to start.
 - `Done for now` is the only other action.
-- Nothing counts down until the user chooses.
+- Nothing counts down until the user chooses, unless Auto-start break is on, in
+  which case the running break screen appears immediately and its countdown
+  begins when the chime finishes. This ready state is skipped.
 
 ### Break running
 
@@ -513,6 +527,8 @@ only in how full they are at the start.
 - Clock values are read naturally rather than character by character.
 - Completion, pause, resume, and break transitions post appropriate
   accessibility announcements.
+- An auto-started break posts the break-start announcement without repeating
+  the focus-complete announcement.
 - Tick sound is optional and never carries information that is unavailable
   visually or through VoiceOver.
 - Do not announce every second or minute.
@@ -537,7 +553,8 @@ The app stores only what the timer needs:
 - Absolute end timestamp while running.
 - Remaining duration while paused.
 - Completed-focus count for the long-break rhythm.
-- Completion chime, tick sound, and menu-bar display preferences.
+- Completion chime, tick sound, auto-start break, and menu-bar display
+  preferences.
 - First-run tip state.
 
 No task, project, note, or session-history data is stored.
@@ -616,10 +633,18 @@ No task, project, note, or session-history data is stored.
 
 - Natural completion plays the chime once when enabled.
 - A notification appears once when authorized and appropriate.
-- Focus completion automatically shows the recommended break's duration and a
-  Start break action without a second modal.
+- With Auto-start break off, focus completion automatically shows the
+  recommended break's duration and a Start break action without a second modal.
+- With Auto-start break on, focus completion goes directly to the running break
+  screen; the break's end date includes the chime, so the countdown holds at
+  full until the chime finishes. With the chime off, it starts immediately.
+- Auto-start break defaults on, survives relaunch, and older state files without
+  the field load as on; an explicit off choice is preserved.
+- Auto-start break does not start the next focus after a break.
+- An early-ended focus does not start a break, and an expired focus restored at
+  launch shows the break-ready screen instead of starting retroactively.
 - A long break is offered after every fourth completed focus interval.
-- No countdown starts automatically.
+- No countdown starts automatically unless Auto-start break is enabled.
 - Break completion automatically shows the next focus ready to start; `Done for
   now` remains the idle path.
 - The completion dial shows the next interval's duration with `READY`, not
@@ -645,7 +670,10 @@ No task, project, note, or session-history data is stored.
 - Standalone timer with no tasks, projects, or history.
 - Classic 25/5 rhythm with 15/25/45 focus choices.
 - Long break after every four completed focus intervals.
-- Guided transitions that present the next interval without starting it.
+- Guided transitions that present the next interval without starting it,
+  except the Auto-start break.
+- Auto-start break on by default; it starts only the recommended break after
+  focus.
 - Quiet analog visual direction.
 - Chime plus notification.
 - Optional tick sound, off by default.

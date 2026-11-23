@@ -2,6 +2,11 @@ import AVFoundation
 import Foundation
 
 final class SoundPlayer: @unchecked Sendable {
+    /// Length of the generated completion chime. TimerModel waits for this
+    /// before auto-starting a break so the break does not begin under the
+    /// chime.
+    static let chimeDuration: TimeInterval = 0.98
+
     private let queue = DispatchQueue(
         label: "com.hb.pomodoro.sound",
         qos: .userInitiated
@@ -108,7 +113,7 @@ final class SoundPlayer: @unchecked Sendable {
     }
 
     private static func makeChimeData(sampleRate: Double) -> Data {
-        let duration = 0.98
+        let duration = Self.chimeDuration
         let frameCount = Int(duration * sampleRate)
         var samples = [Float](repeating: 0, count: frameCount)
         let notes: [(start: Double, frequency: Double, duration: Double, gain: Double)] = [

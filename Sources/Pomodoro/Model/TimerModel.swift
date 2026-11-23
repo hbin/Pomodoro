@@ -43,12 +43,17 @@ private enum TimerModelError: Equatable {
 
 @MainActor
 final class TimerModel: ObservableObject {
+    /// Extra room after the chime for audio-output latency before the break
+    /// countdown starts.
+    private static let autoStartChimeBuffer: TimeInterval = 0.15
+
     @Published private(set) var snapshot: TimerState
     @Published private(set) var now: Date
     @Published private(set) var isShowingSettings = false
     @Published private(set) var chimeEnabled: Bool
     @Published private(set) var tickEnabled: Bool
     @Published private(set) var showMenuBarMinutes: Bool
+    @Published private(set) var autoStartBreak: Bool
     @Published private(set) var themePreference: ThemePreference
     @Published private(set) var languagePreference: LanguagePreference
     @Published private(set) var firstRunTipDismissed: Bool
@@ -97,6 +102,7 @@ final class TimerModel: ObservableObject {
         self.chimeEnabled = loaded.state.chimeEnabled
         self.tickEnabled = loaded.state.tickEnabled
         self.showMenuBarMinutes = loaded.state.showMenuBarMinutes
+        self.autoStartBreak = loaded.state.autoStartBreak
         self.themePreference = loaded.state.themePreference
         self.languagePreference = languagePreference
         self.firstRunTipDismissed = loaded.state.firstRunTipDismissed
@@ -333,7 +339,13 @@ final class TimerModel: ObservableObject {
     }
 
     func takeBreak() {
-        guard let endDate = engine.startRecommendedBreak() else { return }
+        startRecommendedBreak(after: 0)
+    }
+
+    /// Starts the recommended break with its end date pushed out by `delay`, so
+    /// the displayed countdown stays at full while the completion chime ends.
+    private func startRecommendedBreak(after delay: TimeInterval) {
+        guard let endDate = engine.startRecommendedBreak(after: delay) else { return }
         snapshot = engine.state
         now = Date()
         lastTickSecond = nil
@@ -448,6 +460,12 @@ final class TimerModel: ObservableObject {
         updateMenuBar(force: true)
     }
 
+    func setAutoStartBreak(_ enabled: Bool) {
+        guard autoStartBreak != enabled else { return }
+        autoStartBreak = enabled
+        save()
+    }
+
     func setThemePreference(_ preference: ThemePreference) {
         if themePreference != preference {
             themePreference = preference
@@ -516,7 +534,17 @@ final class TimerModel: ObservableObject {
                 sounds.playChime()
             }
             if phase == .focus {
-                announce(L10n.format("announcements.focus_complete", recommendedBreakMinutes))
+                if autoStartBreak {
+                    if chimeEnabled {
+                        startRecommendedBreak(
+                            after: SoundPlayer.chimeDuration + Self.autoStartChimeBuffer
+                        )
+                    } else {
+                        takeBreak()
+                    }
+                } else {
+                    announce(L10n.format("announcements.focus_complete", recommendedBreakMinutes))
+                }
             } else {
                 announce(L10n.string("announcements.break_complete"))
             }
@@ -593,6 +621,7 @@ final class TimerModel: ObservableObject {
             chimeEnabled: chimeEnabled,
             tickEnabled: tickEnabled,
             showMenuBarMinutes: showMenuBarMinutes,
+            autoStartBreak: autoStartBreak,
             themePreference: themePreference,
             firstRunTipDismissed: firstRunTipDismissed
         )

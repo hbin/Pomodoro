@@ -14,9 +14,13 @@
 | Visual study | [Ambient motion](../../design/ambient-motion.md) |
 
 > **Amended 2026-11-24:** The completion presentation now moves directly to the
-> recommended break's ready screen. The direct-break behavior in this spec is
-> unchanged; see
-> [`2026-11-24-guided-next-step-design.md`](2026-11-24-guided-next-step-design.md).
+> recommended break's ready screen. The later Auto-start break setting can start
+> the recommended break without waiting for Start, holding its countdown until
+> the chime ends; it adds one Settings row and raises the Settings height. The
+> direct-break behavior in this spec is unchanged; see
+> [`2026-11-24-guided-next-step-design.md`](2026-11-24-guided-next-step-design.md)
+> and
+> [`2026-11-24-auto-start-break-design.md`](2026-11-24-auto-start-break-design.md).
 
 ## Contents
 
@@ -94,7 +98,8 @@ while idle. Mid-interval switching remains excluded.
 
 - Switching phases while a focus or break is running or paused.
 - Pausing a focus and switching directly to a break.
-- Auto-starting a break after focus completion.
+- Auto-starting a break after focus completion except through the Auto-start
+  break setting.
 - Changing the five- or fifteen-minute durations.
 - Configurable break durations or long-break cadence.
 - Focus durations other than 25 minutes in the idle mode selector.
@@ -295,7 +300,8 @@ a localized label and duration.
 - Preserve the 380-point popover width.
 - Use a 506-point card height; the top mode row is removed and the current mode
   sits below the dial; the primary/footer spacing is preserved.
-- Keep Settings at its current height and layout. Settings uses the plain card
+- Keep the Settings card and layout; the later Auto-start break setting adds
+  one row and raises the card height. Settings uses the plain card
   background without the ambient rim, glow, or shade; the light study is limited
   to the clock page.
 - The status line uses the mode row; the dial and primary do not move.

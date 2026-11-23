@@ -299,12 +299,12 @@
       }
     },
     "notifications.focus.body" : {
-      "comment" : "Body of the notification delivered when focus finishes. Native review pending.",
+      "comment" : "Body of the notification delivered when focus finishes; neutral so it fits both manual and auto-started breaks. Native review pending.",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ready for a break, whenever you are." } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "准备好休息时，随时开始。" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "準備好休息時，隨時開始。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩の準備ができたら、いつでもどうぞ。" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time for a break." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "该休息一下了。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "該休息一下了。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩の時間です。" } }
       }
     },
     "notifications.focus.title" : {
@@ -359,6 +359,24 @@
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "返回" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "返回" } },
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "戻る" } }
+      }
+    },
+    "settings.focus.auto_break.detail" : {
+      "comment" : "Detail for the auto-start-break setting, which waits for the completion chime. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Starts the recommended break after the focus chime ends." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注提示音结束后，自动开始推荐的休息。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注提示音結束後，自動開始推薦的休息。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中のチャイムが終わると、おすすめの休憩を自動で開始します。" } }
+      }
+    },
+    "settings.focus.auto_break.title" : {
+      "comment" : "Title for the auto-start-break setting. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Auto-start break" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自动开始休息" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "自動開始休息" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩を自動で開始" } }
       }
     },
     "settings.language.detail" : {
@@ -449,6 +467,15 @@
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "外观" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "外觀" } },
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "外観" } }
+      }
+    },
+    "settings.section.focus" : {
+      "comment" : "Settings section label for focus behavior. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "FOCUS" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中" } }
       }
     },
     "settings.section.menu_bar" : {
