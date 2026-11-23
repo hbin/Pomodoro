@@ -2,11 +2,17 @@
 
 **Product design specification**
 
-- Status: Draft for approval
+- Status: Implemented (v1); later features are specified separately
 - Date: 2026-11-21
 - Working name: Pomodoro
 - Platform: macOS 15+
-- Delivery: Local, personal build only
+- Delivery: Local builds and GitHub Releases with Sparkle updates
+
+Later changes amend this spec: see
+`2026-11-22-minimal-update-indicator.md`,
+`2026-11-23-four-language-localization.md`, and
+`2026-11-23-in-app-language-picker.md`. Statements below about local-only
+delivery and no network requests describe the original v1 scope.
 
 ## 1. Summary
 
