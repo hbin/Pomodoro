@@ -137,6 +137,11 @@ nested components in the required order, and verifies entitlements.
   checks signing and required entitlements.
 - Do not describe a visual change as verified unless the built app was
   launched and inspected.
+- `TESTING.md` is the coverage checklist for releases. Every feature or bug fix
+  must add or update its checklist entry before the change is complete, and
+  keep that entry while the behavior exists. Run the full checklist only when
+  preparing a release; routine changes still require `swift test` and targeted
+  verification for the affected area.
 - Keep unrelated test or build failures separate from the current change
   rather than fixing them incidentally.
 
@@ -146,6 +151,8 @@ nested components in the required order, and verifies entitlements.
   `CFBundleShortVersionString` or `CFBundleVersion` in `Resources/Info.plist`.
 - Use `scripts/bump-version.sh` for release version changes. A release tag must
   be exactly `v` plus the `CFBundleShortVersionString`.
+- Before creating a release tag, complete the pre-tag checks in `TESTING.md`.
+  After publishing, complete the artifact checks in the same file.
 - Releases are tag-driven through `.github/workflows/release.yml`. Do not
   create or push a release tag unless explicitly requested.
 - Do not edit or commit generated output in `.build/`, `build/`, or `dist/`.

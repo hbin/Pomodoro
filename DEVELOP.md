@@ -13,6 +13,9 @@ Run the tests:
 swift test
 ```
 
+Before preparing a release, complete the release-only coverage checklist in
+[`TESTING.md`](TESTING.md).
+
 Resolve the exact Sparkle dependency after changing `Package.swift`:
 
 ```sh
