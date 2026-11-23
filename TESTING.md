@@ -84,6 +84,8 @@ automated tests.
 - [ ] The dial's progress arc sits in the chapter ring outside the minute
       ticks, a square-ended hairline against the brass rim with no glow.
 - [ ] A paused interval shows the paused status line and the paused footer tip.
+- [ ] Idle mode labels and footer tips reach 4.5:1 against the popover in both
+      themes; light mode uses the deeper mode accents.
 - [ ] Settings uses the plain card background; no ambient rim, glow, or shade
       is visible there.
 - [ ] Changing the mode animates the light over 850 ms; with Reduce Motion

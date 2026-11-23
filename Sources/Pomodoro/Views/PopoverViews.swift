@@ -103,7 +103,7 @@ struct TimerPopoverView: View {
     private var palette: Palette { Palette.forScheme(scheme) }
     private var accent: Color {
         if model.isIdle {
-            return idleMode.isBreak ? palette.sage : palette.tomato
+            return idleMode.isBreak ? palette.modeBreak : palette.modeFocus
         }
         return palette.accent(for: model.phase)
     }
@@ -175,12 +175,12 @@ struct TimerPopoverView: View {
             if !model.isIdle {
                 Text(L10n.string(model.isPaused ? "timer.tip.paused" : "timer.tip.keeps_running"))
                     .font(Typo.sans(9.7))
-                    .foregroundStyle(palette.mutedInk.opacity(0.78))
+                    .foregroundStyle(palette.mutedInk)
                     .padding(.top, 10)
             } else {
                 Text(L10n.string("timer.tip.rhythm"))
                     .font(Typo.sans(9.7))
-                    .foregroundStyle(palette.mutedInk.opacity(0.78))
+                    .foregroundStyle(palette.mutedInk)
                     .padding(.top, 10)
             }
         }

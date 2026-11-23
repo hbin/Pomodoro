@@ -52,6 +52,11 @@ struct Palette {
     let onLeaf: Color
     let sage: Color
     let deepSage: Color
+    /// Accent for the idle mode indicator: the dots and the mode label.
+    /// Light mode needs the deeper variants because 9-point text requires
+    /// 4.5:1; the dark accent already passes on the espresso field.
+    let modeFocus: Color
+    let modeBreak: Color
 
     static func forScheme(_ scheme: ColorScheme) -> Palette {
         if scheme == .dark {
@@ -69,7 +74,9 @@ struct Palette {
                 leaf: Color(hex: 0x2F6B3A),
                 onLeaf: .white,
                 sage: Color(hex: 0x94A284),
-                deepSage: Color(hex: 0x5E6B52)
+                deepSage: Color(hex: 0x5E6B52),
+                modeFocus: Color(hex: 0xD46A54),
+                modeBreak: Color(hex: 0x94A284)
             )
         }
         return Palette(
@@ -86,7 +93,9 @@ struct Palette {
             leaf: Color(hex: 0x7C9F5C),
             onLeaf: Color(hex: 0x2B2520),
             sage: Color(hex: 0x7F8C72),
-            deepSage: Color(hex: 0x5F6B52)
+            deepSage: Color(hex: 0x5F6B52),
+            modeFocus: Color(hex: 0xA53D2E),
+            modeBreak: Color(hex: 0x5F6B52)
         )
     }
 
