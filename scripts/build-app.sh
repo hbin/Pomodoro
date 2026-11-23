@@ -45,8 +45,10 @@ cp "$BIN_PATH/$APP_NAME" "$APP/Contents/MacOS/$APP_NAME"
 cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
 cp "$ROOT/Resources/AppIcon.icns" "$APP/Contents/Resources/AppIcon.icns"
 
-xcrun xcstringstool installloc "$ROOT/Resources/Localization" \
-    --output-directory "$APP/Contents/Resources"
+for catalog in "$ROOT"/Resources/Localization/*.xcstrings; do
+    xcrun xcstringstool compile "$catalog" \
+        --output-directory "$APP/Contents/Resources"
+done
 
 for locale in en zh-Hans zh-Hant ja; do
     for table in Localizable.strings InfoPlist.strings; do
