@@ -80,6 +80,8 @@ automated tests.
 - [ ] Switching idle modes does not recolor the pointer.
 - [ ] Starting a focus or break keeps the dial and primary in place; the status
       line appears in the mode row below the dial.
+- [ ] The dial's progress arc sits in the chapter ring outside the minute
+      ticks, a square-ended hairline against the brass rim with no glow.
 - [ ] Settings uses the plain card background; no ambient rim, glow, or shade
       is visible there.
 - [ ] Changing the mode animates the light over 850 ms; with Reduce Motion

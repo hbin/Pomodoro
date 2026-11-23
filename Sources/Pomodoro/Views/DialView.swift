@@ -97,15 +97,16 @@ struct DialView: View {
             .frame(width: size, height: size)
             .accessibilityHidden(true)
 
+            // The arc is a chapter ring: outside the minute ticks, inside the
+            // brass rim, square-ended, and flat rather than glowing.
             Circle()
                 .trim(from: 0, to: arcProgress)
                 .stroke(
                     accent,
-                    style: StrokeStyle(lineWidth: max(2.5, size * 0.013), lineCap: .round)
+                    style: StrokeStyle(lineWidth: max(2.0, size * 0.0112), lineCap: .butt)
                 )
                 .rotationEffect(.degrees(-90))
-                .padding(size / 2 - tickRadius + 5.5)
-                .shadow(color: accent.opacity(0.25), radius: 1.5)
+                .padding(size / 2 - (tickRadius + 6.5))
                 .animation(reduceMotion ? nil : .linear(duration: 0.22), value: arcProgress)
                 .accessibilityHidden(true)
 

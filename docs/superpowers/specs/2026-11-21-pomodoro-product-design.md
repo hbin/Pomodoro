@@ -405,11 +405,18 @@ No task-title typography is required.
 
 ### 9.4 Dial
 
-The dial is a session dial:
+The dial is a 60-minute clock:
 
-- One full revolution corresponds to the selected interval.
-- The hand sweeps clockwise as the interval progresses.
-- A subtle outer arc shows elapsed progress.
+- The hand marks the remaining minutes on a 60-minute face. One full
+  revolution is an hour, not the selected interval.
+- The hand stands at the selected duration while idle and counts back
+  toward 12 o'clock as the interval runs. Starting an interval therefore
+  leaves the hand where it was.
+- A thin arc in the chapter ring, between the minute ticks and the brass
+  rim, shows the same value as the hand. It starts at 12 o'clock and ends
+  at the hand's angle, so the two always agree without touching.
+- The arc has square ends and no glow; it reads as an inlay in the bezel
+  rather than a drawn highlight.
 - Tick marks are decorative and unlabelled; the central readout is
   authoritative.
 - The central plaque shows `MM:SS` and `REMAINING`.
@@ -418,6 +425,11 @@ The dial is a session dial:
 - The dial remains legible at the popover's supported size.
 
 Break intervals use the same geometry with the sage accent.
+
+The menu-bar icon is a session gauge rather than a clock: its arc starts full
+and empties counterclockwise as the interval runs, with the hand riding the
+emptying edge. Both surfaces reach zero when the interval ends; they differ
+only in how full they are at the start.
 
 ### 9.5 Motion
 
@@ -452,7 +464,7 @@ Break intervals use the same geometry with the sage accent.
 - App icon: bone rounded-square field, tomato dial, and a brass hand pointing
   to the 25-minute mark, with a brass pivot.
 - Menu-bar icon: grand monochrome dial that fills the 22-point canvas, with a
-  readable resting outline and bold elapsed-progress arc.
+  readable resting outline and bold remaining-time arc.
 - Active menu bar: icon plus remaining whole minutes.
 - Break menu bar: the same progress dial and minutes with a cup in place of the
   focus hand.
@@ -607,7 +619,8 @@ No task, project, note, or session-history data is stored.
 ### Builder calls
 
 - Versioned JSON state rather than a database.
-- Full-circle session dial rather than a 60-minute wall-clock face.
+- 60-minute clock dial in the popover, with the menu-bar icon as the session
+  gauge, rather than one shared full-circle session dial.
 - Notification suppressed in the foreground because the popover is already
   visible.
 - Completion chime and tick sound are separate preferences.
