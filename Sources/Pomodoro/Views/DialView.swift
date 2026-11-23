@@ -8,8 +8,8 @@ struct DialView: View {
     let size: CGFloat
     var showsCountdown = false
     var handProgress = 0.0
-    var accessibilityLabel = "Timer"
-    var accessibilityValue = ""
+    let accessibilityLabel: String
+    let accessibilityValue: String
 
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -116,7 +116,7 @@ struct DialView: View {
         .frame(width: size, height: size)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(accessibilityLabel))
-        .accessibilityValue(Text(accessibilityValue.isEmpty ? "\(timeText), \(caption.lowercased())" : accessibilityValue))
+        .accessibilityValue(Text(accessibilityValue))
     }
 
     private func handView(
@@ -170,7 +170,7 @@ struct DialView: View {
                     .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: timeText)
                 Text(caption)
                     .font(Typo.label(max(7.4, diameter * 0.047)))
-                    .tracking(diameter * 0.011)
+                    .tracking(Typo.tracking(diameter * 0.011))
                     .foregroundStyle(palette.mutedInk.opacity(0.95))
             }
             .offset(y: -diameter * 0.012)

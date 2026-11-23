@@ -17,7 +17,7 @@ status, an install or check action, and the automatic-update preference. The
 panel is dismissed by clicking the dot again, choosing **Later**, or closing
 Settings.
 
-Settings collapses from its timer height to a compact **460-point** height so
+Settings collapses from its timer height to a compact **520-point** height so
 the removed update section does not leave an empty block above the footer. The
 width remains **380 points**, and returning to the timer restores the **544-point**
 height.
@@ -106,7 +106,7 @@ segmented control.
 - Update modes can still be changed from the panel.
 - Debug builds without an update feed show a neutral dot and disabled update
   controls.
-- Settings remains within its fixed 380-point width, collapses to 460 points,
+- Settings remains within its fixed 380-point width, collapses to 520 points,
   and shows no clipping.
 - Keyboard focus and VoiceOver labels describe the dot and panel actions.
 

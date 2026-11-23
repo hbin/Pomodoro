@@ -1,0 +1,15 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSHumanReadableCopyright" : {
+      "comment" : "Copyright line shown in the standard About panel. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Personal build" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "个人构建" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "個人建置" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "個人ビルド" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

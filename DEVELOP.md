@@ -36,6 +36,99 @@ UNIVERSAL=1 ./scripts/package-dmg.sh
 The app bundle is written to `build/Pomodoro.app`. Packaged disk images, update
 archives, checksums, and appcasts are written to `dist/`.
 
+## Localization
+
+Supported locale identifiers are `en`, `zh-Hans`, `zh-Hant`, and `ja`.
+English is the development language and fallback. `CFBundleLocalizations` in
+`Resources/Info.plist` must list exactly those four identifiers.
+
+Runtime strings live in `Resources/Localization/Localizable.xcstrings`.
+Info.plist strings, currently `NSHumanReadableCopyright`, live in
+`Resources/Localization/InfoPlist.xcstrings`. Both catalogs use English as
+their source language and contain all four localizations.
+
+Keys are semantic and grouped by surface: `common.*`, `menu.*`,
+`status_bar.*`, `timer.*`, `completion.*`, `settings.*`,
+`notification_status.*`, `notifications.*`, `updates.*`, `accessibility.*`,
+`announcements.*`, and `errors.*`. `InfoPlist.xcstrings` uses the plist key
+names directly, currently `NSHumanReadableCopyright`. Use whole sentences
+rather than concatenating translated fragments. English count-bearing copy uses
+String Catalog plural variations; Chinese and Japanese use a single
+grammatical form.
+
+Use `L10n.string`, `L10n.format`, or `L10n.count` from
+`Sources/Pomodoro/Localization.swift` for all runtime copy, including copy in
+SwiftUI views. Do not use a bare localized `Text("semantic.key")` for runtime
+copy because SwiftUI literals keep the language selected at launch and would
+not update with the in-app language picker. Do not pass a localized fragment
+into an English sentence, and do not use `Bundle.module`; the app bundle is
+assembled by `scripts/build-app.sh`.
+
+The in-app picker stores an app-only override in `UserDefaults` under
+`PomodoroLanguagePreference`. With no stored value, Pomodoro uses the macOS app
+language captured at launch. `L10n` resolves strings from the matching
+`.lproj` bundle, and `Typo` resolves the same active language so changing the
+picker updates copy, typography, menus, and status-item accessibility without
+a relaunch.
+
+When changing language in `TimerModel`, rebuild the app menu, refresh the
+status item, and reschedule the pending notification at the existing
+`endDate`. Do not restart or alter the running timer. The standard About panel
+is provided by AppKit and remains localized at launch; that limitation is
+accepted.
+
+`./scripts/build-app.sh` validates both catalogs before compiling, installs
+compiled resources into each `.lproj` directory, and verifies the expected
+`Localizable.strings` and `InfoPlist.strings` files before signing. Run the
+validator directly with:
+
+```sh
+swift scripts/check-localizations.swift .
+```
+
+The validator fails on a missing locale, empty value, unsupported plural shape,
+or format-placeholder mismatch. When adding or changing copy, update every
+localized value and rerun the debug build.
+
+The three translated catalogs are complete drafts pending native-speaker
+review. Record that state on the release checklist and keep the catalog comments
+current. Do not replace unfinished translations with English placeholders.
+
+Before a release:
+
+- [ ] Native-speaker review of the `zh-Hans`, `zh-Hant`, and `ja` catalogs is
+      complete; update the review state in the catalog comments.
+- [ ] `swift scripts/check-localizations.swift .` passes.
+- [ ] `./scripts/build-app.sh debug` installs all four localizations.
+- [ ] The manual language matrix in the in-app language picker spec passes for
+      all four languages, including Light, Black, and reduced-transparency
+      appearances.
+
+For normal QA, launch the app and change **Settings → Appearance → Language**
+through all five choices. Each change should apply immediately, preserve any
+running timer, and survive a relaunch. To test the **System Default** path with
+an explicit macOS language, first clear the app-only override, quit any running
+instance, and launch the built app with:
+
+```sh
+defaults delete com.hb.pomodoro PomodoroLanguagePreference 2>/dev/null || true
+open build/Pomodoro.app --args --open-popover \
+  -AppleLanguages '(zh-Hans)' -AppleLocale zh_CN
+```
+
+| Language | `-AppleLanguages` | `-AppleLocale` |
+| --- | --- | --- |
+| English | `(en)` | `en_US` |
+| Simplified Chinese | `(zh-Hans)` | `zh_CN` |
+| Traditional Chinese | `(zh-Hant)` | `zh_TW` |
+| Japanese | `(ja)` | `ja_JP` |
+
+Replace `--open-popover` with `--open-settings` to open Settings directly.
+These arguments use the same mechanism as the per-app language setting in
+**System Settings → General → Language & Region → Applications**, which is the
+system-language path described in the README. The macOS language is captured
+at launch; external macOS language changes apply after reopening the app.
+
 ## Auto-updates
 
 Pomodoro uses Sparkle 2.10.1 through SwiftPM. The exact dependency and

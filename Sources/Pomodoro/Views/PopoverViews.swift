@@ -9,7 +9,7 @@ struct PopoverRootView: View {
 
     static let width: CGFloat = 380
     static let height: CGFloat = 544
-    static let settingsHeight: CGFloat = 460
+    static let settingsHeight: CGFloat = 520
 
     static func contentHeight(showingSettings: Bool) -> CGFloat {
         showingSettings ? settingsHeight : height
@@ -62,14 +62,14 @@ struct TimerPopoverView: View {
     }
 
     private var title: String {
-        if model.isIdle { return "Ready to focus" }
-        if model.isPaused { return "Holding pause" }
-        if model.isBreak { return "Step away" }
-        return "Focus in progress"
+        if model.isIdle { return L10n.string("timer.title.idle") }
+        if model.isPaused { return L10n.string("timer.title.paused") }
+        if model.isBreak { return L10n.string("timer.title.break") }
+        return L10n.string("timer.title.running")
     }
 
     private var dialCaption: String {
-        model.isIdle ? "READY" : model.readoutCaption
+        model.isIdle ? L10n.string("timer.caption.ready") : model.readoutCaption
     }
 
     var body: some View {
@@ -89,10 +89,14 @@ struct TimerPopoverView: View {
                 size: 215,
                 showsCountdown: !model.isIdle,
                 handProgress: model.dialHandProgress,
-                accessibilityLabel: model.isBreak ? "Break timer" : "Focus timer",
+                accessibilityLabel: model.isBreak
+                    ? L10n.string("timer.a11y.break_dial")
+                    : L10n.string("timer.a11y.focus_dial"),
                 accessibilityValue: model.isIdle
-                    ? "\(model.selectedFocusMinutes) minutes, ready"
-                    : "\(model.timeText), \(model.isPaused ? "paused" : "running")"
+                    ? L10n.format("timer.a11y.ready_value", model.selectedFocusMinutes)
+                    : model.isPaused
+                        ? L10n.format("timer.a11y.paused_value", model.timeText)
+                        : L10n.format("timer.a11y.running_value", model.timeText)
             )
             .padding(.top, 11)
 
@@ -117,12 +121,12 @@ struct TimerPopoverView: View {
             }
 
             if !model.isIdle {
-                Text("You can close this popover; the timer keeps running.")
+                Text(L10n.string("timer.tip.keeps_running"))
                     .font(Typo.sans(9.7))
                     .foregroundStyle(palette.mutedInk.opacity(0.78))
             } else if !model.firstRunTipDismissed {
                 HStack(spacing: 7) {
-                    Text("The dial lives in your menu bar. Click it anytime.")
+                    Text(L10n.string("timer.tip.first_run"))
                         .font(Typo.sans(9.7))
                         .foregroundStyle(palette.mutedInk)
                     Spacer(minLength: 2)
@@ -132,11 +136,11 @@ struct TimerPopoverView: View {
                         Image(systemName: "xmark")
                     }
                     .buttonStyle(IconButtonStyle(size: 19))
-                    .accessibilityLabel("Dismiss tip")
+                    .accessibilityLabel(L10n.string("timer.tip.dismiss"))
                 }
                 .padding(.horizontal, 2)
             } else {
-                Text("Enjoy the rhythm of focused time.")
+                Text(L10n.string("timer.tip.rhythm"))
                     .font(Typo.sans(9.7))
                     .foregroundStyle(palette.mutedInk.opacity(0.78))
             }
@@ -146,12 +150,12 @@ struct TimerPopoverView: View {
     private var intervalPicker: some View {
         VStack(spacing: 7) {
             HStack(spacing: 6) {
-                Text("INTERVAL")
+                Text(L10n.string("timer.interval.label"))
                     .font(Typo.label(8.7))
-                    .tracking(1.8)
+                    .tracking(Typo.tracking(1.8))
                     .foregroundStyle(palette.mutedInk)
                 Spacer()
-                Text("long break after 4")
+                Text(L10n.string("timer.interval.long_break_hint"))
                     .font(Typo.sans(9.5))
                     .foregroundStyle(palette.mutedInk.opacity(0.8))
             }
@@ -172,11 +176,11 @@ struct TimerPopoverView: View {
     private var activeStatus: some View {
         VStack(spacing: 3) {
             if let endsAt = model.endsAtText, !model.isPaused {
-                Text("Ends at \(endsAt)")
+                Text(L10n.format("timer.status.ends_at", endsAt))
                     .font(Typo.sans(10.7))
                     .foregroundStyle(palette.mutedInk)
             } else {
-                Text("Paused · \(model.timeText) remaining")
+                Text(L10n.format("timer.status.paused_remaining", model.timeText))
                     .font(Typo.sans(10.7))
                     .foregroundStyle(palette.mutedInk)
             }
@@ -209,6 +213,7 @@ struct TimerPopoverView: View {
         } label: {
             HStack(spacing: 8) {
                 Text(primaryButtonTitle)
+                    .lineLimit(1)
                 Spacer()
                 Image(systemName: primaryButtonIcon)
                     .font(.system(size: 10, weight: .semibold))
@@ -245,22 +250,30 @@ struct TimerPopoverView: View {
                 .font(.system(size: 12, weight: .semibold))
         }
         .buttonStyle(SquareButtonStyle(size: 44, foreground: palette.tomato))
-        .accessibilityLabel(model.isBreak ? "End break" : "End focus interval")
-        .accessibilityHint(model.isBreak ? "Ends the break now" : "Asks for confirmation before ending focus")
+        .accessibilityLabel(
+            model.isBreak
+                ? L10n.string("timer.action.end_break")
+                : L10n.string("timer.action.end_focus")
+        )
+        .accessibilityHint(
+            model.isBreak
+                ? L10n.string("timer.action.end_break_hint")
+                : L10n.string("timer.action.end_focus_hint")
+        )
     }
 
     private var endConfirmation: some View {
         HStack(spacing: 8) {
-            Text("End this focus?")
+            Text(L10n.string("timer.end.confirm"))
                 .font(Typo.sans(11))
                 .foregroundStyle(palette.ink.opacity(0.82))
             Spacer(minLength: 4)
-            Button("Keep going") {
+            Button(L10n.string("timer.end.keep_going")) {
                 confirmingEnd = false
             }
             .buttonStyle(QuietTextButtonStyle())
 
-            Button("End") {
+            Button(L10n.string("timer.end.end")) {
                 confirmingEnd = false
                 model.endInterval()
             }
@@ -271,9 +284,11 @@ struct TimerPopoverView: View {
 
     private var primaryButtonTitle: String {
         if model.isIdle {
-            return "Start \(model.selectedFocusMinutes)-minute focus"
+            return L10n.format("timer.action.start", model.selectedFocusMinutes)
         }
-        return model.isPaused ? "Resume" : "Pause"
+        return model.isPaused
+            ? L10n.string("timer.action.resume")
+            : L10n.string("timer.action.pause")
     }
 
     private var primaryButtonIcon: String {
@@ -285,9 +300,11 @@ struct TimerPopoverView: View {
 
     private var primaryButtonHint: String {
         if model.isIdle {
-            return "Starts a focus interval in this popover"
+            return L10n.string("timer.a11y.start_hint")
         }
-        return model.isPaused ? "Resumes the timer" : "Pauses the timer"
+        return model.isPaused
+            ? L10n.string("timer.a11y.resume_hint")
+            : L10n.string("timer.a11y.pause_hint")
     }
 }
 
@@ -302,34 +319,42 @@ struct CompletionPopoverView: View {
         VStack(spacing: 0) {
             PopoverHeader(accent: accent, onSettings: model.openSettings)
 
-            Text("COMPLETE")
+            Text(L10n.string("timer.caption.complete"))
                 .font(Typo.label(8.7))
-                .tracking(2.1)
+                .tracking(Typo.tracking(2.1))
                 .foregroundStyle(palette.mutedInk)
                 .padding(.top, 22)
 
-            Text(model.isBreak ? "Break complete" : "Focus complete")
-                .font(Typo.serif(32))
-                .foregroundStyle(palette.ink)
-                .padding(.top, 3)
+            Text(
+                model.isBreak
+                    ? L10n.string("completion.title.break")
+                    : L10n.string("completion.title.focus")
+            )
+            .font(Typo.serif(32))
+            .foregroundStyle(palette.ink)
+            .padding(.top, 3)
 
             DialView(
                 timeText: "00:00",
-                caption: "COMPLETE",
+                caption: L10n.string("timer.caption.complete"),
                 progress: 1,
                 accent: accent,
                 size: 168,
-                accessibilityLabel: model.isBreak ? "Break complete" : "Focus complete",
-                accessibilityValue: "Complete"
+                accessibilityLabel: model.isBreak
+                    ? L10n.string("completion.title.break")
+                    : L10n.string("completion.title.focus"),
+                accessibilityValue: L10n.string("completion.a11y.complete")
             )
             .padding(.top, 12)
 
-            Text(model.isBreak
-                 ? "Start another focus whenever you’re ready."
-                 : "Nothing starts until you choose.")
-                .font(Typo.sans(10.7))
-                .foregroundStyle(palette.mutedInk)
-                .padding(.top, 7)
+            Text(
+                model.isBreak
+                    ? L10n.string("completion.body.break_ready")
+                    : L10n.string("completion.body.focus_done")
+            )
+            .font(Typo.sans(10.7))
+            .foregroundStyle(palette.mutedInk)
+            .padding(.top, 7)
 
             Spacer(minLength: 10)
 
@@ -338,7 +363,8 @@ struct CompletionPopoverView: View {
                     model.startAnother()
                 } label: {
                     HStack(spacing: 8) {
-                        Text("Start another focus")
+                        Text(L10n.string("completion.action.start_another"))
+                            .lineLimit(1)
                         Spacer()
                         Image(systemName: "play.fill").font(.system(size: 10, weight: .semibold))
                     }
@@ -356,7 +382,8 @@ struct CompletionPopoverView: View {
                     model.takeBreak()
                 } label: {
                     HStack(spacing: 8) {
-                        Text("Take a \(model.recommendedBreakMinutes)-minute break")
+                        Text(L10n.format("completion.action.take_break", model.recommendedBreakMinutes))
+                            .lineLimit(1)
                         Spacer()
                         Image(systemName: "play.fill").font(.system(size: 10, weight: .semibold))
                     }
@@ -364,14 +391,14 @@ struct CompletionPopoverView: View {
                 }
                 .buttonStyle(PrimaryInstrumentButtonStyle(color: palette.deepAccent(for: .shortBreak), height: 48))
 
-                Button("Start another focus") {
+                Button(L10n.string("completion.action.start_another")) {
                     model.startAnother()
                 }
                 .buttonStyle(OutlineButtonStyle(height: 41))
                 .padding(.top, 8)
             }
 
-            Button("Done for now") {
+            Button(L10n.string("completion.action.done")) {
                 model.doneForNow()
             }
             .buttonStyle(QuietTextButtonStyle())

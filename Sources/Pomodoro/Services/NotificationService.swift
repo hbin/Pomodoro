@@ -37,11 +37,11 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         let content = UNMutableNotificationContent()
         switch phase {
         case .focus:
-            content.title = "Focus complete"
-            content.body = "Ready for a break, whenever you are."
+            content.title = L10n.string("notifications.focus.title")
+            content.body = L10n.string("notifications.focus.body")
         case .shortBreak, .longBreak:
-            content.title = "Break complete"
-            content.body = "Start another focus when you’re ready."
+            content.title = L10n.string("notifications.break.title")
+            content.body = L10n.string("notifications.break.body")
         }
         content.sound = nil
 

@@ -51,22 +51,27 @@ public struct PersistedState: Codable, Sendable, Equatable {
     }
 }
 
+public enum StateRecoveryIssue: Sendable, Equatable {
+    case unreadableStateBackedUp
+    case unreadableStateReset
+}
+
 public struct LoadResult: Sendable {
     public var state: PersistedState
     public var isFirstRun: Bool
     public var backupURL: URL?
-    public var recoveryMessage: String?
+    public var recoveryIssue: StateRecoveryIssue?
 
     public init(
         state: PersistedState,
         isFirstRun: Bool,
         backupURL: URL? = nil,
-        recoveryMessage: String? = nil
+        recoveryIssue: StateRecoveryIssue? = nil
     ) {
         self.state = state
         self.isFirstRun = isFirstRun
         self.backupURL = backupURL
-        self.recoveryMessage = recoveryMessage
+        self.recoveryIssue = recoveryIssue
     }
 }
 
@@ -110,14 +115,11 @@ public struct StateStore {
             } catch {
                 didBackUp = false
             }
-            let message = didBackUp
-                ? "Saved timer data couldn’t be read. A backup was kept and the timer was reset."
-                : "Saved timer data couldn’t be read. The timer was reset."
             return LoadResult(
                 state: PersistedState(),
                 isFirstRun: false,
                 backupURL: didBackUp ? backupURL : nil,
-                recoveryMessage: message
+                recoveryIssue: didBackUp ? .unreadableStateBackedUp : .unreadableStateReset
             )
         }
     }

@@ -3,6 +3,7 @@ import SwiftUI
 struct UpdateDot: View {
     let hasUpdate: Bool
     let isExpanded: Bool
+    let language: AppLanguage
     let action: () -> Void
     @Environment(\.colorScheme) private var scheme
 
@@ -27,16 +28,22 @@ struct UpdateDot: View {
             .contentShape(Circle())
         }
         .buttonStyle(.plain)
-        .help(hasUpdate ? "Update available" : "Update settings")
-        .accessibilityLabel("Update settings")
-        .accessibilityValue(hasUpdate ? "Update available" : "No update available")
-        .accessibilityHint("Shows update controls")
+        .help(hasUpdate
+            ? L10n.string("updates.dot.value_available")
+            : L10n.string("updates.dot.label"))
+        .accessibilityLabel(L10n.string("updates.dot.label"))
+        .accessibilityValue(hasUpdate
+            ? L10n.string("updates.dot.value_available")
+            : L10n.string("updates.dot.value_none"))
+        .accessibilityHint(L10n.string("updates.dot.hint"))
         .accessibilityAddTraits(isExpanded ? [.isSelected] : [])
+        .id(language)
     }
 }
 
 struct UpdatePanel: View {
     @ObservedObject var updates: UpdateController
+    let language: AppLanguage
     let onInstall: () -> Void
     let onCheck: () -> Void
     let onClose: () -> Void
@@ -47,16 +54,16 @@ struct UpdatePanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 8) {
-                Text("Updates")
+                Text(L10n.string("updates.panel.title"))
                     .font(Typo.sans(11.5, weight: "DemiBold"))
                     .foregroundStyle(palette.ink)
                 Spacer(minLength: 6)
                 if updates.hasUpdate {
-                    Button("Later", action: onClose)
+                    Button(L10n.string("updates.action.later"), action: onClose)
                         .buttonStyle(QuietTextButtonStyle())
-                        .accessibilityHint("Keeps the update available")
+                        .accessibilityHint(L10n.string("updates.action.later_hint"))
                 } else {
-                    Button("Check Now", action: onCheck)
+                    Button(L10n.string("updates.action.check_now"), action: onCheck)
                     .buttonStyle(QuietTextButtonStyle(color: palette.ink))
                     .disabled(!updates.canCheckForUpdates)
                     .opacity(updates.canCheckForUpdates ? 1 : 0.45)
@@ -76,7 +83,7 @@ struct UpdatePanel: View {
             .padding(.top, 4)
 
             if showsInstallButton {
-                Button("Install Update") {
+                Button(L10n.string("updates.action.install")) {
                     onInstall()
                 }
                 .buttonStyle(UpdatePrimaryButtonStyle())
@@ -89,9 +96,9 @@ struct UpdatePanel: View {
                 .padding(.top, showsInstallButton ? 9 : 7)
 
             HStack(spacing: 2) {
-                Text("AUTOMATIC")
+                Text(L10n.string("updates.section.automatic"))
                     .font(Typo.label(7.8))
-                    .tracking(1.35)
+                    .tracking(Typo.tracking(1.35))
                     .foregroundStyle(palette.mutedInk)
                 Spacer(minLength: 8)
                 ForEach(UpdateMode.allCases) { mode in
@@ -119,7 +126,7 @@ struct UpdatePanel: View {
                     .disabled(!updates.isAvailable)
                     .opacity(updates.isAvailable ? 1 : 0.45)
                     .help(mode.detail)
-                    .accessibilityLabel("\(mode.title) updates")
+                    .accessibilityLabel(L10n.format("updates.mode.a11y", mode.title))
                     .accessibilityAddTraits(isSelected ? [.isSelected] : [])
                 }
             }
@@ -138,6 +145,7 @@ struct UpdatePanel: View {
                 .shadow(color: .black.opacity(0.16), radius: 12, y: 5)
         }
         .accessibilityElement(children: .contain)
+        .id(language)
     }
 
     private var showsInstallButton: Bool {

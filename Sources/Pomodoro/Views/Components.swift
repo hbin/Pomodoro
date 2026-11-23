@@ -184,7 +184,7 @@ struct DurationChip: View {
     var body: some View {
         let palette = Palette.forScheme(scheme)
         Button(action: action) {
-            Text("\(minutes)m")
+            Text(L10n.count("common.minutes_compact", minutes))
                 .font(Typo.sans(12.5, weight: isSelected ? "DemiBold" : "Medium"))
                 .foregroundStyle(isSelected ? palette.boneTop : palette.ink.opacity(0.8))
                 .frame(maxWidth: .infinity, minHeight: 36)
@@ -202,7 +202,7 @@ struct DurationChip: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("\(minutes) minute focus")
+        .accessibilityLabel(L10n.format("timer.a11y.focus_chip", minutes))
         .accessibilityAddTraits(isSelected ? [.isSelected] : [])
     }
 }
@@ -290,7 +290,7 @@ struct ErrorNote: View {
                 Image(systemName: "xmark")
             }
             .buttonStyle(IconButtonStyle(size: 20))
-            .accessibilityLabel("Dismiss error")
+            .accessibilityLabel(L10n.string("accessibility.dismiss_error"))
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 8)
@@ -314,8 +314,8 @@ struct PopoverHeader: View {
         let palette = Palette.forScheme(scheme)
         HStack(spacing: 8) {
             AppIconMark(accent: accent)
-            Text("POMODORO")
-                .font(Typo.label(10))
+            Text(verbatim: "POMODORO")
+                .font(Typo.wordmark(10))
                 .tracking(2.5)
                 .foregroundStyle(palette.ink.opacity(0.72))
             Spacer()
@@ -323,7 +323,7 @@ struct PopoverHeader: View {
                 Image(systemName: "gearshape")
             }
             .buttonStyle(IconButtonStyle(size: 28))
-            .accessibilityLabel("Settings")
+            .accessibilityLabel(L10n.string("accessibility.settings"))
         }
     }
 }

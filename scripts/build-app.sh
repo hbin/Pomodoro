@@ -17,6 +17,9 @@ mkdir -p "$CLANG_MODULE_CACHE_PATH" "$SWIFTPM_MODULECACHE_PATH"
 
 cd "$ROOT"
 
+echo "Validating localizations…"
+swift "$ROOT/scripts/check-localizations.swift" "$ROOT"
+
 if [[ ! -f "$ROOT/Resources/AppIcon.icns" ]]; then
     echo "Generating app icon…"
     swift "$ROOT/scripts/make-icon.swift" "$ROOT"
@@ -41,6 +44,18 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources" "$FRAMEWORKS"
 cp "$BIN_PATH/$APP_NAME" "$APP/Contents/MacOS/$APP_NAME"
 cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
 cp "$ROOT/Resources/AppIcon.icns" "$APP/Contents/Resources/AppIcon.icns"
+
+xcrun xcstringstool installloc "$ROOT/Resources/Localization" \
+    --output-directory "$APP/Contents/Resources"
+
+for locale in en zh-Hans zh-Hant ja; do
+    for table in Localizable.strings InfoPlist.strings; do
+        if [[ ! -f "$APP/Contents/Resources/$locale.lproj/$table" ]]; then
+            echo "Missing localization resource: $locale.lproj/$table" >&2
+            exit 1
+        fi
+    done
+done
 
 if [[ ! -d "$SPARKLE_FRAMEWORK" ]]; then
     echo "Sparkle framework not found at $SPARKLE_FRAMEWORK" >&2

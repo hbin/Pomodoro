@@ -29,6 +29,9 @@ final class AppCoordinator: NSObject, NSMenuItemValidation {
         model.onAppearanceChange = { [weak self] preference in
             self?.applyAppearance(preference)
         }
+        model.onLanguageChange = { [weak self] in
+            self?.buildMainMenu()
+        }
         popover.onWillShow = { [weak self] in
             self?.model.refreshNotificationStatus()
         }
@@ -91,7 +94,7 @@ final class AppCoordinator: NSObject, NSMenuItemValidation {
         appItem.submenu = appMenu
 
         let about = NSMenuItem(
-            title: "About Pomodoro",
+            title: L10n.string("menu.about"),
             action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)),
             keyEquivalent: ""
         )
@@ -99,7 +102,7 @@ final class AppCoordinator: NSObject, NSMenuItemValidation {
         appMenu.addItem(about)
 
         let checkForUpdates = NSMenuItem(
-            title: "Check for Updates…",
+            title: L10n.string("menu.check_for_updates"),
             action: #selector(checkForUpdatesFromMenu(_:)),
             keyEquivalent: ""
         )
@@ -109,7 +112,7 @@ final class AppCoordinator: NSObject, NSMenuItemValidation {
         appMenu.addItem(.separator())
 
         let settingsItem = NSMenuItem(
-            title: "Settings…",
+            title: L10n.string("menu.settings"),
             action: #selector(openSettingsFromMenu),
             keyEquivalent: ","
         )
@@ -118,7 +121,7 @@ final class AppCoordinator: NSObject, NSMenuItemValidation {
         appMenu.addItem(.separator())
 
         let quit = NSMenuItem(
-            title: "Quit Pomodoro",
+            title: L10n.string("menu.quit"),
             action: #selector(NSApplication.terminate(_:)),
             keyEquivalent: "q"
         )
@@ -132,7 +135,7 @@ final class AppCoordinator: NSObject, NSMenuItemValidation {
         let menu = NSMenu()
 
         let settingsItem = NSMenuItem(
-            title: "Settings…",
+            title: L10n.string("menu.settings"),
             action: #selector(openSettingsFromMenu),
             keyEquivalent: ","
         )
@@ -140,7 +143,7 @@ final class AppCoordinator: NSObject, NSMenuItemValidation {
         menu.addItem(settingsItem)
 
         let checkForUpdates = NSMenuItem(
-            title: "Check for Updates…",
+            title: L10n.string("menu.check_for_updates"),
             action: #selector(checkForUpdatesFromMenu(_:)),
             keyEquivalent: ""
         )
@@ -150,7 +153,7 @@ final class AppCoordinator: NSObject, NSMenuItemValidation {
         menu.addItem(.separator())
 
         let quit = NSMenuItem(
-            title: "Quit Pomodoro",
+            title: L10n.string("menu.quit"),
             action: #selector(NSApplication.terminate(_:)),
             keyEquivalent: "q"
         )

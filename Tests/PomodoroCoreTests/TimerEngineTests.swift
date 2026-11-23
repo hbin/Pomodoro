@@ -297,7 +297,7 @@ final class PersistenceTests: XCTestCase {
 
         XCTAssertTrue(result.isFirstRun)
         XCTAssertEqual(result.state, PersistedState())
-        XCTAssertNil(result.recoveryMessage)
+        XCTAssertNil(result.recoveryIssue)
     }
 
     func testCorruptStateIsBackedUpAndRecovered() throws {
@@ -308,11 +308,34 @@ final class PersistenceTests: XCTestCase {
 
         XCTAssertFalse(result.isFirstRun)
         XCTAssertEqual(result.state, PersistedState())
-        XCTAssertNotNil(result.recoveryMessage)
+        XCTAssertEqual(result.recoveryIssue, .unreadableStateBackedUp)
         let backupURL = try XCTUnwrap(result.backupURL)
         XCTAssertTrue(FileManager.default.fileExists(atPath: backupURL.path))
         XCTAssertEqual(try String(contentsOf: backupURL, encoding: .utf8), "not json")
         XCTAssertFalse(FileManager.default.fileExists(atPath: store.stateURL.path))
+    }
+
+    func testCorruptStateWithFailedBackupReportsReset() throws {
+        let store = StateStore(directory: directory)
+        try Data("not json".utf8).write(to: store.stateURL)
+        try FileManager.default.setAttributes(
+            [.posixPermissions: 0o500],
+            ofItemAtPath: directory.path
+        )
+        defer {
+            try? FileManager.default.setAttributes(
+                [.posixPermissions: 0o700],
+                ofItemAtPath: directory.path
+            )
+        }
+
+        let result = store.load()
+
+        XCTAssertFalse(result.isFirstRun)
+        XCTAssertEqual(result.state, PersistedState())
+        XCTAssertEqual(result.recoveryIssue, .unreadableStateReset)
+        XCTAssertNil(result.backupURL)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: store.stateURL.path))
     }
 
     func testDecodingPartialStateUsesDefaults() throws {

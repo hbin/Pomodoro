@@ -105,6 +105,10 @@ nested components in the required order, and verifies entitlements.
 - Verify changes in both Light and Black themes and with reduced transparency.
 - The app supports these launch arguments for focused UI checks:
   `--open-popover`, `--open-settings`, `--force-light`, and `--force-dark`.
+- Runtime language is switchable in Settings. Use `L10n` for runtime copy
+  instead of SwiftUI `Text("key")` literals so the interface updates without a
+  relaunch; keep `Typo` language-aware and refresh menus, status-item copy, and
+  pending notifications when the preference changes.
 - There are no UI snapshot tests. For visual changes, build the app, launch it,
   and inspect the affected states in both themes.
 - If the home popover UI changes, explicitly tell the user to update the README
@@ -153,6 +157,14 @@ nested components in the required order, and verifies entitlements.
 
 - Make the smallest coherent change that solves the requested problem and
   follow the surrounding Swift style.
+- New user-facing copy must use a semantic key in
+  `Resources/Localization/Localizable.xcstrings` and include English,
+  Simplified Chinese, Traditional Chinese, and Japanese values. Info.plist copy
+  belongs in `InfoPlist.xcstrings`. Resolve runtime copy through `L10n` so the
+  in-app language picker updates immediately. Do not hardcode English UI copy,
+  use `Bundle.module`, or add a locale-specific code path. Run
+  `./scripts/build-app.sh debug` so the catalog validator and resource
+  installation both run.
 - Preserve existing accessibility, appearance, notification, persistence, and
   update behavior unless the task explicitly changes them.
 - Do not commit, push, tag, or publish unless explicitly requested.

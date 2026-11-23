@@ -10,20 +10,20 @@ enum UpdateMode: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .notify: "Notify"
-        case .download: "Download"
-        case .never: "Never"
+        case .notify: L10n.string("updates.mode.notify.title")
+        case .download: L10n.string("updates.mode.download.title")
+        case .never: L10n.string("updates.mode.never.title")
         }
     }
 
     var detail: String {
         switch self {
         case .notify:
-            "Checks daily; you choose when to install."
+            L10n.string("updates.mode.notify.detail")
         case .download:
-            "Downloads quietly and installs when Pomodoro quits."
+            L10n.string("updates.mode.download.detail")
         case .never:
-            "Automatic updates off; manual checks still work."
+            L10n.string("updates.mode.never.detail")
         }
     }
 
@@ -85,20 +85,20 @@ final class UpdateController: NSObject, ObservableObject, SPUUpdaterDelegate {
 
     var statusText: String {
         guard isAvailable else {
-            return "Updates are unavailable in this build."
+            return L10n.string("updates.status.unavailable")
         }
 
         switch availability {
         case .unknown:
             return mode.detail
         case .upToDate:
-            return "Pomodoro is up to date."
+            return L10n.string("updates.status.up_to_date")
         case .available(let version):
-            return "Version \(version) is available."
+            return L10n.format("updates.status.available", version)
         case .ready(let version):
-            return "Version \(version) is ready to install."
+            return L10n.format("updates.status.ready", version)
         case .installing(let version):
-            return "Installing version \(version)…"
+            return L10n.format("updates.status.installing", version)
         }
     }
 

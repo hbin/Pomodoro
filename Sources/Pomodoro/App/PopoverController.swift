@@ -16,6 +16,8 @@ final class PopoverController: NSObject {
     private var lastCloseDate: Date?
     private var settingsObservation: AnyCancellable?
     private var appResignObserver: NSObjectProtocol?
+    private var menuTrackingObservers: [NSObjectProtocol] = []
+    private var isMenuTracking = false
     private var localMouseMonitor: Any?
     var onWillShow: (() -> Void)?
     var onDidClose: (() -> Void)?
@@ -88,10 +90,34 @@ final class PopoverController: NSObject {
                 self?.close()
             }
         }
+        let notificationCenter = NotificationCenter.default
+        menuTrackingObservers = [
+            notificationCenter.addObserver(
+                forName: NSMenu.didBeginTrackingNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                MainActor.assumeIsolated {
+                    self?.isMenuTracking = true
+                }
+            },
+            notificationCenter.addObserver(
+                forName: NSMenu.didEndTrackingNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                MainActor.assumeIsolated {
+                    self?.isMenuTracking = false
+                }
+            }
+        ]
         localMouseMonitor = NSEvent.addLocalMonitorForEvents(
             matching: [.leftMouseDown, .rightMouseDown]
         ) { [weak self] event in
-            if let self, event.window !== self.panel {
+            if let self,
+               !self.isMenuTracking,
+               event.window !== self.panel,
+               !Self.isMenuWindow(event.window) {
                 self.close()
             }
             return event
@@ -168,6 +194,12 @@ final class PopoverController: NSObject {
         lastCloseDate = Date()
         panel.orderOut(nil)
         onDidClose?()
+    }
+
+    private static func isMenuWindow(_ window: NSWindow?) -> Bool {
+        guard let window else { return false }
+        return window.level == .popUpMenu
+            || window.className.contains("Menu")
     }
 
 }

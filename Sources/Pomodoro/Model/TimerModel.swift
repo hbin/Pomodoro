@@ -4,13 +4,29 @@ import PomodoroCore
 import UserNotifications
 
 struct MenuBarDescriptor: Equatable {
-    var title: String
+    var showsRemainingMinutes: Bool
     var isActive: Bool
     var isPaused: Bool
     var isCompleted: Bool
     var isBreak: Bool
     var remainingMinutes: Int
     var progress: Double
+}
+
+private enum TimerModelError: Equatable {
+    case recovery(StateRecoveryIssue)
+    case saveFailed
+
+    var message: String {
+        switch self {
+        case .recovery(.unreadableStateBackedUp):
+            L10n.string("errors.recovery.backed_up")
+        case .recovery(.unreadableStateReset):
+            L10n.string("errors.recovery.reset")
+        case .saveFailed:
+            L10n.string("errors.save_failed")
+        }
+    }
 }
 
 @MainActor
@@ -22,13 +38,16 @@ final class TimerModel: ObservableObject {
     @Published private(set) var tickEnabled: Bool
     @Published private(set) var showMenuBarMinutes: Bool
     @Published private(set) var themePreference: ThemePreference
+    @Published private(set) var languagePreference: LanguagePreference
     @Published private(set) var firstRunTipDismissed: Bool
-    @Published private(set) var errorMessage: String?
     @Published private(set) var notificationStatus: UNAuthorizationStatus = .notDetermined
     @Published private(set) var isFirstRun: Bool
 
+    @Published private var error: TimerModelError?
+
     var onMenuBarChange: ((MenuBarDescriptor) -> Void)?
     var onAppearanceChange: ((ThemePreference) -> Void)?
+    var onLanguageChange: (() -> Void)?
 
     private let store: StateStore
     private let notifications: NotificationService
@@ -50,6 +69,9 @@ final class TimerModel: ObservableObject {
         notifications: NotificationService = NotificationService(),
         sounds: SoundPlayer = SoundPlayer()
     ) {
+        let languagePreference = LanguagePreferenceStore.load()
+        L10n.setActiveLanguage(languagePreference.effectiveLanguage)
+
         self.store = store
         self.notifications = notifications
         self.sounds = sounds
@@ -64,9 +86,14 @@ final class TimerModel: ObservableObject {
         self.tickEnabled = loaded.state.tickEnabled
         self.showMenuBarMinutes = loaded.state.showMenuBarMinutes
         self.themePreference = loaded.state.themePreference
+        self.languagePreference = languagePreference
         self.firstRunTipDismissed = loaded.state.firstRunTipDismissed
         self.isFirstRun = loaded.isFirstRun
-        self.errorMessage = loaded.recoveryMessage
+        self.error = switch loaded.recoveryIssue {
+        case .unreadableStateBackedUp: .recovery(.unreadableStateBackedUp)
+        case .unreadableStateReset: .recovery(.unreadableStateReset)
+        case nil: nil
+        }
         self.needsInitialSave = restoredEvent != nil
 
         if engine.state.runState == .running {
@@ -187,6 +214,8 @@ final class TimerModel: ObservableObject {
     var recommendedBreakMinutes: Int { engine.recommendedBreak.minutes }
     var recommendedBreakPhase: Phase { engine.recommendedBreak.phase }
     var completedFocusCount: Int { snapshot.completedFocusCount }
+    var activeLanguage: AppLanguage { languagePreference.effectiveLanguage }
+    var errorMessage: String? { error?.message }
 
     var remainingSeconds: TimeInterval {
         engine.remaining(at: now)
@@ -213,42 +242,25 @@ final class TimerModel: ObservableObject {
         return endDate.formatted(date: .omitted, time: .shortened)
     }
 
-    var phaseLabel: String {
-        return switch snapshot.phase {
-        case .focus: "FOCUS"
-        case .shortBreak: "SHORT BREAK"
-        case .longBreak: "LONG BREAK"
-        }
-    }
-
-    var intervalCaption: String {
-        let minutes = Int(snapshot.totalSeconds / 60)
-        return switch snapshot.phase {
-        case .focus: "\(minutes)-MINUTE INTERVAL"
-        case .shortBreak: "\(minutes)-MINUTE BREAK"
-        case .longBreak: "\(minutes)-MINUTE BREAK"
-        }
-    }
-
     var readoutCaption: String {
         return switch snapshot.runState {
-        case .idle: "READY"
-        case .running: "REMAINING"
-        case .paused: "PAUSED"
-        case .completed: "COMPLETE"
+        case .idle: L10n.string("timer.caption.ready")
+        case .running: L10n.string("timer.caption.remaining")
+        case .paused: L10n.string("timer.caption.paused")
+        case .completed: L10n.string("timer.caption.complete")
         }
     }
 
     var notificationStatusText: String {
         return switch notificationStatus {
         case .authorized, .provisional, .ephemeral:
-            "Notifications are on"
+            L10n.string("notification_status.on")
         case .denied:
-            "Notifications are off"
+            L10n.string("notification_status.off")
         case .notDetermined:
-            "Notifications not requested yet"
+            L10n.string("notification_status.not_requested")
         @unknown default:
-            "Notification status unknown"
+            L10n.string("notification_status.unknown")
         }
     }
 
@@ -256,12 +268,6 @@ final class TimerModel: ObservableObject {
         let active = snapshot.runState == .running || snapshot.runState == .paused
         let completed = snapshot.runState == .completed
         let remainingMinutes = active ? max(1, Int(ceil(remainingSeconds / 60))) : 0
-        let title: String
-        if active && showMenuBarMinutes {
-            title = "\(remainingMinutes)m"
-        } else {
-            title = ""
-        }
         let progress: Double
         if completed {
             progress = 1
@@ -271,7 +277,7 @@ final class TimerModel: ObservableObject {
             progress = 0
         }
         return MenuBarDescriptor(
-            title: title,
+            showsRemainingMinutes: active && showMenuBarMinutes,
             isActive: active,
             isPaused: snapshot.runState == .paused,
             isCompleted: completed,
@@ -297,7 +303,7 @@ final class TimerModel: ObservableObject {
         lastTickDate = nil
         save()
         updateMenuBar(force: true)
-        announce("Focus started")
+        announce(L10n.string("announcements.focus_started"))
         scheduleNotification(endDate: endDate, phase: .focus)
     }
 
@@ -308,7 +314,7 @@ final class TimerModel: ObservableObject {
         lastTickSecond = nil
         save()
         updateMenuBar(force: true)
-        announce("Break started")
+        announce(L10n.string("announcements.break_started"))
         scheduleNotification(endDate: endDate, phase: snapshot.phase)
     }
 
@@ -320,7 +326,7 @@ final class TimerModel: ObservableObject {
         lastTickDate = nil
         save()
         updateMenuBar(force: true)
-        announce("Focus started")
+        announce(L10n.string("announcements.focus_started"))
         scheduleNotification(endDate: endDate, phase: .focus)
     }
 
@@ -336,7 +342,7 @@ final class TimerModel: ObservableObject {
             notifications.cancel()
             save()
             updateMenuBar(force: true)
-            announce("Focus paused")
+            announce(L10n.string("announcements.focus_paused"))
         } else if engine.state.runState == .paused {
             guard let endDate = engine.resume() else { return }
             snapshot = engine.state
@@ -345,7 +351,7 @@ final class TimerModel: ObservableObject {
             lastTickDate = now
             save()
             updateMenuBar(force: true)
-            announce("Focus resumed")
+            announce(L10n.string("announcements.focus_resumed"))
             scheduleNotification(endDate: endDate, phase: snapshot.phase)
         }
     }
@@ -357,13 +363,13 @@ final class TimerModel: ObservableObject {
         notifications.cancel()
         save()
         updateMenuBar(force: true)
-        announce("Interval ended")
+        announce(L10n.string("announcements.interval_ended"))
     }
 
     func skipBreak() {
         engine.skipBreak()
         finishToIdle()
-        announce("Break skipped")
+        announce(L10n.string("announcements.break_skipped"))
     }
 
     func doneForNow() {
@@ -420,6 +426,26 @@ final class TimerModel: ObservableObject {
         onAppearanceChange?(preference)
     }
 
+    func setLanguagePreference(_ preference: LanguagePreference) {
+        guard languagePreference != preference else { return }
+
+        LanguagePreferenceStore.save(preference)
+        L10n.setActiveLanguage(preference.effectiveLanguage)
+        languagePreference = preference
+
+        onLanguageChange?()
+        updateMenuBar(force: true)
+        if engine.state.runState == .running {
+            scheduleNotificationForCurrentInterval()
+        }
+        announce(
+            L10n.format(
+                "announcements.language_changed",
+                preference.effectiveLanguage.autonym
+            )
+        )
+    }
+
     func refreshNotificationStatus() {
         Task {
             notificationStatus = await notifications.authorizationStatus()
@@ -440,7 +466,7 @@ final class TimerModel: ObservableObject {
     }
 
     func dismissError() {
-        errorMessage = nil
+        error = nil
     }
 
     // MARK: - Private
@@ -460,9 +486,9 @@ final class TimerModel: ObservableObject {
                 sounds.playChime()
             }
             if phase == .focus {
-                announce("Focus complete. \(recommendedBreakMinutes)-minute break available.")
+                announce(L10n.format("announcements.focus_complete", recommendedBreakMinutes))
             } else {
-                announce("Break complete.")
+                announce(L10n.string("announcements.break_complete"))
             }
         }
     }
@@ -543,7 +569,7 @@ final class TimerModel: ObservableObject {
         do {
             try store.save(persisted)
         } catch {
-            errorMessage = "Timer state couldn’t be saved to disk."
+            self.error = .saveFailed
         }
     }
 

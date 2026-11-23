@@ -15,95 +15,113 @@ struct SettingsView: View {
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             VStack(alignment: .leading, spacing: 0) {
-                Text("Settings")
-                    .font(Typo.serif(29))
-                    .foregroundStyle(palette.ink)
-                Text("A quiet timer, nothing to manage.")
-                    .font(Typo.sans(10.7))
-                    .foregroundStyle(palette.mutedInk)
-                    .padding(.top, 2)
+                ScrollView(.vertical) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(L10n.string("settings.title"))
+                            .font(Typo.serif(29))
+                            .foregroundStyle(palette.ink)
+                            .frame(minHeight: Typo.lineHeight(29), alignment: .leading)
+                        Text(L10n.string("settings.subtitle"))
+                            .font(Typo.sans(10.7))
+                            .foregroundStyle(palette.mutedInk)
+                            .frame(minHeight: Typo.lineHeight(10.7), alignment: .leading)
+                            .padding(.top, 2)
 
-                sectionLabel("APPEARANCE")
-                    .padding(.top, 13)
-                Hairline()
-                    .padding(.top, 4)
+                        sectionLabel(L10n.string("settings.section.appearance"))
+                            .padding(.top, 13)
+                        Hairline()
+                            .padding(.top, 4)
 
-                appearancePicker
-                    .padding(.top, 8)
+                        appearancePicker
+                            .padding(.top, 8)
 
-                sectionLabel("SOUND")
-                    .padding(.top, 13)
-                Hairline()
-                    .padding(.top, 4)
+                        Hairline()
+                            .padding(.top, 10)
 
-                settingRow(
-                    title: "Completion chime",
-                    detail: "A soft two-note chime when an interval ends.",
-                    isOn: Binding(
-                        get: { model.chimeEnabled },
-                        set: { model.setChimeEnabled($0) }
-                    )
-                )
+                        languageRow
+                            .padding(.top, 8)
 
-                Hairline()
-                    .padding(.vertical, 6)
+                        sectionLabel(L10n.string("settings.section.sound"))
+                            .padding(.top, 13)
+                        Hairline()
+                            .padding(.top, 4)
 
-                settingRow(
-                    title: "Tick sound",
-                    detail: "A quiet tick each second during focus only.",
-                    isOn: Binding(
-                        get: { model.tickEnabled },
-                        set: { model.setTickEnabled($0) }
-                    )
-                )
+                        settingRow(
+                            title: L10n.string("settings.sound.chime.title"),
+                            detail: L10n.string("settings.sound.chime.detail"),
+                            isOn: Binding(
+                                get: { model.chimeEnabled },
+                                set: { model.setChimeEnabled($0) }
+                            )
+                        )
 
-                sectionLabel("MENU BAR")
-                    .padding(.top, 13)
-                Hairline()
-                    .padding(.top, 4)
+                        Hairline()
+                            .padding(.vertical, 6)
 
-                settingRow(
-                    title: "Show remaining minutes",
-                    detail: "Clock time stays hidden when this is off.",
-                    isOn: Binding(
-                        get: { model.showMenuBarMinutes },
-                        set: { model.setShowMenuBarMinutes($0) }
-                    )
-                )
+                        settingRow(
+                            title: L10n.string("settings.sound.tick.title"),
+                            detail: L10n.string("settings.sound.tick.detail"),
+                            isOn: Binding(
+                                get: { model.tickEnabled },
+                                set: { model.setTickEnabled($0) }
+                            )
+                        )
 
-                sectionLabel("NOTIFICATIONS")
-                    .padding(.top, 13)
-                Hairline()
-                    .padding(.top, 4)
+                        sectionLabel(L10n.string("settings.section.menu_bar"))
+                            .padding(.top, 13)
+                        Hairline()
+                            .padding(.top, 4)
 
-                HStack(spacing: 8) {
-                    Circle()
-                        .fill(notificationColor)
-                        .frame(width: 6, height: 6)
-                    Text(model.notificationStatusText)
-                        .font(Typo.sans(12, weight: "Medium"))
-                        .foregroundStyle(palette.ink.opacity(0.86))
-                    Spacer()
-                    Button("Open Settings") {
-                        model.openNotificationSettings()
+                        settingRow(
+                            title: L10n.string("settings.menu_bar.minutes.title"),
+                            detail: L10n.string("settings.menu_bar.minutes.detail"),
+                            isOn: Binding(
+                                get: { model.showMenuBarMinutes },
+                                set: { model.setShowMenuBarMinutes($0) }
+                            )
+                        )
+
+                        sectionLabel(L10n.string("settings.section.notifications"))
+                            .padding(.top, 13)
+                        Hairline()
+                            .padding(.top, 4)
+
+                        HStack(spacing: 8) {
+                            Circle()
+                                .fill(notificationColor)
+                                .frame(width: 6, height: 6)
+                            Text(model.notificationStatusText)
+                                .font(Typo.sans(12, weight: "Medium"))
+                                .foregroundStyle(palette.ink.opacity(0.86))
+                                .frame(minHeight: Typo.lineHeight(12), alignment: .leading)
+                                .fixedSize(horizontal: false, vertical: true)
+                            Spacer()
+                            Button(L10n.string("settings.notifications.open")) {
+                                model.openNotificationSettings()
+                            }
+                            .buttonStyle(QuietTextButtonStyle())
+                        }
+                        .padding(.top, 10)
+
+                        if model.notificationStatus == .denied {
+                            Text(L10n.string("settings.notifications.denied_detail"))
+                                .font(Typo.sans(10))
+                                .foregroundStyle(palette.mutedInk)
+                                .frame(minHeight: Typo.lineHeight(10), alignment: .leading)
+                                .padding(.top, 1)
+                        }
                     }
-                    .buttonStyle(QuietTextButtonStyle())
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding(.top, 10)
-
-                if model.notificationStatus == .denied {
-                    Text("The timer still works without notifications.")
-                        .font(Typo.sans(10))
-                        .foregroundStyle(palette.mutedInk)
-                        .padding(.top, 1)
-                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .scrollIndicators(.hidden)
+                .scrollBounceBehavior(.basedOnSize)
 
                 if let error = model.errorMessage {
                     ErrorNote(message: error, onDismiss: model.dismissError)
-                        .padding(.top, 10)
+                        .padding(.top, 8)
+                        .padding(.bottom, 8)
                 }
-
-                Spacer(minLength: 4)
 
                 Hairline()
                 HStack(spacing: 6) {
@@ -113,17 +131,18 @@ struct SettingsView: View {
                             .foregroundStyle(palette.mutedInk.opacity(0.8))
                         UpdateDot(
                             hasUpdate: updates.hasUpdate,
-                            isExpanded: showsUpdatePanel
+                            isExpanded: showsUpdatePanel,
+                            language: model.activeLanguage
                         ) {
                             showsUpdatePanel.toggle()
                         }
                     }
                     Spacer()
-                    Button("Done") {
+                    Button(L10n.string("settings.done")) {
                         onClose()
                     }
                     .buttonStyle(QuietTextButtonStyle(color: palette.ink))
-                    Button("Quit Pomodoro") {
+                    Button(L10n.string("settings.quit")) {
                         onQuit()
                     }
                     .buttonStyle(QuietTextButtonStyle())
@@ -135,6 +154,7 @@ struct SettingsView: View {
             if showsUpdatePanel {
                 UpdatePanel(
                     updates: updates,
+                    language: model.activeLanguage,
                     onInstall: {
                         showsUpdatePanel = false
                         updates.installUpdate()
@@ -183,10 +203,90 @@ struct SettingsView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("\(preference.title) theme")
+                .accessibilityLabel(L10n.format("settings.appearance.theme_a11y", preference.title))
                 .accessibilityAddTraits(isSelected ? [.isSelected] : [])
             }
         }
+    }
+
+    private var languageRow: some View {
+        HStack(alignment: .center, spacing: 12) {
+            VStack(alignment: .leading, spacing: 1.5) {
+                Text(L10n.string("settings.language.title"))
+                    .font(Typo.sans(12, weight: "Medium"))
+                    .foregroundStyle(palette.ink.opacity(0.88))
+                    .frame(minHeight: Typo.lineHeight(12), alignment: .leading)
+                Text(model.languagePreference.detail)
+                    .font(Typo.sans(9.7))
+                    .foregroundStyle(palette.mutedInk)
+                    .frame(minHeight: Typo.lineHeight(9.7), alignment: .leading)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 8)
+            languageMenu
+        }
+    }
+
+    private var languageMenu: some View {
+        Menu {
+            Toggle(
+                isOn: Binding(
+                    get: { model.languagePreference == .system },
+                    set: { isOn in
+                        if isOn {
+                            model.setLanguagePreference(.system)
+                        }
+                    }
+                )
+            ) {
+                Text(L10n.string("settings.language.system"))
+            }
+
+            Divider()
+
+            ForEach(AppLanguage.allCases) { language in
+                Toggle(
+                    isOn: Binding(
+                        get: { model.languagePreference == .language(language) },
+                        set: { isOn in
+                            if isOn {
+                                model.setLanguagePreference(.language(language))
+                            }
+                        }
+                    )
+                ) {
+                    Text(language.autonym)
+                }
+            }
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: "globe")
+                    .font(.system(size: 10.5, weight: .medium))
+                    .accessibilityHidden(true)
+                Text(model.languagePreference.title)
+                    .font(Typo.sans(11.5, weight: "Medium"))
+                    .lineLimit(1)
+            }
+            .foregroundStyle(palette.ink.opacity(0.84))
+        }
+        .menuStyle(.borderlessButton)
+        .fixedSize()
+        .padding(.horizontal, 9)
+        .frame(height: 28)
+        .background {
+            RoundedRectangle(cornerRadius: 9, style: .continuous)
+                .fill(palette.plaque.opacity(0.28))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                        .strokeBorder(palette.brass.opacity(0.42), lineWidth: 1)
+                }
+        }
+        .contentShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
+        .help(model.languagePreference.detail)
+        .accessibilityLabel(L10n.string("settings.language.title"))
+        .accessibilityValue(model.languagePreference.title)
+        .accessibilityHint(model.languagePreference.detail)
     }
 
     private var notificationColor: Color {
@@ -208,8 +308,9 @@ struct SettingsView: View {
     private func sectionLabel(_ text: String) -> some View {
         Text(text)
             .font(Typo.label(8.7))
-            .tracking(1.9)
+            .tracking(Typo.tracking(1.9))
             .foregroundStyle(palette.mutedInk)
+            .frame(minHeight: Typo.lineHeight(8.7), alignment: .leading)
     }
 
     private func settingRow(title: String, detail: String, isOn: Binding<Bool>) -> some View {
@@ -218,9 +319,12 @@ struct SettingsView: View {
                 Text(title)
                     .font(Typo.sans(12, weight: "Medium"))
                     .foregroundStyle(palette.ink.opacity(0.88))
+                    .frame(minHeight: Typo.lineHeight(12), alignment: .leading)
                 Text(detail)
                     .font(Typo.sans(9.7))
                     .foregroundStyle(palette.mutedInk)
+                    .frame(minHeight: Typo.lineHeight(9.7), alignment: .leading)
+                    .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 8)

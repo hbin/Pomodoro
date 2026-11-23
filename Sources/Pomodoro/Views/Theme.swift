@@ -22,9 +22,9 @@ enum LaunchAppearance {
 extension ThemePreference {
     var title: String {
         switch self {
-        case .system: "System"
-        case .light: "Light"
-        case .dark: "Black"
+        case .system: L10n.string("settings.appearance.system")
+        case .light: L10n.string("settings.appearance.light")
+        case .dark: L10n.string("settings.appearance.black")
         }
     }
 
@@ -112,27 +112,105 @@ extension Color {
 }
 
 enum Typo {
-    static func sans(_ size: CGFloat, weight: String = "Regular") -> Font {
-        let name: String
-        switch weight {
-        case "Medium": name = "AvenirNext-Medium"
-        case "DemiBold": name = "AvenirNext-DemiBold"
-        case "Bold": name = "AvenirNext-Bold"
-        default: name = "AvenirNext-Regular"
+    private enum InterfaceLanguage {
+        case english
+        case simplifiedChinese
+        case traditionalChinese
+        case japanese
+    }
+
+    private static var interfaceLanguage: InterfaceLanguage {
+        switch L10n.activeLanguage {
+        case .english: .english
+        case .simplifiedChinese: .simplifiedChinese
+        case .traditionalChinese: .traditionalChinese
+        case .japanese: .japanese
         }
-        return .custom(name, size: size)
+    }
+
+    private static var isCJK: Bool {
+        switch interfaceLanguage {
+        case .simplifiedChinese, .traditionalChinese, .japanese: true
+        case .english: false
+        }
+    }
+
+    static func tracking(_ value: CGFloat) -> CGFloat {
+        isCJK ? 0 : value
+    }
+
+    static func lineHeight(_ size: CGFloat) -> CGFloat {
+        (size * 1.4).rounded(.up)
+    }
+
+    static func sans(_ size: CGFloat, weight: String = "Regular") -> Font {
+        let style = sansStyle(weight: weight)
+        return font(named: style.name, size: size, fallback: style.fallback)
     }
 
     static func serif(_ size: CGFloat) -> Font {
-        .custom("IowanOldStyle-Roman", size: size)
+        let name = switch interfaceLanguage {
+        case .english: "IowanOldStyle-Roman"
+        case .simplifiedChinese: "STSongti-SC-Regular"
+        case .traditionalChinese: "STSongti-TC-Regular"
+        case .japanese: "HiraMinProN-W3"
+        }
+        if NSFont(name: name, size: size) != nil {
+            return .custom(name, size: size)
+        }
+        return .system(size: size, weight: .regular, design: .serif)
     }
 
     static func digits(_ size: CGFloat) -> Font {
-        .custom("AvenirNext-Medium", size: size).monospacedDigit()
+        if NSFont(name: "AvenirNext-Medium", size: size) != nil {
+            return .custom("AvenirNext-Medium", size: size).monospacedDigit()
+        }
+        return .system(size: size, weight: .medium).monospacedDigit()
     }
 
     static func label(_ size: CGFloat = 9.5) -> Font {
-        .custom("AvenirNext-DemiBold", size: size)
+        sans(size, weight: "DemiBold")
+    }
+
+    static func wordmark(_ size: CGFloat) -> Font {
+        font(named: "AvenirNext-DemiBold", size: size, fallback: .semibold)
+    }
+
+    private static func font(named name: String, size: CGFloat, fallback: Font.Weight) -> Font {
+        if NSFont(name: name, size: size) != nil {
+            return .custom(name, size: size)
+        }
+        return .system(size: size, weight: fallback)
+    }
+
+    private static func sansStyle(weight: String) -> (name: String, fallback: Font.Weight) {
+        switch interfaceLanguage {
+        case .english:
+            switch weight {
+            case "Medium": ("AvenirNext-Medium", .medium)
+            case "DemiBold": ("AvenirNext-DemiBold", .semibold)
+            case "Bold": ("AvenirNext-Bold", .bold)
+            default: ("AvenirNext-Regular", .regular)
+            }
+        case .simplifiedChinese:
+            switch weight {
+            case "Medium": ("PingFangSC-Medium", .medium)
+            case "DemiBold", "Bold": ("PingFangSC-Semibold", weight == "Bold" ? .bold : .semibold)
+            default: ("PingFangSC-Regular", .regular)
+            }
+        case .traditionalChinese:
+            switch weight {
+            case "Medium": ("PingFangTC-Medium", .medium)
+            case "DemiBold", "Bold": ("PingFangTC-Semibold", weight == "Bold" ? .bold : .semibold)
+            default: ("PingFangTC-Regular", .regular)
+            }
+        case .japanese:
+            switch weight {
+            case "Medium": ("HiraginoSans-W5", .medium)
+            case "DemiBold", "Bold": ("HiraginoSans-W6", weight == "Bold" ? .bold : .semibold)
+            default: ("HiraginoSans-W3", .regular)
+            }
+        }
     }
 }
 

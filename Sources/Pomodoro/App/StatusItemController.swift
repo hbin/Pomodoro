@@ -19,7 +19,7 @@ final class StatusItemController: NSObject {
         button.action = #selector(handleClick(_:))
         button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         button.toolTip = "Pomodoro"
-        button.setAccessibilityLabel("Pomodoro timer")
+        button.setAccessibilityLabel(L10n.string("status_bar.accessibility_label"))
     }
 
     @objc
@@ -40,29 +40,40 @@ final class StatusItemController: NSObject {
 
     func update(_ descriptor: MenuBarDescriptor) {
         guard let button = statusItem.button else { return }
+        button.setAccessibilityLabel(L10n.string("status_bar.accessibility_label"))
         button.image = MenuBarIconFactory.image(
             progress: descriptor.progress,
             isPaused: descriptor.isPaused,
             isBreak: descriptor.isBreak,
             showsRemainingTime: descriptor.isActive || descriptor.isCompleted
         )
-        button.title = descriptor.title.isEmpty ? "" : " \(descriptor.title)"
+        button.title = descriptor.showsRemainingMinutes
+            ? " " + L10n.count("common.minutes_compact", descriptor.remainingMinutes)
+            : ""
         button.font = NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .medium)
 
-        let phase = descriptor.isBreak ? "Break" : "Focus"
         let value: String
         if descriptor.isActive {
-            value = "\(phase), \(descriptor.remainingMinutes) minutes remaining"
-                + (descriptor.isPaused ? ", paused" : "")
+            if descriptor.isBreak {
+                value = descriptor.isPaused
+                    ? L10n.count("status_bar.a11y.break_paused", descriptor.remainingMinutes)
+                    : L10n.count("status_bar.a11y.break_running", descriptor.remainingMinutes)
+            } else {
+                value = descriptor.isPaused
+                    ? L10n.count("status_bar.a11y.focus_paused", descriptor.remainingMinutes)
+                    : L10n.count("status_bar.a11y.focus_running", descriptor.remainingMinutes)
+            }
         } else if descriptor.isCompleted {
-            value = "\(phase) complete"
+            value = descriptor.isBreak
+                ? L10n.string("status_bar.a11y.break_complete")
+                : L10n.string("status_bar.a11y.focus_complete")
         } else {
-            value = "Ready to focus"
+            value = L10n.string("status_bar.a11y.ready")
         }
         button.setAccessibilityValue(value)
         button.toolTip = descriptor.isActive || descriptor.isCompleted
-            ? "Pomodoro — \(value)"
-            : "Pomodoro — ready to focus"
+            ? L10n.format("status_bar.tooltip", value)
+            : L10n.string("status_bar.tooltip.ready")
     }
 
     var anchorButton: NSStatusBarButton? {

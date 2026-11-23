@@ -1,0 +1,1168 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "accessibility.dismiss_error" : {
+      "comment" : "Button that dismisses a timer or save error note. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dismiss error" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关闭错误提示" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "關閉錯誤提示" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "エラーを閉じる" } }
+      }
+    },
+    "accessibility.settings" : {
+      "comment" : "Accessibility label for the gear button that opens Settings. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "设置" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "設定" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "設定" } }
+      }
+    },
+    "announcements.break_complete" : {
+      "comment" : "VoiceOver announcement after a break finishes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Break complete." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息完成。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息完成。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了。" } }
+      }
+    },
+    "announcements.break_skipped" : {
+      "comment" : "VoiceOver announcement after skipping a break. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Break skipped" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已跳过休息" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "已跳過休息" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩をスキップしました" } }
+      }
+    },
+    "announcements.break_started" : {
+      "comment" : "VoiceOver announcement when a break starts. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Break started" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息开始" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息開始" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩を開始しました" } }
+      }
+    },
+    "announcements.focus_complete" : {
+      "comment" : "VoiceOver announcement after focus completes, including the recommended break length. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus complete. %lld-minute break available." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注完成。可以休息 %lld 分钟。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注完成。可以休息 %lld 分鐘。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了。%lld分間の休憩ができます。" } }
+      }
+    },
+    "announcements.focus_paused" : {
+      "comment" : "VoiceOver announcement when focus is paused. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus paused" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注已暂停" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注已暫停" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を一時停止しました" } }
+      }
+    },
+    "announcements.focus_resumed" : {
+      "comment" : "VoiceOver announcement when focus resumes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus resumed" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注已继续" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注已繼續" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を再開しました" } }
+      }
+    },
+    "announcements.focus_started" : {
+      "comment" : "VoiceOver announcement when focus starts. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus started" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注开始" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注開始" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を開始しました" } }
+      }
+    },
+    "announcements.interval_ended" : {
+      "comment" : "VoiceOver announcement after ending an interval early. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Interval ended" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "计时结束" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "計時結束" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマーを終了しました" } }
+      }
+    },
+    "announcements.language_changed" : {
+      "comment" : "VoiceOver announcement after the user changes the app language; %@ is the language name. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Language changed to %@." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "语言已切换为%@。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "語言已切換為%@。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "言語を%@に切り替えました。" } }
+      }
+    },
+    "common.minutes_compact" : {
+      "comment" : "Compact integer minutes used by duration chips and the menu-bar title. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%lldm" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分钟" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分鐘" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分" } }
+      }
+    },
+    "completion.action.done" : {
+      "comment" : "Quiet button that dismisses the completion state. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done for now" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂时完成" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "暫時完成" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "今回はここまで" } }
+      }
+    },
+    "completion.action.start_another" : {
+      "comment" : "Button that starts another focus interval. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start another focus" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "开始下一次专注" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "開始下一次專注" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "もう一度集中する" } }
+      }
+    },
+    "completion.action.take_break" : {
+      "comment" : "Primary button that starts the recommended break. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Take a %lld-minute break" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息 %lld 分钟" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息 %lld 分鐘" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分間の休憩を取る" } }
+      }
+    },
+    "completion.a11y.complete" : {
+      "comment" : "Accessibility value for the completed dial. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Complete" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "完成" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了" } }
+      }
+    },
+    "completion.body.break_ready" : {
+      "comment" : "Completion body shown after a break finishes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start another focus whenever you’re ready." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "准备好后，随时开始下一次专注。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "準備好後，隨時開始下一次專注。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "準備ができたら、次の集中を始めましょう。" } }
+      }
+    },
+    "completion.body.focus_done" : {
+      "comment" : "Completion body shown after focus finishes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Nothing starts until you choose." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "在你选择之前，不会自动开始。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "在你選擇之前，不會自動開始。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "選ぶまで何も始まりません。" } }
+      }
+    },
+    "completion.title.break" : {
+      "comment" : "Completion title after a break. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Break complete" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息完成" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息完成" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了" } }
+      }
+    },
+    "completion.title.focus" : {
+      "comment" : "Completion title after focus. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus complete" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注完成" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注完成" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了" } }
+      }
+    },
+    "errors.recovery.backed_up" : {
+      "comment" : "Recovery note when unreadable timer data was backed up. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Saved timer data couldn’t be read. A backup was kept and the timer was reset." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "无法读取已保存的计时数据。已保留备份，并重置了计时器。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "無法讀取已儲存的計時資料。已保留備份，並重設了計時器。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "保存されたタイマーデータを読み取れませんでした。バックアップを残し、タイマーをリセットしました。" } }
+      }
+    },
+    "errors.recovery.reset" : {
+      "comment" : "Recovery note when unreadable timer data could not be backed up. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Saved timer data couldn’t be read. The timer was reset." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "无法读取已保存的计时数据。计时器已重置。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "無法讀取已儲存的計時資料。計時器已重設。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "保存されたタイマーデータを読み取れませんでした。タイマーをリセットしました。" } }
+      }
+    },
+    "errors.save_failed" : {
+      "comment" : "Error note when timer state cannot be written to disk. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Timer state couldn’t be saved to disk." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "计时器状态无法保存到磁盘。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "計時器狀態無法儲存到磁碟。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマーの状態を保存できませんでした。" } }
+      }
+    },
+    "menu.about" : {
+      "comment" : "Application menu item that opens the standard About panel. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "About Pomodoro" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关于 Pomodoro" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "關於 Pomodoro" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroについて" } }
+      }
+    },
+    "menu.check_for_updates" : {
+      "comment" : "Application and status menu item that asks Sparkle to check for updates. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Check for Updates…" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "检查更新…" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "檢查更新…" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートを確認…" } }
+      }
+    },
+    "menu.quit" : {
+      "comment" : "Application and status menu item that quits the app. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quit Pomodoro" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "退出 Pomodoro" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束 Pomodoro" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroを終了" } }
+      }
+    },
+    "menu.settings" : {
+      "comment" : "Application and status menu item that opens Settings. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings…" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "设置…" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "設定…" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "設定…" } }
+      }
+    },
+    "notification_status.not_requested" : {
+      "comment" : "Settings notification status before permission is requested. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications not requested yet" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "尚未请求通知权限" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "尚未要求通知權限" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知は未設定です" } }
+      }
+    },
+    "notification_status.off" : {
+      "comment" : "Settings notification status when permission is denied. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications are off" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "通知已关闭" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "通知已關閉" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知はオフです" } }
+      }
+    },
+    "notification_status.on" : {
+      "comment" : "Settings notification status when permission is granted. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications are on" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "通知已开启" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "通知已開啟" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知はオンです" } }
+      }
+    },
+    "notification_status.unknown" : {
+      "comment" : "Settings notification status fallback. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notification status unknown" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "通知状态未知" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "通知狀態未知" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知の状態は不明です" } }
+      }
+    },
+    "notifications.break.body" : {
+      "comment" : "Body of the notification delivered when a break finishes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start another focus when you’re ready." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "准备好后，开始下一次专注。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "準備好後，開始下一次專注。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "準備ができたら、次の集中を始めましょう。" } }
+      }
+    },
+    "notifications.break.title" : {
+      "comment" : "Title of the notification delivered when a break finishes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Break complete" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息完成" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息完成" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了" } }
+      }
+    },
+    "notifications.focus.body" : {
+      "comment" : "Body of the notification delivered when focus finishes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ready for a break, whenever you are." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "准备好休息时，随时开始。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "準備好休息時，隨時開始。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩の準備ができたら、いつでもどうぞ。" } }
+      }
+    },
+    "notifications.focus.title" : {
+      "comment" : "Title of the notification delivered when focus finishes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus complete" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注完成" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注完成" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了" } }
+      }
+    },
+    "settings.appearance.black" : {
+      "comment" : "Appearance choice that forces the dark palette. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Black" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "黑色" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "黑色" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ブラック" } }
+      }
+    },
+    "settings.appearance.light" : {
+      "comment" : "Appearance choice that forces the light palette. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Light" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "浅色" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "淺色" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ライト" } }
+      }
+    },
+    "settings.appearance.system" : {
+      "comment" : "Appearance choice that follows the macOS appearance. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "System" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "系统" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "系統" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "システム" } }
+      }
+    },
+    "settings.appearance.theme_a11y" : {
+      "comment" : "Accessibility label for an appearance choice; %@ is the localized theme name. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@ theme" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%@主题" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%@主題" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@のテーマ" } }
+      }
+    },
+    "settings.done" : {
+      "comment" : "Quiet button that closes Settings. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "完成" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了" } }
+      }
+    },
+    "settings.language.detail" : {
+      "comment" : "Detail shown when the app uses a language chosen in Settings. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Changes apply immediately." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "更改会立即生效。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "變更會立即生效。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "変更はすぐに反映されます。" } }
+      }
+    },
+    "settings.language.system" : {
+      "comment" : "Language choice that follows the macOS app language. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "System Default" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "跟随系统" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "跟隨系統" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "システム（既定）" } }
+      }
+    },
+    "settings.language.system_detail" : {
+      "comment" : "Detail shown when the app follows the macOS app language. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Follows the macOS app language." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "跟随 macOS 的应用语言。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "跟隨 macOS 的應用語言。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "macOSのアプリ言語に従います。" } }
+      }
+    },
+    "settings.language.title" : {
+      "comment" : "Settings row title for the in-app language picker. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Language" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "语言" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "語言" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "言語" } }
+      }
+    },
+    "settings.menu_bar.minutes.detail" : {
+      "comment" : "Detail for the menu-bar remaining-minutes toggle. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Clock time stays hidden when this is off." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关闭后隐藏时钟时间。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "關閉後隱藏時鐘時間。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "オフにすると時刻は表示されません。" } }
+      }
+    },
+    "settings.menu_bar.minutes.title" : {
+      "comment" : "Title for the menu-bar remaining-minutes toggle. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Show remaining minutes" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "显示剩余分钟" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "顯示剩餘分鐘" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "残り時間を表示" } }
+      }
+    },
+    "settings.notifications.denied_detail" : {
+      "comment" : "Detail shown when notification permission is denied. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "The timer still works without notifications." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "即使没有通知，计时器仍可正常使用。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "即使沒有通知，計時器仍可正常使用。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知がなくてもタイマーは使えます。" } }
+      }
+    },
+    "settings.notifications.open" : {
+      "comment" : "Button that opens macOS notification settings for the app. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Settings" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "打开系统设置" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "打開系統設定" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "システム設定を開く" } }
+      }
+    },
+    "settings.quit" : {
+      "comment" : "Button in Settings that quits the app. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quit Pomodoro" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "退出 Pomodoro" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束 Pomodoro" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroを終了" } }
+      }
+    },
+    "settings.section.appearance" : {
+      "comment" : "Settings section label for appearance. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "APPEARANCE" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "外观" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "外觀" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "外観" } }
+      }
+    },
+    "settings.section.menu_bar" : {
+      "comment" : "Settings section label for menu-bar options. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "MENU BAR" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "菜单栏" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "選單列" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "メニューバー" } }
+      }
+    },
+    "settings.section.notifications" : {
+      "comment" : "Settings section label for notifications. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "NOTIFICATIONS" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "通知" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "通知" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知" } }
+      }
+    },
+    "settings.section.sound" : {
+      "comment" : "Settings section label for sound. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "SOUND" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "声音" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "音效" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "サウンド" } }
+      }
+    },
+    "settings.sound.chime.detail" : {
+      "comment" : "Detail for the completion chime toggle. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A soft two-note chime when an interval ends." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "间隔结束时响起柔和的双音提示。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "間隔結束時響起柔和的雙音提示。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "区切りが終わると、やわらかな2音のチャイムが鳴ります。" } }
+      }
+    },
+    "settings.sound.chime.title" : {
+      "comment" : "Title for the completion chime toggle. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Completion chime" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成提示音" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "完成提示音" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了チャイム" } }
+      }
+    },
+    "settings.sound.tick.detail" : {
+      "comment" : "Detail for the ticking sound toggle. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A quiet tick each second during focus only." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "仅在专注时每秒发出轻微滴答声。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "僅在專注時每秒發出輕微滴答聲。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中中だけ、1秒ごとに小さく時を刻みます。" } }
+      }
+    },
+    "settings.sound.tick.title" : {
+      "comment" : "Title for the ticking sound toggle. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tick sound" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "滴答声" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "滴答聲" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "時計の音" } }
+      }
+    },
+    "settings.subtitle" : {
+      "comment" : "Subtitle under the Settings heading. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A quiet timer, nothing to manage." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "安静的计时器，无需操心。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "安靜的計時器，無需操心。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "静かなタイマー。管理するものはありません。" } }
+      }
+    },
+    "settings.title" : {
+      "comment" : "Settings heading. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "设置" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "設定" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "設定" } }
+      }
+    },
+    "status_bar.a11y.break_complete" : {
+      "comment" : "Status item accessibility value after a break completes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Break complete" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息完成" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息完成" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了" } }
+      }
+    },
+    "status_bar.a11y.break_paused" : {
+      "comment" : "Status item accessibility value while a paused break remains. Native review pending.",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : { "stringUnit" : { "state" : "translated", "value" : "Break, %lld minute remaining, paused" } },
+              "other" : { "stringUnit" : { "state" : "translated", "value" : "Break, %lld minutes remaining, paused" } }
+            }
+          }
+        },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息，剩余 %lld 分钟，已暂停" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息，剩餘 %lld 分鐘，已暫停" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩、残り%lld分、一時停止中" } }
+      }
+    },
+    "status_bar.a11y.break_running" : {
+      "comment" : "Status item accessibility value while a break is running. Native review pending.",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : { "stringUnit" : { "state" : "translated", "value" : "Break, %lld minute remaining" } },
+              "other" : { "stringUnit" : { "state" : "translated", "value" : "Break, %lld minutes remaining" } }
+            }
+          }
+        },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息，剩余 %lld 分钟" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息，剩餘 %lld 分鐘" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩、残り%lld分" } }
+      }
+    },
+    "status_bar.a11y.focus_complete" : {
+      "comment" : "Status item accessibility value after focus completes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus complete" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注完成" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注完成" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了" } }
+      }
+    },
+    "status_bar.a11y.focus_paused" : {
+      "comment" : "Status item accessibility value while a paused focus remains. Native review pending.",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : { "stringUnit" : { "state" : "translated", "value" : "Focus, %lld minute remaining, paused" } },
+              "other" : { "stringUnit" : { "state" : "translated", "value" : "Focus, %lld minutes remaining, paused" } }
+            }
+          }
+        },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注，剩余 %lld 分钟，已暂停" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注，剩餘 %lld 分鐘，已暫停" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中、残り%lld分、一時停止中" } }
+      }
+    },
+    "status_bar.a11y.focus_running" : {
+      "comment" : "Status item accessibility value while focus is running. Native review pending.",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : { "stringUnit" : { "state" : "translated", "value" : "Focus, %lld minute remaining" } },
+              "other" : { "stringUnit" : { "state" : "translated", "value" : "Focus, %lld minutes remaining" } }
+            }
+          }
+        },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注，剩余 %lld 分钟" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注，剩餘 %lld 分鐘" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中、残り%lld分" } }
+      }
+    },
+    "status_bar.a11y.ready" : {
+      "comment" : "Status item accessibility value when idle. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ready to focus" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "准备专注" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "準備專注" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中の準備完了" } }
+      }
+    },
+    "status_bar.accessibility_label" : {
+      "comment" : "Accessibility label for the menu-bar status item. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro timer" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro 计时器" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro 計時器" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroタイマー" } }
+      }
+    },
+    "status_bar.tooltip" : {
+      "comment" : "Status item tooltip prefix followed by the localized state value. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — %@" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — %@" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — %@" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — %@" } }
+      }
+    },
+    "status_bar.tooltip.ready" : {
+      "comment" : "Status item tooltip when idle. Keeps the lowercase English wording. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — ready to focus" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — 准备专注" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — 準備專注" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — 集中の準備完了" } }
+      }
+    },
+    "timer.action.end_break" : {
+      "comment" : "Accessibility label for the button that ends a break immediately. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "End break" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结束休息" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束休息" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩を終了" } }
+      }
+    },
+    "timer.action.end_break_hint" : {
+      "comment" : "Accessibility hint for the button that ends a break. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ends the break now" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "立即结束休息" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "立即結束休息" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩をすぐに終了します" } }
+      }
+    },
+    "timer.action.end_focus" : {
+      "comment" : "Accessibility label for the button that ends a focus interval. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "End focus interval" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结束专注" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束專注" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を終了" } }
+      }
+    },
+    "timer.action.end_focus_hint" : {
+      "comment" : "Accessibility hint for the focus end button. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Asks for confirmation before ending focus" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结束专注前会先确认" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束專注前會先確認" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を終了する前に確認します" } }
+      }
+    },
+    "timer.action.pause" : {
+      "comment" : "Primary button title while running. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pause" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂停" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "暫停" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止" } }
+      }
+    },
+    "timer.action.resume" : {
+      "comment" : "Primary button title while paused. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Resume" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "继续" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "繼續" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "再開" } }
+      }
+    },
+    "timer.action.start" : {
+      "comment" : "Primary button title when idle; %lld is the selected focus length in minutes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start %lld-minute focus" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "开始 %lld 分钟专注" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "開始 %lld 分鐘專注" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分間の集中を開始" } }
+      }
+    },
+    "timer.a11y.break_dial" : {
+      "comment" : "Accessibility label for the break dial. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Break timer" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息计时器" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息計時器" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩タイマー" } }
+      }
+    },
+    "timer.a11y.focus_chip" : {
+      "comment" : "Accessibility label for a focus-length chip; %lld is the length in minutes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld-minute focus" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注 %lld 分钟" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注 %lld 分鐘" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分間の集中" } }
+      }
+    },
+    "timer.a11y.focus_dial" : {
+      "comment" : "Accessibility label for the focus dial. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus timer" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注计时器" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注計時器" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中タイマー" } }
+      }
+    },
+    "timer.a11y.pause_hint" : {
+      "comment" : "Accessibility hint for the pause action. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pauses the timer" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂停计时" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "暫停計時" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマーを一時停止します" } }
+      }
+    },
+    "timer.a11y.paused_value" : {
+      "comment" : "Accessibility value for the paused dial; %@ is the MM:SS remaining time. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@, paused" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%@，已暂停" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%@，已暫停" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@、一時停止中" } }
+      }
+    },
+    "timer.a11y.ready_value" : {
+      "comment" : "Accessibility value for the idle dial; %lld is the selected focus length. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld minutes, ready" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分钟，准备就绪" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分鐘，準備就緒" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分、準備完了" } }
+      }
+    },
+    "timer.a11y.resume_hint" : {
+      "comment" : "Accessibility hint for the resume action. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Resumes the timer" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "继续计时" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "繼續計時" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマーを再開します" } }
+      }
+    },
+    "timer.a11y.running_value" : {
+      "comment" : "Accessibility value for the running dial; %@ is the MM:SS remaining time. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@, running" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%@，进行中" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%@，進行中" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@、実行中" } }
+      }
+    },
+    "timer.a11y.start_hint" : {
+      "comment" : "Accessibility hint for the start-focus action. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Starts a focus interval in this popover" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "在此窗口中开始一段专注" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "在此視窗中開始一段專注" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画面で集中を開始します" } }
+      }
+    },
+    "timer.caption.complete" : {
+      "comment" : "Dial caption and completion headline when an interval is complete. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "COMPLETE" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "完成" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了" } }
+      }
+    },
+    "timer.caption.paused" : {
+      "comment" : "Dial caption while paused. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "PAUSED" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂停" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "暫停" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止" } }
+      }
+    },
+    "timer.caption.ready" : {
+      "comment" : "Dial caption while idle. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "READY" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "准备" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "準備" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "準備" } }
+      }
+    },
+    "timer.caption.remaining" : {
+      "comment" : "Dial caption while running. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "REMAINING" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "剩余" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "剩餘" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "残り" } }
+      }
+    },
+    "timer.end.confirm" : {
+      "comment" : "Inline confirmation shown before ending focus. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "End this focus?" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结束本次专注？" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束本次專注？" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この集中を終了しますか？" } }
+      }
+    },
+    "timer.end.end" : {
+      "comment" : "Confirmation button that ends focus. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "End" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结束" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "終了" } }
+      }
+    },
+    "timer.end.keep_going" : {
+      "comment" : "Confirmation button that keeps focus running. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Keep going" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "继续专注" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "繼續專注" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "続ける" } }
+      }
+    },
+    "timer.interval.label" : {
+      "comment" : "Label above the focus-length chips. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "INTERVAL" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "时长" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "時長" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "時間" } }
+      }
+    },
+    "timer.interval.long_break_hint" : {
+      "comment" : "Hint next to the focus-length chips explaining the four-focus rhythm. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "long break after 4" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "每 4 次后长休息" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "每 4 次後長休息" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "4回後に長めの休憩" } }
+      }
+    },
+    "timer.status.ends_at" : {
+      "comment" : "Status line showing when the current interval ends; %@ is a system-formatted time. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ends at %@" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结束于 %@" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束於 %@" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@に終了" } }
+      }
+    },
+    "timer.status.paused_remaining" : {
+      "comment" : "Status line while paused; %@ is the MM:SS remaining time. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Paused · %@ remaining" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已暂停 · 剩余 %@" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "已暫停 · 剩餘 %@" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止 · 残り %@" } }
+      }
+    },
+    "timer.tip.dismiss" : {
+      "comment" : "Accessibility label for dismissing the first-run tip. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dismiss tip" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关闭提示" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "關閉提示" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ヒントを閉じる" } }
+      }
+    },
+    "timer.tip.first_run" : {
+      "comment" : "First-run tip explaining the menu-bar dial. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "The dial lives in your menu bar. Click it anytime." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "表盘就在菜单栏中，随时点击即可。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "錶盤就在選單列中，隨時點擊即可。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ダイヤルはメニューバーにあります。クリックで開きます。" } }
+      }
+    },
+    "timer.tip.keeps_running" : {
+      "comment" : "Footer tip shown while an interval is active. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "You can close this popover; the timer keeps running." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "可以关闭此窗口，计时仍会继续。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "可以關閉此視窗，計時仍會繼續。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画面を閉じてもタイマーは動き続けます。" } }
+      }
+    },
+    "timer.tip.rhythm" : {
+      "comment" : "Idle footer tip after the first-run tip is dismissed. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Enjoy the rhythm of focused time." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "享受专注的节奏。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "享受專注的節奏。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中できる時間のリズムを楽しみましょう。" } }
+      }
+    },
+    "timer.title.break" : {
+      "comment" : "Popover title during a break. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Step away" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息一下" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息一下" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ひと休み" } }
+      }
+    },
+    "timer.title.idle" : {
+      "comment" : "Popover title when idle. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ready to focus" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "准备专注" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "準備專注" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中の準備" } }
+      }
+    },
+    "timer.title.paused" : {
+      "comment" : "Popover title while paused. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Holding pause" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂停中" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "暫停中" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止中" } }
+      }
+    },
+    "timer.title.running" : {
+      "comment" : "Popover title during focus. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus in progress" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注进行中" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注進行中" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中しています" } }
+      }
+    },
+    "updates.action.check_now" : {
+      "comment" : "Update panel button that asks Sparkle to check now. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Check Now" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "立即检查" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "立即檢查" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "今すぐ確認" } }
+      }
+    },
+    "updates.action.install" : {
+      "comment" : "Update panel button that installs an available update. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Install Update" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "安装更新" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "安裝更新" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートをインストール" } }
+      }
+    },
+    "updates.action.later" : {
+      "comment" : "Update panel button that closes the panel while keeping the update available. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Later" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "稍后" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "稍後" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "あとで" } }
+      }
+    },
+    "updates.action.later_hint" : {
+      "comment" : "Accessibility hint for the Later button. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Keeps the update available" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "保留此更新" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "保留此更新" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートを残しておきます" } }
+      }
+    },
+    "updates.dot.hint" : {
+      "comment" : "Accessibility hint for the update dot. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Shows update controls" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "显示更新控件" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "顯示更新控制項" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートの操作を表示します" } }
+      }
+    },
+    "updates.dot.label" : {
+      "comment" : "Tooltip and accessibility label for the update dot. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Update settings" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "更新设置" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "更新設定" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデート設定" } }
+      }
+    },
+    "updates.dot.value_available" : {
+      "comment" : "Tooltip and accessibility value for an available update. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Update available" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "有可用更新" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "有可用更新" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートがあります" } }
+      }
+    },
+    "updates.dot.value_none" : {
+      "comment" : "Accessibility value when no update is known. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No update available" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "没有可用更新" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "沒有可用更新" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートはありません" } }
+      }
+    },
+    "updates.mode.a11y" : {
+      "comment" : "Accessibility label for an update mode; %@ is the localized mode name. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%@ updates" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%@更新" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%@更新" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@のアップデート" } }
+      }
+    },
+    "updates.mode.download.detail" : {
+      "comment" : "Description of the Download update mode. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Downloads quietly and installs when Pomodoro quits." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "静默下载，并在退出 Pomodoro 时安装。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "靜默下載，並在結束 Pomodoro 時安裝。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "静かにダウンロードし、Pomodoro終了時にインストールします。" } }
+      }
+    },
+    "updates.mode.download.title" : {
+      "comment" : "Download update mode name. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Download" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "下载" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "下載" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ダウンロード" } }
+      }
+    },
+    "updates.mode.never.detail" : {
+      "comment" : "Description of the Never update mode. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Automatic updates off; manual checks still work." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自动更新已关闭，仍可手动检查。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "自動更新已關閉，仍可手動檢查。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "自動アップデートはオフですが、手動で確認できます。" } }
+      }
+    },
+    "updates.mode.never.title" : {
+      "comment" : "Never update mode name. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Never" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "从不" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "從不" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "しない" } }
+      }
+    },
+    "updates.mode.notify.detail" : {
+      "comment" : "Description of the Notify update mode. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Checks daily; you choose when to install." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "每天检查，由你决定何时安装。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "每天檢查，由你決定何時安裝。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "毎日確認し、インストールはあなたが選びます。" } }
+      }
+    },
+    "updates.mode.notify.title" : {
+      "comment" : "Notify update mode name. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notify" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "通知" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "通知" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知" } }
+      }
+    },
+    "updates.panel.title" : {
+      "comment" : "Heading of the compact update panel. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Updates" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "更新" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "更新" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデート" } }
+      }
+    },
+    "updates.section.automatic" : {
+      "comment" : "Section label above the update mode choices. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "AUTOMATIC" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自动" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "自動" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "自動" } }
+      }
+    },
+    "updates.status.available" : {
+      "comment" : "Update status when a version is available; %@ is the version string. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Version %@ is available." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "版本 %@ 可用。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "版本 %@ 可用。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "バージョン %@ が利用できます。" } }
+      }
+    },
+    "updates.status.installing" : {
+      "comment" : "Update status while installing; %@ is the version string. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Installing version %@…" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "正在安装版本 %@…" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "正在安裝版本 %@…" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "バージョン %@ をインストール中…" } }
+      }
+    },
+    "updates.status.ready" : {
+      "comment" : "Update status when a version is ready to install; %@ is the version string. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Version %@ is ready to install." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "版本 %@ 可以安装。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "版本 %@ 可以安裝。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "バージョン %@ をインストールできます。" } }
+      }
+    },
+    "updates.status.unavailable" : {
+      "comment" : "Update status when the build has no updater. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Updates are unavailable in this build." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "此版本不支持更新。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "此版本不支援更新。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "このビルドではアップデートを利用できません。" } }
+      }
+    },
+    "updates.status.up_to_date" : {
+      "comment" : "Update status when Pomodoro is current. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro is up to date." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro 已是最新版本。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro 已是最新版本。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroは最新です。" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}
