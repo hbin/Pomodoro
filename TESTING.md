@@ -35,6 +35,8 @@ automated tests.
 - [ ] Pausing at zero completes the interval once without double-counting.
 - [ ] Natural completion increments the focus count and offers the next action.
 - [ ] Ending a focus early does not advance the focus count or long-break rhythm.
+- [ ] Ending a focus early asks for confirmation before discarding the interval;
+      ending a break does not.
 - [ ] The fourth completed focus recommends a 15-minute long break.
 - [ ] Declining an offered long break with `Done for now` resets the rhythm
       before the next focus.

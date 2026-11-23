@@ -328,8 +328,8 @@ struct TimerPopoverView: View {
                 confirmingEnd = true
             }
         } label: {
-            Image(systemName: "xmark")
-                .font(.system(size: 12, weight: .semibold))
+            Image(systemName: "stop.fill")
+                .font(.system(size: 13, weight: .semibold))
         }
         .buttonStyle(SquareButtonStyle(size: 44, foreground: palette.tomato))
         .accessibilityLabel(
@@ -346,10 +346,11 @@ struct TimerPopoverView: View {
 
     private var endConfirmation: some View {
         HStack(spacing: 8) {
+            Spacer(minLength: 4)
             Text(L10n.string("timer.end.confirm"))
                 .font(Typo.sans(11))
                 .foregroundStyle(palette.ink.opacity(0.82))
-            Spacer(minLength: 4)
+                .padding(.trailing, 10)
             Button(L10n.string("timer.end.keep_going")) {
                 confirmingEnd = false
             }
@@ -359,7 +360,7 @@ struct TimerPopoverView: View {
                 confirmingEnd = false
                 model.endInterval()
             }
-            .buttonStyle(QuietTextButtonStyle(color: palette.tomato))
+            .buttonStyle(DestructiveTextButtonStyle(color: palette.deepTomato))
         }
         .frame(height: 49)
     }
@@ -495,5 +496,21 @@ private struct PrimaryButtonLabel: View {
             }
             .padding(.trailing, 15)
         }
+    }
+}
+
+private struct DestructiveTextButtonStyle: ButtonStyle {
+    let color: Color
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(Typo.sans(11.5, weight: "DemiBold"))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 15)
+            .frame(height: 30)
+            .background {
+                RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    .fill(color.opacity(configuration.isPressed ? 0.78 : 1))
+            }
     }
 }
