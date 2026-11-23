@@ -187,7 +187,7 @@ struct DialView: View {
                 }
                 .overlay {
                     Circle()
-                        .strokeBorder(palette.ink.opacity(0.035), lineWidth: 0.8)
+                        .strokeBorder(palette.brass.opacity(0.55), lineWidth: 0.9)
                 }
                 .shadow(
                     color: .black.opacity(scheme == .dark ? 0.32 : 0.10),

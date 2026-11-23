@@ -430,8 +430,11 @@ The dial is a 60-minute clock:
 - Tick marks are decorative and unlabelled; the central readout is
   authoritative.
 - The central plaque shows `MM:SS` and `REMAINING`.
+- The plaque is a raised disc with a hairline brass edge, so the hand reads as
+  mounted on it rather than floating on the face.
 - The hand and arc use the tomato accent.
-- The center pivot uses brass with a dark center.
+- The plaque covers the dial center, so this dial has no visible pivot; the
+  brass pivot appears only in the app and menu-bar icons.
 - The dial remains legible at the popover's supported size.
 
 Break intervals use the same geometry with the sage accent.
