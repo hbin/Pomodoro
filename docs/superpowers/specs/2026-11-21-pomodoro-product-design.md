@@ -374,7 +374,7 @@ The popover should feel like a small, well-made desk instrument:
 - Thin brass outer rim.
 - Slightly inset paper surface with restrained texture.
 - Muted tomato-red hand and live-interval controls, with a leaf-green action
-  that starts focus.
+  that starts an interval.
 - Dark warm ink for typography and controls.
 - Rounded rectangular body rather than a literal tomato or mascot.
 
@@ -393,7 +393,7 @@ Light mode:
 - Deep tomato: `#A53D2E`
 - Brass: `#B48A58`
 - Light brass: `#DCC29B`
-- Leaf, focus start only: `#74965F` with an ink label
+- Leaf, primary actions only: `#7C9F5C` with an ink label
 - Sage, breaks only: `#7F8C72`
 
 Dark mode:
@@ -402,6 +402,11 @@ Dark mode:
 - Cream text replaces ink.
 - Tomato, brass, and sage remain recognizable.
 - Contrast is maintained without turning the popover into a glowing object.
+
+The primary action keeps one fill in every mode, including breaks, pause, and
+resume. Mode is carried by the dial, the pointer, the mode dots, and the mode
+label, so the button stays a constant target while the face changes. Sage and
+tomato are too low-contrast to fill a button with legible text.
 
 ### 9.3 Typography
 
