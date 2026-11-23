@@ -173,7 +173,7 @@ struct TimerPopoverView: View {
             }
 
             if !model.isIdle {
-                Text(L10n.string("timer.tip.keeps_running"))
+                Text(L10n.string(model.isPaused ? "timer.tip.paused" : "timer.tip.keeps_running"))
                     .font(Typo.sans(9.7))
                     .foregroundStyle(palette.mutedInk.opacity(0.78))
                     .padding(.top, 10)

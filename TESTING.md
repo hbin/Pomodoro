@@ -83,6 +83,7 @@ automated tests.
       line appears in the mode row below the dial.
 - [ ] The dial's progress arc sits in the chapter ring outside the minute
       ticks, a square-ended hairline against the brass rim with no glow.
+- [ ] A paused interval shows the paused status line and the paused footer tip.
 - [ ] Settings uses the plain card background; no ambient rim, glow, or shade
       is visible there.
 - [ ] Changing the mode animates the light over 850 ms; with Reduce Motion
