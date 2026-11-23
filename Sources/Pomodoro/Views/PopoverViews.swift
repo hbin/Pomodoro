@@ -8,7 +8,7 @@ struct PopoverRootView: View {
     @Environment(\.colorScheme) private var scheme
 
     static let width: CGFloat = 380
-    static let height: CGFloat = 544
+    static let height: CGFloat = 580
     static let settingsHeight: CGFloat = 520
 
     static func contentHeight(showingSettings: Bool) -> CGFloat {
@@ -112,6 +112,11 @@ struct TimerPopoverView: View {
 
             controls
             .padding(.top, 17)
+
+            if model.isIdle {
+                breakActions
+                    .padding(.top, 8)
+            }
 
             Spacer(minLength: 8)
 
@@ -280,6 +285,31 @@ struct TimerPopoverView: View {
             .buttonStyle(QuietTextButtonStyle(color: palette.tomato))
         }
         .frame(height: 49)
+    }
+
+    private var breakActions: some View {
+        HStack(spacing: 8) {
+            breakButton(
+                phase: .shortBreak,
+                title: L10n.format("timer.break.short_with_minutes", 5)
+            )
+            breakButton(
+                phase: .longBreak,
+                title: L10n.format("timer.break.long_with_minutes", 15)
+            )
+        }
+    }
+
+    private func breakButton(phase: Phase, title: String) -> some View {
+        Button {
+            model.startBreak(phase)
+        } label: {
+            Text(title)
+                .lineLimit(1)
+                .minimumScaleFactor(0.9)
+        }
+        .buttonStyle(OutlineButtonStyle(height: 42))
+        .accessibilityLabel(title)
     }
 
     private var primaryButtonTitle: String {

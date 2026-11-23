@@ -38,6 +38,8 @@ automated tests.
 - [ ] The fourth completed focus recommends a 15-minute long break.
 - [ ] Skipping a long break or starting another focus resets the rhythm.
 - [ ] Completing a break offers another focus interval.
+- [ ] Starting a short or long break from idle uses the 5- or 15-minute
+      duration and preserves the completed focus count and rhythm.
 
 ### Restoration and wake recovery
 
@@ -59,6 +61,10 @@ automated tests.
 ### Popover and menu bar
 
 - [ ] Idle, running, paused, completed, and break states render correctly.
+- [ ] The short- and long-break buttons appear only while idle and are hidden
+      while any interval is running, paused, or completed.
+- [ ] Both break buttons start the existing break state, menu-bar
+      treatment, notification, and completion flow.
 - [ ] Duration selection, start, pause, resume, end early, skip, and done actions work.
 - [ ] The menu-bar icon, optional minutes, progress, and paused/completed states
       match the timer state.

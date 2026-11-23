@@ -318,6 +318,17 @@ final class TimerModel: ObservableObject {
         scheduleNotification(endDate: endDate, phase: snapshot.phase)
     }
 
+    func startBreak(_ phase: Phase) {
+        guard let endDate = engine.startBreak(phase) else { return }
+        snapshot = engine.state
+        now = Date()
+        lastTickSecond = nil
+        save()
+        updateMenuBar(force: true)
+        announce(L10n.string("announcements.break_started"))
+        scheduleNotification(endDate: endDate, phase: snapshot.phase)
+    }
+
     func startAnother() {
         guard let endDate = engine.startAnother() else { return }
         snapshot = engine.state

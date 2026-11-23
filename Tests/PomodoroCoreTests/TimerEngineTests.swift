@@ -129,6 +129,103 @@ final class TimerEngineTests: XCTestCase {
         XCTAssertEqual(engine.state.runState, .running)
     }
 
+    func testStartingShortBreakDirectlyFromIdle() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+
+        let end = engine.startBreak(.shortBreak)
+
+        XCTAssertEqual(engine.state.phase, .shortBreak)
+        XCTAssertEqual(engine.state.runState, .running)
+        XCTAssertEqual(engine.state.totalSeconds, 300)
+        XCTAssertEqual(engine.state.remainingSeconds, 300)
+        XCTAssertEqual(engine.state.endDate, clock.date.addingTimeInterval(300))
+        XCTAssertEqual(end, clock.date.addingTimeInterval(300))
+        XCTAssertEqual(engine.displaySeconds(), 300)
+    }
+
+    func testStartingLongBreakDirectlyFromIdle() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+
+        let end = engine.startBreak(.longBreak)
+
+        XCTAssertEqual(engine.state.phase, .longBreak)
+        XCTAssertEqual(engine.state.runState, .running)
+        XCTAssertEqual(engine.state.totalSeconds, 900)
+        XCTAssertEqual(engine.state.remainingSeconds, 900)
+        XCTAssertEqual(engine.state.endDate, clock.date.addingTimeInterval(900))
+        XCTAssertEqual(end, clock.date.addingTimeInterval(900))
+        XCTAssertEqual(engine.displaySeconds(), 900)
+    }
+
+    func testDirectBreakPreservesFocusRhythm() {
+        let clock = TestClock()
+        let state = TimerState(completedFocusCount: 3)
+        var engine = makeEngine(clock, state: state)
+
+        engine.startBreak(.longBreak)
+
+        XCTAssertEqual(engine.state.completedFocusCount, 3)
+        XCTAssertEqual(engine.recommendedBreak.phase, .shortBreak)
+    }
+
+    func testDirectBreakRejectsInvalidPhaseAndNonIdleStates() {
+        let clock = TestClock()
+        var idleEngine = makeEngine(clock)
+
+        XCTAssertNil(idleEngine.startBreak(.focus))
+        XCTAssertEqual(idleEngine.state, .initial)
+
+        let states = [
+            TimerState(
+                phase: .focus,
+                runState: .running,
+                totalSeconds: 1500,
+                remainingSeconds: 1200,
+                endDate: clock.date.addingTimeInterval(1200)
+            ),
+            TimerState(
+                phase: .focus,
+                runState: .paused,
+                totalSeconds: 1500,
+                remainingSeconds: 1200
+            ),
+            TimerState(
+                phase: .focus,
+                runState: .completed,
+                totalSeconds: 1500,
+                remainingSeconds: 0
+            ),
+            TimerState(
+                phase: .shortBreak,
+                runState: .running,
+                totalSeconds: 300,
+                remainingSeconds: 200,
+                endDate: clock.date.addingTimeInterval(200)
+            ),
+            TimerState(
+                phase: .shortBreak,
+                runState: .paused,
+                totalSeconds: 300,
+                remainingSeconds: 200
+            ),
+            TimerState(
+                phase: .shortBreak,
+                runState: .completed,
+                totalSeconds: 300,
+                remainingSeconds: 0
+            )
+        ]
+
+        for state in states {
+            var engine = makeEngine(clock, state: state)
+
+            XCTAssertNil(engine.startBreak(.shortBreak), "\(state.runState) \(state.phase)")
+            XCTAssertEqual(engine.state, state)
+        }
+    }
+
     func testSkippingLongBreakResetsRhythm() {
         let clock = TestClock()
         var engine = makeEngine(clock)

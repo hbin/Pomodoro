@@ -234,6 +234,18 @@ public struct TimerEngine {
     }
 
     @discardableResult
+    public mutating func startBreak(_ phase: Phase) -> Date? {
+        guard state.runState == .idle, phase.isBreak else { return nil }
+        let minutes = phase == .longBreak ? 15 : 5
+        state.phase = phase
+        state.totalSeconds = TimeInterval(minutes * 60)
+        state.remainingSeconds = state.totalSeconds
+        state.endDate = now().addingTimeInterval(state.totalSeconds)
+        state.runState = .running
+        return state.endDate
+    }
+
+    @discardableResult
     public mutating func startRecommendedBreak() -> Date? {
         guard state.runState == .completed, state.phase == .focus else { return nil }
         let recommendation = recommendedBreak

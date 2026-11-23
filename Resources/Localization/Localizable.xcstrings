@@ -794,6 +794,24 @@
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画面で集中を開始します" } }
       }
     },
+    "timer.break.long_with_minutes" : {
+      "comment" : "Idle-screen button that starts a long break; %lld is the break length in minutes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Long break · %lld min" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "长休息 · %lld 分钟" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "長休息 · %lld 分鐘" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩 · %lld分" } }
+      }
+    },
+    "timer.break.short_with_minutes" : {
+      "comment" : "Idle-screen button that starts a short break; %lld is the break length in minutes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Short break · %lld min" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "短休息 · %lld 分钟" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "短休息 · %lld 分鐘" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩 · %lld分" } }
+      }
+    },
     "timer.caption.complete" : {
       "comment" : "Dial caption and completion headline when an interval is complete. Native review pending.",
       "localizations" : {
