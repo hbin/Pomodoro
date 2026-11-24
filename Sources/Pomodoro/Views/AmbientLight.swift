@@ -151,7 +151,7 @@ enum AmbientMotion {
 
 /// A linear paper gradient whose angle can animate. SwiftUI does not
 /// interpolate `LinearGradient` points by default.
-struct AmbientPaper: View, @MainActor Animatable {
+struct AmbientPaper: View, @preconcurrency Animatable {
     var angle: Double
     let colors: [Color]
 
@@ -186,7 +186,7 @@ struct AmbientPaper: View, @MainActor Animatable {
 }
 
 /// A radial gradient whose center can animate.
-struct AmbientCircleFace: View, @MainActor Animatable {
+struct AmbientCircleFace: View, @preconcurrency Animatable {
     var center: UnitPoint
     let colors: [Color]
     let startRadius: CGFloat
