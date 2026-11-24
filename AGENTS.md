@@ -112,6 +112,13 @@ nested components in the required order, and verifies entitlements.
   pending notifications when the preference changes.
 - There are no UI snapshot tests. For visual changes, build the app, launch it,
   and inspect the affected states in both themes.
+- Check the Settings card for overflow after every change to its content or
+  layout, not only before a release. The card is 592 points at its shortest and
+  grows to the measured content plus footer, so a new row, a longer translation,
+  or a notification-state line must never push the last row or the footer into a
+  scrollbar. Open Settings in all four languages, with notifications allowed and
+  denied, in both themes, and confirm the footer is visible without a scroll
+  indicator; a scrollbar here is a bug, not a fallback.
 - Do not regenerate the README screenshots with each UI change. Refresh
   `docs/screenshots` only when preparing a release, and tell the user the
   screenshots are stale instead of updating them mid-cycle.
