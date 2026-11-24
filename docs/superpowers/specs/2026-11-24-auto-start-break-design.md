@@ -101,8 +101,9 @@ normal running break and restores with its delayed end date.
 | `settings.focus.auto_break.detail` | **Starts the recommended break after the focus chime ends.** |
 | `notifications.focus.body` | **Time for a break.** |
 
-The Settings card gains one section and one row. Its height increases so the
-row and footer remain visible without scrolling.
+The Settings card gains one section and one row. It is at least 592 points tall
+and grows to whatever its measured content and footer need, so the new row, the
+notification explanation, and the footer all fit without a scrollbar.
 
 ## 4. Accessibility
 

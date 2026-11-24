@@ -50,6 +50,9 @@ final class TimerModel: ObservableObject {
     @Published private(set) var snapshot: TimerState
     @Published private(set) var now: Date
     @Published private(set) var isShowingSettings = false
+    /// The natural height of the Settings content, measured by the view so the
+    /// card can grow to fit instead of scrolling.
+    @Published private(set) var settingsContentHeight: CGFloat = 0
     @Published private(set) var chimeEnabled: Bool
     @Published private(set) var tickEnabled: Bool
     @Published private(set) var showMenuBarMinutes: Bool
@@ -139,6 +142,11 @@ final class TimerModel: ObservableObject {
 
     func saveNow() {
         save()
+    }
+
+    func reportSettingsContentHeight(_ height: CGFloat) {
+        guard height > 0, height.isFinite, abs(height - settingsContentHeight) >= 0.5 else { return }
+        settingsContentHeight = height
     }
 
     private func startTicker() {

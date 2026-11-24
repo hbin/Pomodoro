@@ -134,8 +134,12 @@ automated tests.
 - [ ] The Settings back control returns to the timer without closing the popover.
 - [ ] Settings shows the FOCUS section and Auto-start break toggle, on by
       default, and the choice survives relaunch.
-- [ ] The taller Settings card keeps the Auto-start break row and footer visible
-      without a visible scrollbar in all four languages and both themes.
+- [ ] The Settings card grows to fit its content: the Auto-start break row, the
+      notifications explanation, and the footer all stay visible with no
+      scrollbar, in all four languages, both themes, and with notifications
+      allowed or denied. The card is never shorter than the timer page's card
+      plus the settings rows, and switching Settings on and off returns the
+      popover to 506 points.
 - [ ] Changing the mode animates the light over 850 ms; with Reduce Motion
       enabled the pose updates without movement.
 - [ ] Reduce Transparency keeps the ambient layers legible and does not

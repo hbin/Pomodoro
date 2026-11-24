@@ -15,6 +15,7 @@ final class PopoverController: NSObject {
     private static let screenEdgeInset: CGFloat = 8
     private var lastCloseDate: Date?
     private var settingsObservation: AnyCancellable?
+    private var settingsHeightObservation: AnyCancellable?
     private var appResignObserver: NSObjectProtocol?
     private var menuTrackingObservers: [NSObjectProtocol] = []
     private var isMenuTracking = false
@@ -30,7 +31,8 @@ final class PopoverController: NSObject {
         )
         self.host = host
         let initialHeight = PopoverRootView.contentHeight(
-            showingSettings: model.isShowingSettings
+            showingSettings: model.isShowingSettings,
+            settingsContent: model.settingsContentHeight
         )
         host.view.frame = NSRect(
             x: 0,
@@ -79,6 +81,14 @@ final class PopoverController: NSObject {
             .receive(on: RunLoop.main)
             .sink { [weak self] isShowingSettings in
                 self?.resize(for: isShowingSettings)
+            }
+
+        settingsHeightObservation = model.$settingsContentHeight
+            .removeDuplicates()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                guard let self, self.model.isShowingSettings else { return }
+                self.resize(for: true)
             }
 
         appResignObserver = NotificationCenter.default.addObserver(
@@ -135,7 +145,10 @@ final class PopoverController: NSObject {
     }
 
     private func resize(for isShowingSettings: Bool) {
-        let height = PopoverRootView.contentHeight(showingSettings: isShowingSettings)
+        let height = PopoverRootView.contentHeight(
+            showingSettings: isShowingSettings,
+            settingsContent: model.settingsContentHeight
+        )
         guard panel.frame.height != height else { return }
 
         var frame = panel.frame
@@ -165,7 +178,8 @@ final class PopoverController: NSObject {
 
         let buttonRect = buttonWindow.convertToScreen(button.bounds)
         let height = PopoverRootView.contentHeight(
-            showingSettings: model.isShowingSettings
+            showingSettings: model.isShowingSettings,
+            settingsContent: model.settingsContentHeight
         )
         let anchorWidth = min(Self.menuBarAnchorWidth, buttonRect.width)
         let anchorCenterX = buttonRect.maxX - anchorWidth / 2

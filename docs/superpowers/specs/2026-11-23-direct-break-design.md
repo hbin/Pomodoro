@@ -311,9 +311,11 @@ a localized label and duration.
 - Use a 506-point card height; the top mode row is removed and the current mode
   sits below the dial; the primary/footer spacing is preserved.
 - Keep the Settings card and layout; the later Auto-start break setting adds
-  one row and raises the card height. Settings uses the plain card
-  background without the ambient rim, glow, or shade; the light study is limited
-  to the clock page.
+  one row and raises the card height. The card is never shorter than 592 points
+  and grows to the height its measured content and footer need, so a row or a
+  notification explanation never falls into a scrollbar. Settings uses the
+  plain card background without the ambient rim, glow, or shade; the light
+  study is limited to the clock page.
 - The status line uses the mode row; the dial and primary do not move.
 - Verify Light, Black, System appearance, and Reduce Transparency.
 - Do not animate break start. The ambient light follows the selected mode.

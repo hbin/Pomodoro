@@ -9,10 +9,20 @@ struct PopoverRootView: View {
 
     static let width: CGFloat = 380
     static let height: CGFloat = 506
-    static let settingsHeight: CGFloat = 592
 
-    static func contentHeight(showingSettings: Bool) -> CGFloat {
-        showingSettings ? settingsHeight : height
+    /// The Settings card is at least this tall, and grows to fit its content
+    /// so no row or explanation has to scroll.
+    static let settingsHeight: CGFloat = 592
+    static let settingsMaxHeight: CGFloat = 700
+
+    /// The outer padding of the Settings card; the rest of its height is the
+    /// measured content plus footer.
+    private static let settingsChrome: CGFloat = 37
+
+    static func contentHeight(showingSettings: Bool, settingsContent: CGFloat = 0) -> CGFloat {
+        guard showingSettings else { return height }
+        let fitted = settingsContent > 0 ? settingsContent + settingsChrome : settingsHeight
+        return min(max(settingsHeight, fitted.rounded(.up)), settingsMaxHeight)
     }
 
     @State private var idleMode: IdleMode = LaunchIdleMode.override ?? .focus
@@ -58,7 +68,8 @@ struct PopoverRootView: View {
                         model: model,
                         updates: updates,
                         onQuit: { NSApp.terminate(nil) },
-                        onClose: model.closeSettings
+                        onClose: model.closeSettings,
+                        onContentHeight: model.reportSettingsContentHeight
                     )
                 } else {
                     content
@@ -70,7 +81,10 @@ struct PopoverRootView: View {
         }
         .frame(
             width: Self.width,
-            height: Self.contentHeight(showingSettings: model.isShowingSettings)
+            height: Self.contentHeight(
+                showingSettings: model.isShowingSettings,
+                settingsContent: model.settingsContentHeight
+            )
         )
         .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
         .onAppear {

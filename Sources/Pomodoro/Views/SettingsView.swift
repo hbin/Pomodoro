@@ -7,8 +7,11 @@ struct SettingsView: View {
     @ObservedObject var updates: UpdateController
     let onQuit: () -> Void
     let onClose: () -> Void
+    let onContentHeight: (CGFloat) -> Void
     @Environment(\.colorScheme) private var scheme
     @State private var showsUpdatePanel = false
+    @State private var scrolledHeight: CGFloat = 0
+    @State private var footerHeight: CGFloat = 0
 
     private var palette: Palette { Palette.forScheme(scheme) }
 
@@ -146,6 +149,10 @@ struct SettingsView: View {
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { height in
+                        scrolledHeight = height
+                        reportNeededHeight()
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .scrollIndicators(.hidden)
@@ -178,6 +185,10 @@ struct SettingsView: View {
                     .buttonStyle(QuietTextButtonStyle())
                 }
                 .padding(.top, 7)
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { height in
+                    footerHeight = height
+                    reportNeededHeight()
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 
@@ -206,6 +217,13 @@ struct SettingsView: View {
         .onAppear {
             model.refreshNotificationStatus()
         }
+    }
+
+    /// The card grows to this height, so the scrolling content and the footer
+    /// never compete for the same space.
+    private func reportNeededHeight() {
+        guard scrolledHeight > 0, footerHeight > 0 else { return }
+        onContentHeight(scrolledHeight + footerHeight + 0.7)
     }
 
     private var appearancePicker: some View {
