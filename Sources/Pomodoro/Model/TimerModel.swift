@@ -64,6 +64,10 @@ final class TimerModel: ObservableObject {
     @Published private(set) var firstRunTipDismissed: Bool
     @Published private(set) var notificationStatus: UNAuthorizationStatus = .notDetermined
     @Published private(set) var isFirstRun: Bool
+    /// Set when a break is ended before its natural completion. The idle
+    /// screen consumes it to keep that break selected instead of jumping to
+    /// Focus; a completed break still uses the normal Focus-ready flow.
+    @Published private(set) var idleReturnPhase: Phase?
 
     @Published private var error: TimerModelError?
 
@@ -415,13 +419,19 @@ final class TimerModel: ObservableObject {
     }
 
     func endInterval() {
+        let endedPhase = snapshot.phase
         engine.endEarly()
+        idleReturnPhase = endedPhase.isBreak ? endedPhase : nil
         snapshot = engine.state
         now = Date()
         notifications.cancel()
         save()
         updateMenuBar(force: true)
         announce(L10n.string("announcements.interval_ended"))
+    }
+
+    func clearIdleReturnPhase() {
+        idleReturnPhase = nil
     }
 
     func skipBreak() {

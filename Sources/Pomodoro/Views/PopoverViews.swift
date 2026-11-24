@@ -100,13 +100,22 @@ struct PopoverRootView: View {
         .onAppear {
             if let override = LaunchIdleMode.override {
                 idleMode = override
+                model.clearIdleReturnPhase()
+            } else if let phase = model.idleReturnPhase {
+                idleMode = IdleMode(phase: phase)
+                model.clearIdleReturnPhase()
             } else {
                 normalizeIdleSelection()
             }
         }
         .onChange(of: model.isIdle) { _, isIdle in
             if isIdle {
-                normalizeIdleSelection()
+                if let phase = model.idleReturnPhase {
+                    idleMode = IdleMode(phase: phase)
+                    model.clearIdleReturnPhase()
+                } else {
+                    normalizeIdleSelection()
+                }
             }
         }
     }
