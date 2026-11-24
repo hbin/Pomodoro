@@ -45,6 +45,8 @@
 	<false/>
 	<key>SUAutomaticallyUpdate</key>
 	<false/>
+	<key>SUBetaFeedURL</key>
+	<string>https://github.com/hbin/Pomodoro/releases/download/beta/appcast.xml</string>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUEnableInstallerLauncherService</key>

@@ -106,6 +106,9 @@ nested components in the required order, and verifies entitlements.
 - The app supports these launch arguments for focused UI checks:
   `--open-popover`, `--open-settings`, `--force-light`, `--force-dark`, and
   `--idle-mode=focus|short|long`.
+- Quit Pomodoro and wait for the process to exit before launching with
+  arguments. `open` treats an already-running app as an activation and silently
+  drops `--args`, so a stale instance shows the previous theme or language.
 - Runtime language is switchable in Settings. Use `L10n` for runtime copy
   instead of SwiftUI `Text("key")` literals so the interface updates without a
   relaunch; keep `Typo` language-aware and refresh menus, status-item copy, and

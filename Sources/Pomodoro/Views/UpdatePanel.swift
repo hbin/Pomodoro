@@ -131,6 +131,33 @@ struct UpdatePanel: View {
                 }
             }
             .padding(.top, 1)
+
+            if updates.isBetaChannelAvailable {
+                Hairline()
+                    .padding(.top, 6)
+
+                HStack(alignment: .center, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(L10n.string("updates.beta.title"))
+                            .font(Typo.sans(9.5, weight: "Medium"))
+                            .foregroundStyle(palette.ink.opacity(0.86))
+                        Text(L10n.string("updates.beta.detail"))
+                            .font(Typo.sans(8.6))
+                            .foregroundStyle(palette.mutedInk)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Spacer(minLength: 6)
+                    Toggle("", isOn: betaChannelBinding)
+                        .labelsHidden()
+                        .toggleStyle(.switch)
+                        .tint(palette.tomato)
+                        .controlSize(.mini)
+                        .accessibilityLabel(L10n.string("updates.beta.title"))
+                        .accessibilityHint(L10n.string("updates.beta.detail"))
+                }
+                .padding(.top, 5)
+                .padding(.bottom, 4)
+            }
         }
         .padding(.horizontal, 11)
         .padding(.top, 9)
@@ -146,6 +173,13 @@ struct UpdatePanel: View {
         }
         .accessibilityElement(children: .contain)
         .id(language)
+    }
+
+    private var betaChannelBinding: Binding<Bool> {
+        Binding(
+            get: { updates.isBetaChannelEnabled },
+            set: { updates.setBetaChannelEnabled($0) }
+        )
     }
 
     private var showsInstallButton: Bool {

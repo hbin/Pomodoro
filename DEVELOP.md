@@ -115,9 +115,14 @@ instance, and launch the built app with:
 
 ```sh
 defaults delete com.hb.pomodoro PomodoroLanguagePreference 2>/dev/null || true
+pkill -x Pomodoro 2>/dev/null || true
+while pgrep -x Pomodoro >/dev/null; do sleep 0.2; done
 open build/Pomodoro.app --args --open-popover \
   -AppleLanguages '(zh-Hans)' -AppleLocale zh_CN
 ```
+
+The `pkill` and wait lines are required. `open` activates an already-running
+app and drops `--args`, so a stale instance keeps the previous language.
 
 | Language | `-AppleLanguages` | `-AppleLocale` |
 | --- | --- | --- |
@@ -163,9 +168,44 @@ GitHub Releases on a private repository do not provide public download URLs, so
 the repository must be public or the feed and update archive must be hosted at
 a public URL.
 
+### Beta channel
+
+Pre-release builds ship through a second Sparkle channel named `beta`:
+
+```text
+https://github.com/hbin/Pomodoro/releases/download/beta/appcast.xml
+```
+
+That URL belongs to a rolling pre-release whose tag is `beta`. The release
+workflow replaces its `appcast.xml` and update ZIP on every beta, so the URL
+stays fixed. The stable and beta feeds never mix:
+
+- `releases/latest` skips pre-releases, so stable users cannot see a beta item.
+- Beta items carry `<sparkle:channel>beta</sparkle:channel>` and are only
+  visible to an updater that allows the channel.
+- When a stable release ships, the workflow also replaces the beta feed's
+  appcast with the stable one, so beta testers roll onto the final build.
+
+The first workflow run that publishes a release creates the `beta` release, so
+the feed resolves even before the first beta exists. Local release bundles built
+before that run have a switch that cannot check the channel.
+
+**Settings → update dot → Beta updates** stores the opt-in in
+`PomodoroBetaUpdates` and switches the feed through
+`SPUUpdaterDelegate.feedURLString(for:)` and
+`SPUUpdaterDelegate.allowedChannels(for:)`. The beta feed comes from
+`SUBetaFeedURL`. Debug bundles remove `SUFeedURL`, `SUBetaFeedURL`, and
+`SUPublicEDKey`, so the switch only appears in release builds and local debug
+builds never check for updates.
+
+Turning the switch off returns the stable feed but does not downgrade the
+installed beta; the next stable release must use a higher `CFBundleVersion` to
+replace it. The design record is
+[`docs/superpowers/specs/2026-11-24-beta-channel.md`](docs/superpowers/specs/2026-11-24-beta-channel.md).
+
 The EdDSA public key is stored as `SUPublicEDKey` in `Resources/Info.plist`.
-Debug bundles remove both `SUFeedURL` and `SUPublicEDKey`, so local debug builds
-show updates as unavailable.
+Update metadata lives only in release bundles, so local debug builds show
+updates as unavailable.
 
 ### Signing key and secret
 
@@ -231,16 +271,34 @@ Bump them before packaging a release:
 ./scripts/bump-version.sh build  # build number only
 ```
 
+Beta builds use the same script:
+
+```sh
+./scripts/bump-version.sh beta minor  # 0.3.1 -> 0.4.0-beta.1
+./scripts/bump-version.sh beta        # 0.4.0-beta.1 -> 0.4.0-beta.2
+./scripts/bump-version.sh final       # 0.4.0-beta.2 -> 0.4.0
+```
+
+`beta` accepts `patch` (default), `minor`, or `major` to choose the base of a
+new series. Every mode increments `CFBundleVersion`. Sparkle compares builds, so
+the final release must keep a higher build number than every beta of the same
+series; do not tag a final release that reuses a beta build number.
+
 ### README screenshots
 
 `docs/screenshots` is refreshed only when preparing a release, not with each UI
-change. Quit any running instance first, since `open` activates an existing
-instance and ignores the launch arguments. Then rebuild the app and launch the
-idle popover in both themes:
+change. Rebuild the app, then quit Pomodoro and wait for the process to exit
+before each launch; `open` drops the launch arguments when an instance is
+already running:
 
 ```sh
 ./scripts/build-app.sh debug
+pkill -x Pomodoro 2>/dev/null || true
+while pgrep -x Pomodoro >/dev/null; do sleep 0.2; done
 open build/Pomodoro.app --args --open-popover --force-light
+# Capture docs/screenshots/light-theme.png, then quit before the next launch.
+pkill -x Pomodoro 2>/dev/null || true
+while pgrep -x Pomodoro >/dev/null; do sleep 0.2; done
 open build/Pomodoro.app --args --open-popover --force-dark
 ```
 
@@ -260,6 +318,12 @@ The annotated tag subject becomes the release summary. Keep it to one concise,
 user-facing sentence. If the tag uses the default `Pomodoro X.Y.Z` message, the
 workflow falls back to a capped list of commit subjects.
 
+The tag must match `CFBundleShortVersionString` in `Resources/Info.plist`,
+including a `-beta.N` suffix. The release must retain the asset name
+`appcast.xml` so the `releases/latest/download/appcast.xml` URL resolves.
+
+### Publishing a stable release
+
 ```sh
 ./scripts/bump-version.sh patch
 VERSION=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Resources/Info.plist)
@@ -269,9 +333,27 @@ git tag -a "v$VERSION" -m "Describe this release in one concise sentence."
 git push origin main "v$VERSION"
 ```
 
-The tag must match `CFBundleShortVersionString` in `Resources/Info.plist`.
-The release must retain the asset name `appcast.xml` so the
-`releases/latest/download/appcast.xml` URL resolves.
+### Publishing a beta
+
+```sh
+./scripts/bump-version.sh beta minor
+VERSION=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Resources/Info.plist)
+git add Resources/Info.plist
+git commit -m "Bump version to $VERSION"
+git tag -a "v$VERSION" -m "Describe this beta in one concise sentence."
+git push origin main "v$VERSION"
+```
+
+A `-beta.N` tag publishes a GitHub pre-release with the DMG, update ZIP,
+checksums, and a channel-signed appcast. It also creates or refreshes the
+rolling `beta` release that serves
+`releases/download/beta/appcast.xml`; that feed is what the in-app switch reads.
+The `beta` tag and release are permanent infrastructure for the channel: do not
+delete them, because the download URL would stop resolving.
+
+To promote a beta to a release, run `./scripts/bump-version.sh final`, commit,
+and tag `vX.Y.Z` without the suffix. The workflow publishes a normal release and
+points the beta feed at the new stable appcast.
 
 ## Code signing and notarization
 

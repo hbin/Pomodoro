@@ -1118,6 +1118,24 @@
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートを残しておきます" } }
       }
     },
+    "updates.beta.detail" : {
+      "comment" : "Detail under the beta channel switch in the update panel. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Test builds before a release land here." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "正式发布前的测试版本会出现在这里。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "正式發布前的測試版本會出現在這裡。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "正式リリース前のテスト版がここに届きます。" } }
+      }
+    },
+    "updates.beta.title" : {
+      "comment" : "Beta channel switch title in the update panel. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Beta updates" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "测试版更新" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "測試版更新" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ベータ版アップデート" } }
+      }
+    },
     "updates.dot.hint" : {
       "comment" : "Accessibility hint for the update dot. Native review pending.",
       "localizations" : {

@@ -12,6 +12,10 @@ concurrency:
   group: release-${{ github.ref_name }}
   cancel-in-progress: false
 
+env:
+  BETA_TAG: beta
+  BETA_DOWNLOAD_PREFIX: https://github.com/hbin/Pomodoro/releases/download/beta/
+
 jobs:
   release:
     runs-on: macos-15
@@ -35,14 +39,27 @@ jobs:
           VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Resources/Info.plist)"
           BUILD="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' Resources/Info.plist)"
 
-          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "::error::CFBundleShortVersionString must be MAJOR.MINOR.PATCH (got $VERSION)."
+          if [[ ! "$BUILD" =~ ^[0-9]+$ ]]; then
+            echo "::error::CFBundleVersion must be a whole number (got $BUILD)."
+            exit 1
+          fi
+
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then
+            echo "::error::CFBundleShortVersionString must be MAJOR.MINOR.PATCH or MAJOR.MINOR.PATCH-beta.N (got $VERSION)."
             exit 1
           fi
 
           if [[ "$GITHUB_REF_NAME" != "v$VERSION" ]]; then
             echo "::error::Tag $GITHUB_REF_NAME does not match Resources/Info.plist version v$VERSION."
             exit 1
+          fi
+
+          if [[ "$VERSION" == *-beta.* ]]; then
+            echo "IS_BETA=1" >> "$GITHUB_ENV"
+            echo "Release channel: beta"
+          else
+            echo "IS_BETA=0" >> "$GITHUB_ENV"
+            echo "Release channel: stable"
           fi
 
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
@@ -92,7 +109,7 @@ jobs:
           fi
 
           SUMMARY_TEXT=""
-          if [[ -n "$TAG_SUMMARY" && ! "$TAG_SUMMARY" =~ ^(Pomodoro|Release)[[:space:]]+v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          if [[ -n "$TAG_SUMMARY" && ! "$TAG_SUMMARY" =~ ^(Pomodoro|Release)[[:space:]]+v?[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then
             SUMMARY_TEXT="$TAG_SUMMARY"
           elif [[ -n "$COMMITS" ]]; then
             COMMIT_COUNT="$(printf '%s\n' "$COMMITS" | sed '/^$/d' | wc -l | tr -d ' ')"
@@ -121,6 +138,20 @@ jobs:
           } > "$NOTES_FILE"
 
           echo "NOTES_FILE=$NOTES_FILE" >> "$GITHUB_ENV"
+
+          if [[ "$IS_BETA" == "1" ]]; then
+            BETA_NOTES_FILE="$RUNNER_TEMP/Pomodoro-beta.md"
+            {
+              echo "This is the rolling beta channel that in-app beta updates read."
+              echo
+              echo "Download \`Pomodoro-$VERSION.zip\` or install the DMG from the"
+              echo "\`v$VERSION\` pre-release, then switch on **Beta updates** in"
+              echo "Settings."
+              echo
+              cat "$NOTES_FILE"
+            } > "$BETA_NOTES_FILE"
+            echo "BETA_NOTES_FILE=$BETA_NOTES_FILE" >> "$GITHUB_ENV"
+          fi
 
       - name: Import Developer ID certificate
         if: env.MACOS_CERTIFICATE != ''
@@ -182,12 +213,23 @@ jobs:
             exit 1
           fi
 
-          ./scripts/make-appcast.sh \
-            --version "$VERSION" \
-            --zip "dist/Pomodoro-$VERSION.zip" \
-            --notes "$NOTES_FILE" \
-            --key-file "$KEY_FILE" \
-            --output "dist/appcast.xml"
+          if [[ "$IS_BETA" == "1" ]]; then
+            ./scripts/make-appcast.sh \
+              --version "$VERSION" \
+              --zip "dist/Pomodoro-$VERSION.zip" \
+              --notes "$NOTES_FILE" \
+              --key-file "$KEY_FILE" \
+              --channel beta \
+              --download-prefix "$BETA_DOWNLOAD_PREFIX" \
+              --output "dist/appcast.xml"
+          else
+            ./scripts/make-appcast.sh \
+              --version "$VERSION" \
+              --zip "dist/Pomodoro-$VERSION.zip" \
+              --notes "$NOTES_FILE" \
+              --key-file "$KEY_FILE" \
+              --output "dist/appcast.xml"
+          fi
 
       - name: Notarize the disk image
         if: env.SIGN_IDENTITY != '' && env.APPLE_ID != '' && env.APPLE_TEAM_ID != '' && env.APPLE_APP_PASSWORD != ''
@@ -222,9 +264,60 @@ jobs:
             dist/appcast.xml
           )
 
+          if [[ "$IS_BETA" == "1" ]]; then
+            # The rolling beta release keeps a stable download URL for the
+            # appcast that beta builds read, so its assets are replaced on
+            # every beta.
+            if ! gh release view "$BETA_TAG" >/dev/null 2>&1; then
+              gh release create "$BETA_TAG" \
+                --prerelease \
+                --title "Pomodoro Beta" \
+                --notes-file "$BETA_NOTES_FILE" \
+                --target "$GITHUB_SHA"
+            fi
+            gh release upload "$BETA_TAG" \
+              "dist/Pomodoro-$VERSION.zip" \
+              dist/appcast.xml \
+              --clobber
+            gh release edit "$BETA_TAG" \
+              --title "Pomodoro Beta" \
+              --notes-file "$BETA_NOTES_FILE"
+          else
+            # Beta users follow the stable release once it ships, so point the
+            # beta feed at the new stable appcast. Beta items never appear in
+            # the stable feed because releases/latest skips pre-releases.
+            if gh release view "$BETA_TAG" >/dev/null 2>&1; then
+              gh release upload "$BETA_TAG" dist/appcast.xml --clobber
+            else
+              # Create the channel early so the switch never reads a missing
+              # feed; the first beta replaces these assets.
+              gh release create "$BETA_TAG" \
+                --prerelease \
+                --title "Pomodoro Beta" \
+                --notes "Rolling beta channel for in-app beta updates. Betas appear here before a release." \
+                --target "$GITHUB_SHA" \
+                dist/appcast.xml
+            fi
+          fi
+
+          # Re-running the workflow must update the existing release instead of
+          # failing, so signing or notarization can be retried from the Actions
+          # tab.
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
             gh release upload "$GITHUB_REF_NAME" "${FILES[@]}" --clobber
-            gh release edit "$GITHUB_REF_NAME" --notes-file "$NOTES_FILE"
+            if [[ "$IS_BETA" == "1" ]]; then
+              gh release edit "$GITHUB_REF_NAME" \
+                --notes-file "$NOTES_FILE" \
+                --prerelease
+            else
+              gh release edit "$GITHUB_REF_NAME" --notes-file "$NOTES_FILE"
+            fi
+          elif [[ "$IS_BETA" == "1" ]]; then
+            gh release create "$GITHUB_REF_NAME" "${FILES[@]}" \
+              --title "Pomodoro $VERSION" \
+              --notes-file "$NOTES_FILE" \
+              --prerelease \
+              --verify-tag
           else
             gh release create "$GITHUB_REF_NAME" "${FILES[@]}" \
               --title "Pomodoro $VERSION" \
@@ -242,6 +335,11 @@ jobs:
             echo "### Pomodoro $VERSION released"
             echo
             echo "- Build: \`$BUILD\`"
+            if [[ "$IS_BETA" == "1" ]]; then
+              echo "- Channel: \`beta\` (pre-release)"
+            else
+              echo "- Channel: \`stable\`"
+            fi
             echo "- Disk image: \`Pomodoro.dmg\`"
             echo "- Update archive: \`Pomodoro-$VERSION.zip\`"
             echo "- Appcast: \`appcast.xml\`"

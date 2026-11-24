@@ -69,14 +69,22 @@ final class UpdateController: NSObject, ObservableObject, SPUUpdaterDelegate {
     @Published private(set) var canCheckForUpdates = false
     @Published private(set) var mode: UpdateMode = .notify
     @Published private(set) var availability: UpdateAvailability = .unknown
+    @Published private(set) var isBetaChannelEnabled = false
+
+    private static let betaChannelPreferenceKey = "PomodoroBetaUpdates"
 
     private var updaterController: SPUStandardUpdaterController?
     private var observations: [NSKeyValueObservation] = []
     private var immediateInstallHandler: (() -> Void)?
+    private var betaFeedURL: String?
     private var hasStarted = false
 
     var isAvailable: Bool {
         updaterController != nil
+    }
+
+    var isBetaChannelAvailable: Bool {
+        isAvailable && betaFeedURL != nil
     }
 
     var hasUpdate: Bool {
@@ -115,6 +123,14 @@ final class UpdateController: NSObject, ObservableObject, SPUUpdaterDelegate {
               !publicKey.isEmpty else {
             return
         }
+
+        let betaFeed = (Bundle.main.object(forInfoDictionaryKey: "SUBetaFeedURL") as? String)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if let betaFeed, !betaFeed.isEmpty {
+            betaFeedURL = betaFeed
+        }
+        isBetaChannelEnabled = betaFeedURL != nil
+            && UserDefaults.standard.bool(forKey: Self.betaChannelPreferenceKey)
 
         let controller = SPUStandardUpdaterController(
             startingUpdater: false,
@@ -164,6 +180,23 @@ final class UpdateController: NSObject, ObservableObject, SPUUpdaterDelegate {
         updater.checkForUpdates()
     }
 
+    func setBetaChannelEnabled(_ enabled: Bool) {
+        guard let updater = updaterController?.updater,
+              betaFeedURL != nil,
+              enabled != isBetaChannelEnabled else {
+            return
+        }
+
+        isBetaChannelEnabled = enabled
+        UserDefaults.standard.set(enabled, forKey: Self.betaChannelPreferenceKey)
+        availability = .unknown
+        updater.resetUpdateCycle()
+
+        if updater.automaticallyChecksForUpdates, updater.canCheckForUpdates {
+            updater.checkForUpdates()
+        }
+    }
+
     func installUpdate() {
         if let immediateInstallHandler {
             self.immediateInstallHandler = nil
@@ -174,6 +207,14 @@ final class UpdateController: NSObject, ObservableObject, SPUUpdaterDelegate {
         } else {
             checkForUpdates()
         }
+    }
+
+    func allowedChannels(for updater: SPUUpdater) -> Set<String> {
+        isBetaChannelEnabled ? ["beta"] : []
+    }
+
+    func feedURLString(for updater: SPUUpdater) -> String? {
+        isBetaChannelEnabled ? betaFeedURL : nil
     }
 
     func updater(_ updater: SPUUpdater, didFindValidUpdate item: SUAppcastItem) {

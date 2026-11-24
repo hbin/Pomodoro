@@ -40,6 +40,17 @@ xattr -dr com.apple.quarantine /Applications/Pomodoro.app
 open /Applications/Pomodoro.app
 ```
 
+## Beta builds
+
+Test builds ship to the `beta` channel before a release. Open **Settings**,
+click the dot next to the version, and switch on **Beta updates**. Pomodoro then
+checks the [beta release](https://github.com/hbin/Pomodoro/releases/tag/beta)
+feed instead of the stable one.
+
+Turning the switch off returns you to stable updates. A beta build stays
+installed until a stable release has a higher build number, so the switch does
+not downgrade the app.
+
 ## License
 
 Pomodoro is free to use, modify, and distribute, including for commercial

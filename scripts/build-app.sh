@@ -67,6 +67,7 @@ ditto "$SPARKLE_FRAMEWORK" "$FRAMEWORKS/Sparkle.framework"
 
 if [[ "$CONFIG" == "debug" ]]; then
     /usr/libexec/PlistBuddy -c 'Delete :SUFeedURL' "$APP/Contents/Info.plist"
+    /usr/libexec/PlistBuddy -c 'Delete :SUBetaFeedURL' "$APP/Contents/Info.plist"
     /usr/libexec/PlistBuddy -c 'Delete :SUPublicEDKey' "$APP/Contents/Info.plist"
 else
     FEED_URL="$(/usr/libexec/PlistBuddy -c 'Print :SUFeedURL' "$APP/Contents/Info.plist")"

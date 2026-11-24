@@ -9,21 +9,26 @@ ZIP_PATH="${ZIP_PATH:-}"
 NOTES_PATH="${NOTES_PATH:-}"
 KEY_FILE="${SPARKLE_PRIVATE_KEY_FILE:-}"
 OUTPUT_PATH="${OUTPUT_PATH:-}"
+CHANNEL="${CHANNEL:-}"
+DOWNLOAD_PREFIX="${DOWNLOAD_PREFIX:-}"
 
 usage() {
     cat <<'EOF'
 Usage: scripts/make-appcast.sh --version VERSION --key-file PRIVATE_KEY [options]
 
 Options:
-  --version VERSION     Release version, for example 0.1.4.
+  --version VERSION     Release version, for example 0.1.4 or 0.2.0-beta.1.
   --zip PATH            Update archive (default: dist/Pomodoro-VERSION.zip).
   --notes PATH          Release notes Markdown file (default: dist/Pomodoro-VERSION.md).
   --key-file PATH       Sparkle EdDSA private key file. Required.
   --output PATH         Appcast output path (default: dist/appcast.xml).
+  --channel NAME        Sparkle channel for new items, for example beta.
+  --download-prefix URL Base URL for update downloads
+                        (default: .../releases/download/vVERSION/).
   -h, --help            Show this help.
 
 Environment equivalents: VERSION, ZIP_PATH, NOTES_PATH,
-SPARKLE_PRIVATE_KEY_FILE, and OUTPUT_PATH.
+SPARKLE_PRIVATE_KEY_FILE, OUTPUT_PATH, CHANNEL, and DOWNLOAD_PREFIX.
 EOF
 }
 
@@ -49,6 +54,14 @@ while (( $# )); do
             OUTPUT_PATH="${2:-}"
             shift 2
             ;;
+        --channel)
+            CHANNEL="${2:-}"
+            shift 2
+            ;;
+        --download-prefix)
+            DOWNLOAD_PREFIX="${2:-}"
+            shift 2
+            ;;
         -h|--help)
             usage
             exit 0
@@ -65,14 +78,18 @@ if [[ -z "$VERSION" ]]; then
     echo "A release version is required (--version or VERSION)." >&2
     exit 1
 fi
-if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    echo "Version must be MAJOR.MINOR.PATCH (got $VERSION)." >&2
+if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then
+    echo "Version must be MAJOR.MINOR.PATCH or MAJOR.MINOR.PATCH-beta.N (got $VERSION)." >&2
     exit 1
 fi
 
 ZIP_PATH="${ZIP_PATH:-$ROOT/dist/Pomodoro-$VERSION.zip}"
 NOTES_PATH="${NOTES_PATH:-$ROOT/dist/Pomodoro-$VERSION.md}"
 OUTPUT_PATH="${OUTPUT_PATH:-$ROOT/dist/appcast.xml}"
+DOWNLOAD_PREFIX="${DOWNLOAD_PREFIX:-https://github.com/hbin/Pomodoro/releases/download/v$VERSION/}"
+if [[ "$DOWNLOAD_PREFIX" != */ ]]; then
+    DOWNLOAD_PREFIX="$DOWNLOAD_PREFIX/"
+fi
 
 if [[ -z "$KEY_FILE" ]]; then
     echo "A Sparkle private key file is required (--key-file or SPARKLE_PRIVATE_KEY_FILE)." >&2
@@ -100,14 +117,18 @@ STAGED_APPCAST="$STAGE/appcast.xml"
 cp "$ZIP_PATH" "$STAGED_ZIP"
 cp "$NOTES_PATH" "$STAGED_NOTES"
 
-"$SPARKLE_TOOLS/generate_appcast" \
-    --ed-key-file "$KEY_FILE" \
-    --download-url-prefix "https://github.com/hbin/Pomodoro/releases/download/v$VERSION/" \
-    --embed-release-notes \
-    --maximum-deltas 0 \
-    --maximum-versions 0 \
-    -o "$STAGED_APPCAST" \
-    "$STAGE"
+GENERATE_ARGS=(
+    --ed-key-file "$KEY_FILE"
+    --download-url-prefix "$DOWNLOAD_PREFIX"
+    --embed-release-notes
+    --maximum-deltas 0
+    --maximum-versions 0
+    -o "$STAGED_APPCAST"
+)
+if [[ -n "$CHANNEL" ]]; then
+    GENERATE_ARGS+=(--channel "$CHANNEL")
+fi
+"$SPARKLE_TOOLS/generate_appcast" "${GENERATE_ARGS[@]}" "$STAGE"
 
 ENCLOSURE_SIGNATURE="$(xmllint \
     --xpath 'string((//*[local-name()="enclosure"])[1]/@*[local-name()="edSignature"])' \
@@ -121,12 +142,17 @@ if ! grep -qF '<!-- sparkle-signatures:' "$STAGED_APPCAST"; then
     exit 1
 fi
 
-EXPECTED_URL="https://github.com/hbin/Pomodoro/releases/download/v$VERSION/Pomodoro-$VERSION.zip"
+EXPECTED_URL="${DOWNLOAD_PREFIX}Pomodoro-$VERSION.zip"
 ACTUAL_URL="$(xmllint \
     --xpath 'string((//*[local-name()="enclosure"])[1]/@url)' \
     "$STAGED_APPCAST")"
 if [[ "$ACTUAL_URL" != "$EXPECTED_URL" ]]; then
     echo "Unexpected enclosure URL in appcast: $ACTUAL_URL" >&2
+    exit 1
+fi
+
+if [[ -n "$CHANNEL" ]] && ! grep -qF "<sparkle:channel>$CHANNEL</sparkle:channel>" "$STAGED_APPCAST"; then
+    echo "Generated appcast is missing the $CHANNEL channel marker." >&2
     exit 1
 fi
 

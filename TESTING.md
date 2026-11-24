@@ -13,6 +13,7 @@ automated tests.
 
 - Version:
 - Build:
+- Channel: stable or beta
 - Tester:
 - Date:
 - macOS version:
@@ -214,6 +215,12 @@ automated tests.
 - [ ] Check Now and Check for Updates work and report availability correctly.
 - [ ] The update-available dot only appears in the documented states.
 - [ ] Update UI is readable in all supported languages and both themes.
+- [ ] The Beta updates switch is hidden in debug builds and present in release
+      builds.
+- [ ] Switching Beta updates on reads the `beta` feed, finds a newer beta
+      build, and leaves a running timer untouched.
+- [ ] Switching Beta updates off returns to the stable feed without
+      downgrading the installed beta.
 
 ### Documentation
 
@@ -225,6 +232,10 @@ automated tests.
 - [ ] The tag matches `v` plus `CFBundleShortVersionString`.
 - [ ] CI publishes `Pomodoro.dmg`, `Pomodoro.dmg.sha256`,
       `Pomodoro-VERSION.zip`, its `.sha256`, and `appcast.xml`.
+- [ ] A `-beta.N` tag publishes a pre-release and refreshes the rolling `beta`
+      release without changing what `releases/latest` serves.
+- [ ] A stable release updates the `beta` release appcast so beta testers can
+      move to the final build.
 - [ ] The Sparkle feed and update archive are publicly readable.
 - [ ] The appcast contains valid EdDSA signatures for the feed and enclosure.
 - [ ] The disk image is notarized and stapled when the required secrets are present.
