@@ -91,17 +91,26 @@ Starts the next focus when a break ends.
 
 - Clicking the number enters input; there is no separate edit button.
 - The current number is selected when the field opens, so typing replaces it.
+- The whole 28-point value area is a click target. The click that opens the
+  editor also focuses it and selects the number, even when it lands near the
+  plaque's top or bottom edge, so the first typed digit replaces the old value.
 - The field accepts digits only and at most three digits.
-- Enter commits and leaves edit mode. Clicking another duration field commits
-  the current draft and opens the next one; moving focus to another Settings
-  control commits and closes the draft.
+- Each typed digit applies immediately, before the field loses focus or the
+  user presses Enter. The preference, idle interval, labels, and dial update
+  while the editor is still open. The field text itself is not rewritten while
+  typing; it normalizes when editing ends.
+- Enter leaves edit mode. Clicking another duration field applies the current
+  draft and opens the next one; moving focus to another Settings control
+  applies the draft and closes the editor.
 - The minus and plus buttons change the value by one minute. At rest, the new
   value saves immediately. While the number is being edited, they commit the
   draft, apply the step, and leave edit mode.
-- An empty or non-numeric value reverts to the last committed value.
-- Values below 1 or above 180 clamp to 1 or 180.
+- An empty value leaves the last applied value in place; committing an empty
+  field restores that value in the field.
+- Values below 1 or above 180 apply clamped to 1 or 180 while typing, and the
+  field text settles to the clamped value when editing ends.
 - Escape keeps the existing app behavior: it dismisses the Settings popover.
-  An uncommitted draft is discarded.
+  Digits already applied while typing remain in effect.
 - The help tooltip and accessibility hint explain the click-to-type interaction
   and the 1–180 range.
 
@@ -232,9 +241,11 @@ Traditional Chinese, and Japanese.
       file without durations.
 - [x] The Time (minutes) caption is visible above the columns, and the fields
       show bare numbers without repeating the unit.
-- [x] Clicking a number selects it and accepts typed digits; Enter and clicking
-      another duration field commit the value; empty and out-of-range input
-      resolves to a valid 1–180 value.
+- [x] Clicking a number selects it and accepts typed digits; a click anywhere
+      in the value plaque, including near its edges, focuses the editor; each
+      digit applies immediately without leaving the field; Enter and clicking
+      another duration field end editing; empty and out-of-range input resolve
+      to a valid 1–180 value.
 - [x] The minus and plus buttons flank the editable number, adjust one minute,
       save at rest, commit an active draft before stepping, and disable at 1
       and 180.

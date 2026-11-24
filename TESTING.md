@@ -92,9 +92,12 @@ automated tests.
       the fields show bare numbers without a repeated unit. Spacing, not a
       hairline, separates the duration block from the Auto-start rows.
 - [ ] A new install and an older state file without durations show 25/5/15.
-- [ ] Clicking a number focuses and selects it; typed digits replace the
-      selection, Enter or clicking another duration field commits the value,
-      empty input reverts, and values outside 1–180 clamp.
+- [ ] Clicking a duration value anywhere in its plaque focuses and selects it,
+      including the first click near the top or bottom edge, so typing starts
+      immediately. Each typed digit applies immediately without leaving the
+      field, and the idle timer reflects the new length while the field still
+      has focus. Enter or leaving the field ends editing, empty input reverts,
+      and values outside 1–180 apply clamped and settle to 1 or 180.
 - [ ] Minus and plus buttons flank each editable number, adjust by one minute,
       disable at 1 and 180, save immediately at rest, and commit an active
       draft before stepping.

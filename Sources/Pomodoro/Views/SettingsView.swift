@@ -583,10 +583,7 @@ private struct DurationColumn: View {
             .accessibilityLabel(title)
             .accessibilityHint(accessibilityHint)
             .onAppear {
-                isFocused = true
-                DispatchQueue.main.async {
-                    NSApp.sendAction(#selector(NSText.selectAll(_:)), to: nil, from: nil)
-                }
+                focusEditor()
             }
             .onChange(of: isFocused) { _, focused in
                 if !focused, isEditing {
@@ -598,6 +595,7 @@ private struct DurationColumn: View {
                 if filtered != newValue {
                     draft = filtered
                 }
+                applyDraftWhileTyping(filtered)
             }
             .help(helpText)
     }
@@ -613,16 +611,23 @@ private struct DurationColumn: View {
         onBeginEditing()
     }
 
+    /// Defers focus past the click that opened the editor. Setting focus while
+    /// the button's mouse-up is still being handled can leave the field visible
+    /// but unfocused when the click lands outside the text's inner bounds.
+    private func focusEditor() {
+        DispatchQueue.main.async {
+            isFocused = true
+            NSApp.sendAction(#selector(NSText.selectAll(_:)), to: nil, from: nil)
+        }
+    }
+
     private func finishEditing() {
         isFocused = false
         onEndEditing()
     }
 
     private func adjust(by delta: Int) {
-        let next = min(
-            max(adjustmentBase + delta, range.lowerBound),
-            range.upperBound
-        )
+        let next = clamped(adjustmentBase + delta)
         if next != minutes {
             onChange(next)
         }
@@ -633,15 +638,26 @@ private struct DurationColumn: View {
         }
     }
 
+    /// Applies each valid keystroke so the setting takes effect without leaving
+    /// the field. The draft is only normalized on commit, which keeps editing
+    /// predictable while the user is still typing.
+    private func applyDraftWhileTyping(_ text: String) {
+        guard let parsed = Int(text) else { return }
+        onChange(clamped(parsed))
+    }
+
     private func commitDraft() {
-        let parsed = Int(draft).map {
-            min(max($0, range.lowerBound), range.upperBound)
+        guard let parsed = Int(draft) else {
+            draft = String(minutes)
+            return
         }
-        let resolved = parsed ?? minutes
+        let resolved = clamped(parsed)
         draft = String(resolved)
-        if resolved != minutes {
-            onChange(resolved)
-        }
+        onChange(resolved)
+    }
+
+    private func clamped(_ minutes: Int) -> Int {
+        min(max(minutes, range.lowerBound), range.upperBound)
     }
 }
 
