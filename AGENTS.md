@@ -174,6 +174,8 @@ nested components in the required order, and verifies entitlements.
 
 ## Versions, generated files, and releases
 
+- Before any version bump, tag, publication, or release-repair request, read
+  and follow `RELEASE_RUNBOOK.md` in full.
 - Normal feature and bug-fix work should not change
   `CFBundleShortVersionString` or `CFBundleVersion` in `Resources/Info.plist`.
 - Use `scripts/bump-version.sh` for release version changes. A release tag must
