@@ -208,7 +208,7 @@ struct SettingsView: View {
                         showsUpdatePanel = false
                     }
                 )
-                .frame(width: 304)
+                .frame(maxWidth: 304)
                 .padding(.bottom, 42)
                 .zIndex(1)
             }

@@ -334,6 +334,9 @@ Settings stays intentionally small:
 
 - Opens inside the menu-bar popover. A back control in the title row returns
   to the timer while leaving the popover open.
+- Shares the timer card's 340-point width. Its height follows its content
+  (592-point minimum, 760-point maximum) and may change with language or new
+  rows; the width never changes.
 - Completion chime on/off.
 - Tick sound on/off; default off.
 - Auto-start break on/off; default off. When on, a completed focus goes directly
@@ -414,15 +417,42 @@ on the idle screen.
 The popover should feel like a small, well-made desk instrument:
 
 - Warm bone or cream face.
-- Thin brass outer rim.
+- Thin brass outer and inner edges around an empty recessed bezel channel.
 - Slightly inset paper surface with restrained texture.
-- Muted tomato-red and sage dial accents and live-interval controls, with a
-  leaf-green action that starts an interval.
+- Mode-colored dial accents and live-interval controls: brick Focus, leaf Short
+  break, and deep sage Long break.
 - Dark warm ink for typography and controls.
 - Rounded rectangular body rather than a literal tomato or mascot.
 
 The material treatment should be believable but restrained. Avoid ornamental
 parts that reduce clarity.
+
+**Fixed card geometry (product requirement).**
+
+- The timer card is **340×510 points (2:3)**. Do not change either dimension,
+  including for a translation, without an explicit product decision.
+- Settings uses the **same 340-point width** and a content-measured height
+  (592–760 points). Settings height may grow or shrink with language and
+  settings content; its width must not.
+- The panel may change height between the timer and Settings. Its horizontal
+  center stays anchored across that change.
+
+**Language-stable layout (product requirement).**
+
+- Switching the interface language changes copy only. Icons, buttons, the dial,
+  dots, toggles, pickers, separators and other non-text elements keep their
+  frames, positions, sizes and alignment.
+- On the timer, the title slot, dial row, mode/status row, primary/stop
+  controls and footer keep fixed geometry. The title slot reserves its full
+  line height so a translated or scaled title cannot move the dial. Prefer
+  shorter Japanese copy over shrinking the type.
+- In Settings, text may wrap and the card may grow or shrink vertically, but
+  horizontal geometry stays fixed. Section hairlines span the same content
+  width at the same leading and trailing insets in every language; they are
+  never sized to the label text. Leading copy, trailing toggles, the language
+  picker and footer controls keep their slots.
+- Check all four languages side by side. Any non-text movement between
+  languages is a bug, not an acceptable layout adaptation.
 
 ### 9.2 Palette
 
@@ -436,20 +466,25 @@ Light mode:
 - Deep tomato: `#A53D2E`
 - Brass: `#B48A58`
 - Light brass: `#DCC29B`
-- Leaf, primary actions only: `#7C9F5C` with an ink label
-- Sage, breaks only: `#7F8C72`
+- Mode accents: Focus deep tomato `#A53D2E`; Short break deep sage
+  `#5F6B52`; Long break deeper sage `#4E5A43`.
+- Primary fills: Focus `#B84A37 → #A53D2E`; Short break
+  `#7FA160 → #789A58`; Long break `#5F6B52 → #4E5A43`. Labels are cream
+  on Focus and Long break, ink on Short break.
 
 Dark mode:
 
 - Espresso and charcoal surfaces replace the bone field.
 - Cream text replaces ink.
-- Tomato, brass, and sage remain recognizable.
+- Tomato, brass, leaf, and deep sage remain recognizable; the mode fills use
+  the Black values in the three-mode color system.
 - Contrast is maintained without turning the popover into a glowing object.
 
-The primary action keeps one fill in every mode, including breaks, pause, and
-resume. Mode is carried by the dial accent, the mode dots, and the mode label,
-so the button stays a constant target while the face changes. Sage and tomato
-are too low-contrast to fill a button with legible text.
+The primary action uses the active mode fill in every state: Start, Pause,
+Resume, and completion. Only the label and play/pause glyph change; there is no
+second ink-key or rail treatment. Mode remains explicit through the channel arc,
+the mode dots, the mode label, and the running caption. Each fill is tuned for
+a legible label rather than reusing one constant action color.
 
 ### 9.3 Typography
 
@@ -467,24 +502,27 @@ The dial is a session gauge on a clock-like face:
 
 - There is no hand or visible pivot. One full revolution is the selected
   interval, not an hour.
-- A thin ring in the chapter ring, between the decorative marks and the brass
-  rim, shows the remaining fraction of the interval. It is empty at idle;
-  starting an interval sweeps it clockwise to full in 0.3 seconds, then it
+- An empty recessed channel between thin brass outer and inner edges carries
+  the remaining fraction of the interval. It is empty at idle; starting an
+  interval sweeps the mode-colored arc clockwise to full in 0.3 seconds, then it
   drains counterclockwise to empty.
-- The ring has square ends and no glow; it reads as an inlay in the bezel
+- The arc has square ends and no glow; it reads as an inlay in the channel
   rather than a drawn highlight.
 - At idle the plaque shows the selected duration with `READY`.
-- While paused the ring freezes at the current fraction. At completion it is
+- While paused the arc freezes at the current fraction. At completion it is
   empty; the completion screen shows the offered duration in the readout.
-- The 60 chapter marks are decorative divisions, not minutes. The central
-  readout is authoritative.
-- The central plaque shows `MM:SS` and `REMAINING`.
+- The 60 chapter marks are fixed divisions, not minutes; all remain visible,
+  and only the 12, 3, 6, and 9 o'clock marks are larger. The central readout is
+  authoritative.
+- The central plaque shows `MM:SS` and a caption: `READY` at idle or
+  completion, or `FOCUS` / `SHORT BREAK` / `LONG BREAK` while running or paused.
 - The plaque is a raised disc with a hairline brass edge.
-- The ring uses the phase accent: tomato for focus, sage for breaks.
+- The channel arc uses the mode accent: brick for Focus, deep sage for Short
+  break, and deeper sage for Long break.
 - The brass pivot appears only in the app and menu-bar icons.
 - The dial remains legible at the popover's supported size.
 
-Break intervals use the same geometry with the sage accent.
+Break intervals use the same geometry with their mode accent.
 
 The menu-bar icon is a session gauge rather than a clock: its arc starts full
 and empties counterclockwise as the interval runs, with the hand riding the
@@ -563,6 +601,8 @@ both surfaces are full at the start and empty at the end.
   states.
 - All interactive targets meet comfortable macOS click-target sizes.
 - The interface remains usable at larger system text sizes without clipping.
+- Changing the language keeps non-text controls and focus order stable; only
+  copy and the content-measured Settings height may change.
 
 ## 11. Data and persistence
 
@@ -635,6 +675,14 @@ No task, project, note, or session-history data is stored.
 - The Settings back control returns to the timer in the same popover.
 - Quitting and relaunching restores a running or paused interval.
 
+### Layout stability
+
+- The timer card is 340×510 (2:3), and Settings uses the same 340-point width
+  with a content-measured height.
+- Switching languages changes only copy: no dial, button, icon, toggle, picker
+  or separator moves. Settings section hairlines keep identical horizontal
+  insets in every language.
+
 ### Timer
 
 - The idle screen offers 15, 25, and 45 minutes.
@@ -675,8 +723,9 @@ No task, project, note, or session-history data is stored.
 - Auto-start focus does not start a break.
 - An early-ended focus does not start a break, and an expired focus restored at
   launch shows the break-ready screen instead of starting retroactively.
-- An early-ended break does not start a focus, and an expired break restored at
-  launch shows the focus-ready screen instead of starting retroactively.
+- An early-ended break does not start a focus and returns to that break's
+  ready screen; an expired break restored at launch shows the focus-ready
+  screen instead of starting retroactively.
 - A long break is offered after every fourth completed focus interval.
 - No countdown starts automatically unless the corresponding Auto-start setting
   is enabled.

@@ -19,7 +19,7 @@ spotlight animation.
 | --- | --- | --- | --- |
 | Pomodoro | Upper left | Lower right | Tomato |
 | Short Break | Overhead | Straight down, softer | Sage |
-| Long Break | Upper right | Lower left | Sage with a faint brass warmth |
+| Long Break | Upper right | Lower left | Deep sage accent; brass ambient light and thin channel edges |
 
 The three position dots below the dial are ordered Pomodoro, Short Break, Long
 Break. The light direction follows that order: left, overhead, right.
@@ -46,7 +46,7 @@ Focus 25 upper left, Short break 5 overhead, Long break 15 upper right.
 - The card projection moves opposite the light.
 - The card's paper angle, top rim, glows, dial face, plaque, and cast shadow
   share one light direction per mode. No lit surface may keep a fixed
-  directional highlight; the brass bezel's conic is a fixed material treatment,
+  directional highlight; the thin brass channel edges are fixed material trim,
   not a second light source.
 - The top rim light travels with the light source.
 - The dial face and center plaque highlights move with the light; their shadows
@@ -60,8 +60,9 @@ Focus 25 upper left, Short break 5 overhead, Long break 15 upper right.
 
 The pointer rotates independently over 700 ms. On the idle surface it points at
 the selected duration's minute position on the 60-minute dial: 25 minutes at
-five o'clock, 5 at one o'clock, 15 at three o'clock. The primary action changes
-color over 520 ms so the button does not lag behind the dial.
+five o'clock, 5 at one o'clock, 15 at three o'clock. The primary takes the
+selected mode's fill; Start, Pause, and Resume keep that fill, so starting an
+interval needs no button-color transition.
 
 ## Theme treatment
 
@@ -72,7 +73,8 @@ color over 520 ms so the button does not lag behind the dial.
 - Move the light about 74 points horizontally. The larger range is safe because
   the card is already dark and the highlight supplies the contrast.
 - The dial face and plaque use the same `30%` / `50%` / `70%` positions as the
-  Light theme, with the brass bezel supplying the black theme's edge material.
+  Light theme, with the thin brass channel edges supplying the black theme's edge
+  material.
 - The external cast shadow is not the primary direction signal on black: it
   measures only 2.4–2.9 luma units against the near-black ground. Direction is
   carried by the top rim, the moving dial face and plaque highlight, and the
@@ -93,8 +95,8 @@ color over 520 ms so the button does not lag behind the dial.
   lit from the named side.
 - Reduce horizontal travel to about 56 points and keep the shadow close to the
   card.
-- Preserve the enamel plaque, brass bezel, and letterpress title treatment from
-  the refined Light palette.
+- Preserve the enamel plaque, thin brass channel edges, and letterpress title
+  treatment from the refined Light palette.
 
 ## Native implementation
 
@@ -107,15 +109,17 @@ color over 520 ms so the button does not lag behind the dial.
   it.
 - The pointer uses the selected duration on the 60-minute dial and rotates
   over 700 ms.
-- The native card uses 506 points.
+- The timer card uses 510 points (340 wide); Settings shares the 340-point
+  width and keeps its independent measured height.
 - All three mode dots use the mode accent at full opacity; only the active dot
   is wider. A single current-mode label below the dots uses the mode accent;
   the 32-point arrows expose hover help, announce the current mode, and use a
   44-point hit area.
-- The native primary uses a leaf-green fill with a centered label and a
-  trailing play glyph; light uses ink text and dark uses white. The mode accent
-  stays in the dial, dots, and mode label; the button uses a clean highlight and
-  a subtle black shadow without a colored glow.
+- The native primary uses the active mode fill in every state: Focus brick,
+  Short break leaf, Long break deep sage. It has a centered label, a trailing
+  play/pause glyph, and a label color tuned per fill. Start, Pause, Resume, and
+  completion share the mode fill; the button uses a clean highlight and a
+  subtle black shadow without a colored glow.
 - The ambient light is limited to the clock page; Settings uses the plain card
   background.
 - The status line uses the mode row, so the dial and primary do not move between

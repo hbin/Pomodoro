@@ -113,15 +113,24 @@ nested components in the required order, and verifies entitlements.
   instead of SwiftUI `Text("key")` literals so the interface updates without a
   relaunch; keep `Typo` language-aware and refresh menus, status-item copy, and
   pending notifications when the preference changes.
+- Treat the timer card as fixed at 340×510 points (2:3). Settings uses the
+  same 340-point width and a content-measured height; do not change either
+  dimension without an explicit product decision.
+- Switching languages must not move non-text elements. On the timer, the title
+  slot, dial, mode/status row, buttons and footer keep their geometry; reserve
+  the title's full line height and prefer shorter Japanese copy over shrinking
+  type. In Settings, text may wrap and the card height may change, but section
+  hairlines, toggles, the language picker and footer controls keep their
+  horizontal slots. Check all four languages side by side.
 - There are no UI snapshot tests. For visual changes, build the app, launch it,
   and inspect the affected states in both themes.
 - Check the Settings card for overflow after every change to its content or
-  layout, not only before a release. The card is 592 points at its shortest and
-  grows to the measured content plus footer, so a new row, a longer translation,
-  or a notification-state line must never push the last row or the footer into a
-  scrollbar. Open Settings in all four languages, with notifications allowed and
-  denied, in both themes, and confirm the footer is visible without a scroll
-  indicator; a scrollbar here is a bug, not a fallback.
+  layout, not only before a release. The card is 340 points wide, is 592 points
+  at its shortest, and grows to the measured content plus footer, so a new row,
+  a longer translation, or a notification-state line must never push the last
+  row or the footer into a scrollbar. Open Settings in all four languages, with
+  notifications allowed and denied, in both themes, and confirm the footer is
+  visible without a scroll indicator; a scrollbar here is a bug, not a fallback.
 - Do not regenerate the README screenshots with each UI change. Refresh
   `docs/screenshots` only when preparing a release, and tell the user the
   screenshots are stale instead of updating them mid-cycle.

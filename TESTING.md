@@ -65,8 +65,8 @@ automated tests.
 - [ ] Pause and End work during the focus chime hold; disabling Auto-start
       pomodoro during the hold does not stop the running focus.
 - [ ] Auto-start focus does not start a break.
-- [ ] An early-ended break does not start a focus, and an expired break restored
-      at launch shows the focus-ready screen instead of starting retroactively.
+- [ ] An expired break restored at launch shows the focus-ready screen instead
+      of starting retroactively.
 - [ ] With both Auto-start break and Auto-start focus on, the focus-to-break
       and break-to-focus cycle continues with the correct durations.
 - [ ] Enabling Auto-start focus while a break runs applies to that
@@ -151,6 +151,12 @@ automated tests.
       state, menu-bar treatment, notification, and completion flow.
 - [ ] The idle mode dots and arrows select Focus, Short break, and Long break
       using the configured lengths; the primary starts the selected mode.
+- [ ] Ending a short or long break early returns to that break's ready screen,
+      not `Ready to focus`, and does not start focus. Ending focus early still
+      returns to the Focus ready screen.
+- [ ] In Japanese, switching Focus / Short break / Long break does not move
+      the dial. The shortened `短い休憩をどうぞ` / `長い休憩をどうぞ` titles fit at
+      the normal 34-point title size.
 - [ ] The arrows do not wrap: Focus shows only the next arrow, Long break only
       the previous one, Short break both. A hidden arrow keeps its slot, so the
       dial does not move, and it cannot be clicked or reached by VoiceOver.
@@ -164,27 +170,36 @@ automated tests.
 - [ ] All three mode dots use the mode accent at full opacity; only the active
       dot is wider. A single current-mode label below the dots names the mode;
       the 32-point arrows expose hover help and announce the current mode.
-- [ ] The primary Start uses the leaf-green fill with a centered label and a
-      trailing play glyph; light uses ink text and dark uses white, without a
-      colored glow.
+- [ ] The primary uses the active mode fill in every state: Focus brick,
+      Short break leaf, Long break deep sage. Start, Pause, Resume and
+      completion share the fill; labels pass 4.5:1 and there is no second
+      ink-key or rail style.
 - [ ] The idle ambient light follows the selected mode dot: Focus upper left,
       Short break overhead, Long break upper right.
-- [ ] The idle dial has no hand; its session ring is empty and the readout
-      shows the selected configured duration.
-- [ ] Starting a focus or break sweeps the ring from empty to full clockwise
-      over 0.3s, then drains it counterclockwise; no value clamps at 60
-      minutes, so 5-, 90-, and 180-minute intervals each use the full circle.
-- [ ] Switching idle modes leaves the ring empty and moves only the readout,
+- [ ] The idle dial has no hand and an empty recessed channel between thin
+      brass edges; the readout shows the selected configured duration.
+- [ ] Starting a focus or break sweeps the mode-colored channel arc from empty
+      to full clockwise over 0.3s, then drains it counterclockwise; no value
+      clamps at 60 minutes, so 5-, 90-, and 180-minute intervals each use the
+      full circle.
+- [ ] Switching idle modes leaves the channel empty and moves only the readout,
       mode accents, and ambient light.
 - [ ] Starting a focus or break keeps the dial and primary in place; the status
       line appears in the mode row below the dial.
-- [ ] The session ring sits in the chapter ring outside the decorative chapter
-      marks, a square-ended hairline against the brass rim with no glow; it is
-      full at the start and empty at completion.
-- [ ] Pausing freezes the ring at the remaining fraction; resuming drains it
-      from the same point.
-- [ ] The completion screen has no hand and an empty ring; its readout shows
-      the offered duration.
+- [ ] The fixed 60-tick ring remains in every state; only the 12, 3, 6 and 9
+      o'clock marks are larger, and no tick is hidden under or clipped by the
+      arc.
+- [ ] Pausing freezes the channel arc at the remaining fraction; resuming drains
+      it from the same point.
+- [ ] At 0% the channel is empty, all 60 ticks and both thin brass edges remain,
+      and the dial still reads as an instrument.
+- [ ] The running and paused caption names the mode, the running break title
+      reads `Short break` / `Long break`, and the idle/completion caption stays
+      `READY`.
+- [ ] Short break and Long break dials announce `Short break timer` /
+      `Long break timer`; VoiceOver does not announce every second.
+- [ ] The completion screen has no hand and an empty channel; its readout shows
+      the offered duration, and its primary uses the offered mode fill.
 - [ ] The menu-bar icon keeps its hand, cup, pause glyph, and remaining-time arc.
 - [ ] A paused interval shows the paused status line and the paused footer tip.
 - [ ] Idle mode labels and footer tips reach 4.5:1 against the popover in both
@@ -203,12 +218,21 @@ automated tests.
 - [ ] Settings starts with TIMER, SOUND, and MENU BAR, then APPEARANCE and
       NOTIFICATIONS. MENU BAR remains a separate section and is not merged with
       appearance or notifications.
+- [ ] The timer card is 340×510 (2:3). Settings uses the same 340-point width
+      and its measured height; opening Settings changes only the height, and
+      closing it returns to 340×510 without moving the popover's center.
+- [ ] Switching languages on the timer changes only copy: the dial, mode
+      dots, arrows, primary/stop controls, header icon and footer keep their
+      frames and positions. The title slot stays fixed at full line height.
+- [ ] Switching languages in Settings changes only copy and its measured
+      height. The 340-point width, section hairlines, toggles, language picker
+      and footer controls keep their horizontal insets; no separator is sized
+      from its label text.
 - [ ] The Settings card grows to fit its content: the three duration fields,
       both Auto-start rows, the notifications explanation, and the footer all
       stay visible with no scrollbar, in all four languages, both themes, and
       with notifications allowed or denied. The card is never shorter than the
-      timer page's card plus the settings rows, and switching Settings on and
-      off returns the popover to 506 points.
+      timer page's card plus the settings rows.
 - [ ] Changing the mode animates the light over 850 ms; with Reduce Motion
       enabled the pose updates without movement.
 - [ ] Reduce Transparency keeps the ambient layers legible and does not

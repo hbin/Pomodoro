@@ -30,6 +30,9 @@ final class PopoverController: NSObject {
             rootView: PopoverRootView(model: model, updates: updates)
         )
         self.host = host
+        let initialWidth = PopoverRootView.contentWidth(
+            showingSettings: model.isShowingSettings
+        )
         let initialHeight = PopoverRootView.contentHeight(
             showingSettings: model.isShowingSettings,
             settingsContent: model.settingsContentHeight
@@ -37,7 +40,7 @@ final class PopoverController: NSObject {
         host.view.frame = NSRect(
             x: 0,
             y: 0,
-            width: PopoverRootView.width,
+            width: initialWidth,
             height: initialHeight
         )
         let panel = TimerPanel(
@@ -145,19 +148,29 @@ final class PopoverController: NSObject {
     }
 
     private func resize(for isShowingSettings: Bool) {
+        let width = PopoverRootView.contentWidth(showingSettings: isShowingSettings)
         let height = PopoverRootView.contentHeight(
             showingSettings: isShowingSettings,
             settingsContent: model.settingsContentHeight
         )
-        guard panel.frame.height != height else { return }
+        guard panel.frame.width != width || panel.frame.height != height else { return }
 
         var frame = panel.frame
         let top = frame.maxY
-        frame.size = NSSize(width: PopoverRootView.width, height: height)
+        let centerX = frame.midX
+        frame.size = NSSize(width: width, height: height)
+        frame.origin.x = centerX - width / 2
         if panel.isVisible {
             frame.origin.y = top - height
+            if let screen = panel.screen ?? NSScreen.main {
+                let visible = screen.visibleFrame
+                let minX = visible.minX + Self.screenEdgeInset
+                let maxX = visible.maxX - width - Self.screenEdgeInset
+                frame.origin.x = min(max(frame.origin.x, minX), maxX)
+            }
         }
         panel.setFrame(frame, display: panel.isVisible)
+        panel.invalidateShadow()
     }
 
     func toggle(relativeTo button: NSStatusBarButton) {
@@ -177,6 +190,7 @@ final class PopoverController: NSObject {
               let screen = buttonWindow.screen ?? NSScreen.main else { return }
 
         let buttonRect = buttonWindow.convertToScreen(button.bounds)
+        let width = PopoverRootView.contentWidth(showingSettings: model.isShowingSettings)
         let height = PopoverRootView.contentHeight(
             showingSettings: model.isShowingSettings,
             settingsContent: model.settingsContentHeight
@@ -184,9 +198,9 @@ final class PopoverController: NSObject {
         let anchorWidth = min(Self.menuBarAnchorWidth, buttonRect.width)
         let anchorCenterX = buttonRect.maxX - anchorWidth / 2
         let visibleFrame = screen.visibleFrame
-        let maxX = visibleFrame.maxX - PopoverRootView.width - Self.screenEdgeInset
+        let maxX = visibleFrame.maxX - width - Self.screenEdgeInset
         let x = min(
-            max(anchorCenterX - PopoverRootView.width / 2, visibleFrame.minX + Self.screenEdgeInset),
+            max(anchorCenterX - width / 2, visibleFrame.minX + Self.screenEdgeInset),
             maxX
         )
         let y = max(
@@ -195,7 +209,7 @@ final class PopoverController: NSObject {
         )
 
         panel.setFrame(
-            NSRect(x: x, y: y, width: PopoverRootView.width, height: height),
+            NSRect(x: x, y: y, width: width, height: height),
             display: true
         )
         onWillShow?()

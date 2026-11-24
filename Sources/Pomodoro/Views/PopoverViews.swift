@@ -7,8 +7,14 @@ struct PopoverRootView: View {
     @ObservedObject var updates: UpdateController
     @Environment(\.colorScheme) private var scheme
 
-    static let width: CGFloat = 380
-    static let height: CGFloat = 506
+    /// The timer card is a 2:3 portrait. Settings uses the same width but
+    /// keeps its own content-measured height.
+    static let timerWidth: CGFloat = 340
+    static let settingsWidth: CGFloat = 340
+    static let timerHeight: CGFloat = 510
+    /// The dial scales with the 2:3 timer card so the side arrows keep their
+    /// 44-point targets without changing the card's horizontal padding.
+    static let timerDialSize: CGFloat = 203
 
     /// The Settings card is at least this tall, and grows to fit its content
     /// so no row or explanation has to scroll.
@@ -19,8 +25,12 @@ struct PopoverRootView: View {
     /// measured content plus footer.
     private static let settingsChrome: CGFloat = 37
 
+    static func contentWidth(showingSettings: Bool) -> CGFloat {
+        showingSettings ? settingsWidth : timerWidth
+    }
+
     static func contentHeight(showingSettings: Bool, settingsContent: CGFloat = 0) -> CGFloat {
-        guard showingSettings else { return height }
+        guard showingSettings else { return timerHeight }
         let fitted = settingsContent > 0 ? settingsContent + settingsChrome : settingsHeight
         return min(max(settingsHeight, fitted.rounded(.up)), settingsMaxHeight)
     }
@@ -75,12 +85,12 @@ struct PopoverRootView: View {
                     content
                 }
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 20)
             .padding(.top, 19)
             .padding(.bottom, 18)
         }
         .frame(
-            width: Self.width,
+            width: Self.contentWidth(showingSettings: model.isShowingSettings),
             height: Self.contentHeight(
                 showingSettings: model.isShowingSettings,
                 settingsContent: model.settingsContentHeight
@@ -171,13 +181,12 @@ struct TimerPopoverView: View {
                 .font(Typo.serif(34))
                 .foregroundStyle(palette.ink)
                 .lineLimit(1)
-                .minimumScaleFactor(0.78)
+                .minimumScaleFactor(0.68)
+                .frame(height: Typo.lineHeight(34), alignment: .center)
                 .padding(.top, 26)
 
             dialRow
                 .padding(.top, 20)
-
-            Spacer(minLength: 8)
 
             Group {
                 if model.isIdle {
@@ -187,6 +196,7 @@ struct TimerPopoverView: View {
                 }
             }
             .frame(height: 28, alignment: .bottom)
+            .padding(.top, 8)
 
             controls
             .padding(.top, 20)
@@ -195,6 +205,8 @@ struct TimerPopoverView: View {
                 ErrorNote(message: error, onDismiss: model.dismissError)
                     .padding(.bottom, 7)
             }
+
+            Spacer(minLength: 8)
 
             if !model.isIdle {
                 Text(L10n.string(model.isPaused ? "timer.tip.paused" : "timer.tip.keeps_running"))
@@ -221,12 +233,12 @@ struct TimerPopoverView: View {
                 caption: dialCaption,
                 progress: model.isIdle ? 0 : model.progress,
                 accent: accent,
-                size: 215,
+                size: PopoverRootView.timerDialSize,
                 showsCountdown: !model.isIdle,
                 readoutFlow: model.isIdle ? readoutFlow : 0,
-                accessibilityLabel: (model.isIdle ? idleMode.isBreak : model.isBreak)
-                    ? L10n.string("timer.a11y.break_dial")
-                    : L10n.string("timer.a11y.focus_dial"),
+                accessibilityLabel: dialAccessibilityLabel(
+                    for: model.isIdle ? idleMode : IdleMode(phase: model.phase)
+                ),
                 accessibilityValue: model.isIdle
                     ? L10n.format(
                         "timer.a11y.ready_value",
@@ -475,7 +487,8 @@ struct CompletionPopoverView: View {
                 .font(Typo.serif(34))
                 .foregroundStyle(palette.ink)
                 .lineLimit(1)
-                .minimumScaleFactor(0.78)
+                .minimumScaleFactor(0.68)
+                .frame(height: Typo.lineHeight(34), alignment: .center)
                 .padding(.top, 26)
 
             DialView(
@@ -483,10 +496,8 @@ struct CompletionPopoverView: View {
                 caption: L10n.string("timer.caption.ready"),
                 progress: 0,
                 accent: accent,
-                size: 215,
-                accessibilityLabel: offer.phase.isBreak
-                    ? L10n.string("timer.a11y.break_dial")
-                    : L10n.string("timer.a11y.focus_dial"),
+                size: PopoverRootView.timerDialSize,
+                accessibilityLabel: dialAccessibilityLabel(for: offerMode),
                 accessibilityValue: L10n.format("timer.a11y.ready_value", offer.minutes),
                 ambient: ambient
             )

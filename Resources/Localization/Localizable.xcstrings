@@ -1124,7 +1124,7 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Take a long break" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "好好休息一下" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "好好休息一下" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩を取りましょう" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩をどうぞ" } }
       }
     },
     "timer.title.paused" : {
@@ -1151,7 +1151,7 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Take a short break" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "短暂休息一下" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "短暫休息一下" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩を取りましょう" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩をどうぞ" } }
       }
     },
     "updates.action.check_now" : {

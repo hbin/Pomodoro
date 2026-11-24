@@ -304,8 +304,9 @@ open build/Pomodoro.app --args --open-popover --force-dark
 
 Capture the popover window with ⇧⌘4 then Space and replace
 `docs/screenshots/light-theme.png` and `docs/screenshots/black-theme.png`. The
-committed files are 380×506; downscale a Retina capture with `sips -z 506 380`
-before replacing them.
+timer card is 340×510; downscale a Retina capture with `sips -z 510 340`
+before replacing them. The committed screenshots are stale until the next
+release.
 
 ## Automated releases
 

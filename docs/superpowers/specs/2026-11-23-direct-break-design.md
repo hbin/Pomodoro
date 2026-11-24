@@ -187,7 +187,9 @@ point.
   vertical positions.
 - Rapid repeated selection cannot start more than one interval or schedule more
   than one notification.
-- Returning to idle resets the selector to Focus.
+- Returning to idle after a focus interval or a completed break resets the
+  selector to Focus. Ending a break early keeps that break selected, so the idle
+  screen returns to the same break instead of jumping to Focus.
 
 ### 5.2 Starting a selection
 
@@ -217,7 +219,8 @@ It does not:
 - The existing break dial, colors, copy, and menu-bar cup icon remain.
 - Pause freezes the remaining break time and cancels the pending notification.
 - Resume creates a new end date and reschedules the notification.
-- End early returns to idle.
+- End early returns to that break's idle screen; it does not jump to Focus or
+  start a focus. The idle selector stays on the break that was ended.
 - Sleep, screen lock, quit, and relaunch use the existing reconciliation path.
 - Completion uses the existing break-complete state.
 - A completed manual break offers **Start another focus** and **Done for now**
@@ -323,9 +326,14 @@ a localized label and duration.
 - Do not restore the former 15/25/45 focus-length chips or the separate pair of
   break buttons.
 - Do not reduce the 215-point dial.
-- Preserve the 380-point popover width.
-- Use a 506-point card height; the top mode row is removed and the current mode
-  sits below the dial; the primary/footer spacing is preserved.
+- Use a 340-point timer popover width and a 510-point card height (2:3).
+  Settings uses the same 340-point width and its own content-measured height;
+  opening Settings grows only the height, and the width does not change.
+- The fixed dimensions and the language-stable layout rule in the product
+  design §9.1 are product requirements. Do not resize the card, the dial or
+  any control to fit a longer translation.
+- The top mode row is removed and the current mode sits below the dial; the
+  primary sits below it, with the footer at the bottom of the taller card.
 - Keep the Settings card and layout; the later Auto-start break and Auto-start
   pomodoro settings add two rows and grow the card. The card is never shorter
   than 592 points and grows to the height its measured content and footer need,
@@ -486,7 +494,8 @@ Black. The repeatable study measurements are in the
 - Do not add keyboard shortcuts in this branch.
 - Keep ambient motion idle-only; do not animate break start.
 - Derive the ambient pose from the selected mode.
-- Reset the idle mode to Focus when returning to idle.
+- Reset the idle mode to Focus when returning to idle from focus or a
+  completed break; keep the break selected after ending it early.
 - Respect Reduce Motion by snapping the pose and Reduce Transparency by
   omitting translucent ambient layers.
 - Regenerate both theme GIFs from the same light-position rule when the visual

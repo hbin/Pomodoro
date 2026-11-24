@@ -24,7 +24,7 @@ preserves the existing macOS app-language behavior.
 2. Apply copy, typography, menus, status-item text, accessibility copy, and
    pending notification content immediately.
 3. Preserve timer state and the current interval's absolute end time.
-4. Fit inside the 380-point-wide Settings surface without a persistent
+4. Fit inside the 340-point-wide Settings surface without a persistent
    scrollbar.
 5. Keep the existing four-language String Catalog as the single source of copy.
 
