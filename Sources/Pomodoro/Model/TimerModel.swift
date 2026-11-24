@@ -64,9 +64,12 @@ final class TimerModel: ObservableObject {
     @Published private(set) var firstRunTipDismissed: Bool
     @Published private(set) var notificationStatus: UNAuthorizationStatus = .notDetermined
     @Published private(set) var isFirstRun: Bool
-    /// Set when ending an interval leaves the next phase in its Ready state.
-    /// The idle screen consumes it before its own mode selection takes over.
-    @Published private(set) var idleReturnPhase: Phase?
+    /// The mode shown on the Ready screen. This is presentation state only:
+    /// it is not saved, and a relaunch returns to Focus Ready.
+    @Published private(set) var idlePhase: Phase
+    /// Set when the completion screen starts its offered interval. The next
+    /// timer presentation consumes it to sweep the ring from empty.
+    @Published private(set) var completionStartSweepPending = false
 
     @Published private var error: TimerModelError?
 
@@ -120,6 +123,7 @@ final class TimerModel: ObservableObject {
         self.languagePreference = languagePreference
         self.firstRunTipDismissed = loaded.state.firstRunTipDismissed
         self.isFirstRun = loaded.isFirstRun
+        self.idlePhase = LaunchIdleMode.override?.phase ?? .focus
         self.error = switch loaded.recoveryIssue {
         case .unreadableStateBackedUp: .recovery(.unreadableStateBackedUp)
         case .unreadableStateReset: .recovery(.unreadableStateReset)
@@ -311,6 +315,7 @@ final class TimerModel: ObservableObject {
     var menuBarDescriptor: MenuBarDescriptor {
         let active = snapshot.runState == .running || snapshot.runState == .paused
         let completed = snapshot.runState == .completed
+        let menuBarPhase = snapshot.runState == .idle ? idlePhase : snapshot.phase
         let remainingMinutes = active ? max(1, Int(ceil(remainingSeconds / 60))) : 0
         let progress: Double
         if completed {
@@ -325,13 +330,28 @@ final class TimerModel: ObservableObject {
             isActive: active,
             isPaused: snapshot.runState == .paused,
             isCompleted: completed,
-            isBreak: snapshot.phase.isBreak,
+            isBreak: menuBarPhase.isBreak,
             remainingMinutes: remainingMinutes,
             progress: progress
         )
     }
 
     // MARK: - Actions
+
+    func selectIdlePhase(_ phase: Phase) {
+        guard isIdle, phase != idlePhase else { return }
+        idlePhase = phase
+        updateMenuBar(force: true)
+    }
+
+    func startIdleInterval() {
+        guard isIdle else { return }
+        if idlePhase == .focus {
+            startFocus()
+        } else {
+            startBreak(idlePhase)
+        }
+    }
 
     func startFocus() {
         guard let endDate = engine.startFocus() else { return }
@@ -345,14 +365,21 @@ final class TimerModel: ObservableObject {
         scheduleNotification(endDate: endDate, phase: .focus)
     }
 
+    /// Starts the break offered by the completion screen.
     func takeBreak() {
-        startRecommendedBreak(after: 0)
+        startRecommendedBreak(after: 0, sweepsOnPresentation: true)
     }
 
     /// Starts the recommended break with its end date pushed out by `delay`, so
     /// the displayed countdown stays at full while the completion chime ends.
-    private func startRecommendedBreak(after delay: TimeInterval) {
+    private func startRecommendedBreak(
+        after delay: TimeInterval,
+        sweepsOnPresentation: Bool = false
+    ) {
         guard let endDate = engine.startRecommendedBreak(after: delay) else { return }
+        if sweepsOnPresentation {
+            completionStartSweepPending = true
+        }
         snapshot = engine.state
         now = Date()
         lastTickSecond = nil
@@ -373,14 +400,21 @@ final class TimerModel: ObservableObject {
         scheduleNotification(endDate: endDate, phase: snapshot.phase)
     }
 
+    /// Starts the focus offered by the completion screen.
     func startAnother() {
-        startAnother(after: 0)
+        startAnother(after: 0, sweepsOnPresentation: true)
     }
 
     /// Starts the next focus with its end date pushed out by `delay`, so the
     /// countdown holds at full while the break chime finishes.
-    private func startAnother(after delay: TimeInterval) {
+    private func startAnother(
+        after delay: TimeInterval,
+        sweepsOnPresentation: Bool = false
+    ) {
         guard let endDate = engine.startAnother(after: delay) else { return }
+        if sweepsOnPresentation {
+            completionStartSweepPending = true
+        }
         snapshot = engine.state
         now = Date()
         lastTickSecond = nil
@@ -389,6 +423,11 @@ final class TimerModel: ObservableObject {
         updateMenuBar(force: true)
         announce(L10n.string("announcements.focus_started"))
         scheduleNotification(endDate: endDate, phase: .focus)
+    }
+
+    func consumeCompletionStartSweep() {
+        guard completionStartSweepPending else { return }
+        completionStartSweepPending = false
     }
 
     func togglePause() {
@@ -423,7 +462,9 @@ final class TimerModel: ObservableObject {
         let autoStart = endedPhase.isBreak ? autoStartFocus : autoStartBreak
         guard let transition = engine.endInterval(autoStart: autoStart) else { return }
 
-        idleReturnPhase = transition.runState == .idle ? transition.nextPhase : nil
+        if transition.runState == .idle {
+            idlePhase = transition.nextPhase
+        }
         snapshot = engine.state
         now = Date()
         lastTickSecond = nil
@@ -448,10 +489,6 @@ final class TimerModel: ObservableObject {
         }
     }
 
-    func clearIdleReturnPhase() {
-        idleReturnPhase = nil
-    }
-
     func skipBreak() {
         engine.skipBreak()
         finishToIdle()
@@ -464,6 +501,8 @@ final class TimerModel: ObservableObject {
     }
 
     private func finishToIdle() {
+        idlePhase = .focus
+        completionStartSweepPending = false
         snapshot = engine.state
         now = Date()
         notifications.cancel()
@@ -578,6 +617,7 @@ final class TimerModel: ObservableObject {
         now = Date()
         lastTickSecond = nil
         lastTickDate = nil
+        completionStartSweepPending = false
         notifications.cancel()
         updateMenuBar(force: true)
         save()
@@ -594,7 +634,7 @@ final class TimerModel: ObservableObject {
                             after: SoundPlayer.focusChimeDuration + Self.autoStartChimeBuffer
                         )
                     } else {
-                        takeBreak()
+                        startRecommendedBreak(after: 0)
                     }
                 } else {
                     announce(L10n.format("announcements.focus_complete", recommendedBreakMinutes))
@@ -606,7 +646,7 @@ final class TimerModel: ObservableObject {
                             after: SoundPlayer.breakChimeDuration + Self.autoStartChimeBuffer
                         )
                     } else {
-                        startAnother()
+                        startAnother(after: 0)
                     }
                 } else {
                     announce(L10n.string("announcements.break_complete"))

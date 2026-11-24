@@ -28,6 +28,38 @@ struct DialView: View {
     @State private var leavingOffset = 0.0
     @State private var enteringOffset = 0.0
     @State private var swapGeneration = 0
+    /// Completion Start replaces its dial with this one, so begin empty and
+    /// animate to full without delaying the already-running timer.
+    @State private var isSweeping: Bool
+    @State private var sweepProgress = 0.0
+
+    private static let sweepDuration: TimeInterval = 0.3
+
+    init(
+        timeText: String,
+        caption: String,
+        progress: Double,
+        accent: Color,
+        size: CGFloat,
+        showsCountdown: Bool = false,
+        readoutFlow: Double = 0,
+        accessibilityLabel: String,
+        accessibilityValue: String,
+        ambient: AmbientPose,
+        sweepsOnAppear: Bool = false
+    ) {
+        self.timeText = timeText
+        self.caption = caption
+        self.progress = progress
+        self.accent = accent
+        self.size = size
+        self.showsCountdown = showsCountdown
+        self.readoutFlow = readoutFlow
+        self.accessibilityLabel = accessibilityLabel
+        self.accessibilityValue = accessibilityValue
+        self.ambient = ambient
+        _isSweeping = State(initialValue: sweepsOnAppear)
+    }
 
     private var palette: Palette { Palette.forScheme(scheme) }
     private var travelScale: CGFloat { scheme == .dark ? 1.3 : 1.0 }
@@ -45,6 +77,7 @@ struct DialView: View {
         let plaqueDiameter = size * (size < 200 ? 0.55 : 0.51)
         let elapsedProgress = min(max(progress, 0), 1)
         let remainingProgress = showsCountdown ? 1 - elapsedProgress : 0
+        let ringProgress = isSweeping ? sweepProgress : remainingProgress
         let isIncreasedContrast = contrast == .increased
         let channelFill = scheme == .dark ? palette.bone : palette.paper
 
@@ -120,7 +153,7 @@ struct DialView: View {
             .accessibilityHidden(true)
 
             Circle()
-                .trim(from: 0, to: remainingProgress)
+                .trim(from: 0, to: ringProgress)
                 .stroke(
                     accent,
                     style: StrokeStyle(
@@ -130,7 +163,14 @@ struct DialView: View {
                 )
                 .rotationEffect(.degrees(-90))
                 .padding(channelPadding)
-                .animation(reduceMotion ? nil : .linear(duration: 0.3), value: remainingProgress)
+                // Ready and completed snap empty; only an active interval
+                // animates its sweep or drain.
+                .animation(
+                    reduceMotion || !showsCountdown || isSweeping
+                        ? nil
+                        : .linear(duration: 0.3),
+                    value: remainingProgress
+                )
                 .animation(reduceMotion ? nil : AmbientMotion.curve, value: accent)
                 .accessibilityHidden(true)
 
@@ -154,6 +194,20 @@ struct DialView: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(accessibilityLabel))
         .accessibilityValue(Text(accessibilityValue))
+        .task {
+            guard isSweeping else { return }
+            await Task.yield()
+            withAnimation(.linear(duration: Self.sweepDuration)) {
+                sweepProgress = 1
+            }
+            try? await Task.sleep(
+                nanoseconds: UInt64(Self.sweepDuration * 1_000_000_000)
+            )
+            guard !Task.isCancelled else { return }
+            withTransaction(Transaction(animation: nil)) {
+                isSweeping = false
+            }
+        }
     }
 
     private func plaque(diameter: CGFloat) -> some View {

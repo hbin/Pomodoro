@@ -151,6 +151,43 @@ final class TimerEngineTests: XCTestCase {
         XCTAssertEqual(engine.displaySeconds(), 299)
     }
 
+    func testStartingOfferedBreakFromCompletionStartsImmediatelyAtFull() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+        engine.startFocus()
+        clock.advance(1500)
+        XCTAssertEqual(engine.refresh(), .completed(.focus))
+
+        let end = engine.startRecommendedBreak()
+
+        XCTAssertEqual(end, clock.date.addingTimeInterval(300))
+        XCTAssertEqual(engine.state.runState, .running)
+        XCTAssertEqual(engine.state.phase, .shortBreak)
+        XCTAssertEqual(engine.state.endDate, clock.date.addingTimeInterval(300))
+        XCTAssertEqual(engine.displaySeconds(), 300)
+        XCTAssertEqual(engine.progress(), 0, accuracy: 0.0001)
+    }
+
+    func testStartingOfferedFocusFromCompletionStartsImmediatelyAtFull() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+        engine.startFocus()
+        clock.advance(1500)
+        XCTAssertEqual(engine.refresh(), .completed(.focus))
+        engine.startRecommendedBreak()
+        clock.advance(300)
+        XCTAssertEqual(engine.refresh(), .completed(.shortBreak))
+
+        let end = engine.startAnother()
+
+        XCTAssertEqual(end, clock.date.addingTimeInterval(1500))
+        XCTAssertEqual(engine.state.runState, .running)
+        XCTAssertEqual(engine.state.phase, .focus)
+        XCTAssertEqual(engine.state.endDate, clock.date.addingTimeInterval(1500))
+        XCTAssertEqual(engine.displaySeconds(), 1500)
+        XCTAssertEqual(engine.progress(), 0, accuracy: 0.0001)
+    }
+
     func testStartAnotherAfterChimeDelayKeepsFullCountdown() {
         let clock = TestClock()
         var engine = makeEngine(clock)
@@ -217,6 +254,27 @@ final class TimerEngineTests: XCTestCase {
 
         XCTAssertEqual(engine.state.completedFocusCount, 3)
         XCTAssertEqual(engine.recommendedBreak.phase, .shortBreak)
+    }
+
+    func testStartingReadyBreakAfterEarlyEndUsesFullDurationWithoutChangingCycle() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+
+        engine.startFocus()
+        clock.advance(60)
+        let transition = engine.endInterval(autoStart: false)
+        XCTAssertEqual(transition?.nextPhase, .shortBreak)
+
+        let cyclePosition = engine.state.focusCyclePosition
+        let completedFocusCount = engine.state.completedFocusCount
+
+        XCTAssertNotNil(engine.startBreak(.shortBreak))
+        XCTAssertEqual(engine.state.runState, .running)
+        XCTAssertEqual(engine.state.phase, .shortBreak)
+        XCTAssertEqual(engine.state.totalSeconds, 300)
+        XCTAssertEqual(engine.state.remainingSeconds, 300)
+        XCTAssertEqual(engine.state.focusCyclePosition, cyclePosition)
+        XCTAssertEqual(engine.state.completedFocusCount, completedFocusCount)
     }
 
     func testDirectBreakRejectsInvalidPhaseAndNonIdleStates() {

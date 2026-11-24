@@ -215,12 +215,18 @@ automated tests.
       perform the same action. Paused removes the end control from the tab order.
 - [ ] The idle ambient light follows the selected mode dot: Focus upper left,
       Short break overhead, Long break upper right.
+- [ ] In Ready, the menu-bar glyph follows the selected mode immediately: Focus
+      shows the hand, Short break and Long break show the cup. Ready never shows
+      remaining minutes or a progress arc.
 - [ ] The idle dial has no hand and an empty recessed channel between thin
       brass edges; the readout shows the selected configured duration.
-- [ ] Starting a focus or break sweeps the mode-colored channel arc from empty
-      to full clockwise over 0.3s, then drains it counterclockwise; no value
-      clamps at 60 minutes, so 5-, 90-, and 180-minute intervals each use the
-      full circle.
+- [ ] Starting a focus or break from every Ready path (manually selected Focus,
+      Short break, or Long break, and the next Ready mode after End or `▷|`),
+      and Start on the natural-completion screen for both the offered Break and
+      the offered Focus, sweeps the mode-colored channel arc from empty to full
+      clockwise over 0.3s, then drains it counterclockwise. The timer starts
+      immediately; no value clamps at 60 minutes, so 5-, 90-, and 180-minute
+      intervals each use the full circle.
 - [ ] Switching idle modes leaves the channel empty and moves only the readout,
       mode accents, and ambient light.
 - [ ] Starting a focus or break keeps the dial and primary in place; the status

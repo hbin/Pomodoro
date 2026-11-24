@@ -45,38 +45,17 @@ struct PopoverRootView: View {
         return min(max(settingsHeight, fitted.rounded(.up)), settingsMaxHeight)
     }
 
-    @State private var idleMode: IdleMode = LaunchIdleMode.override ?? .focus
-
     /// The mode that owns the ambient light. Idle follows the selector, a
     /// running or paused interval follows its phase, and a completed interval
     /// follows the next interval offered by the completion screen.
     private var activeMode: IdleMode {
         if model.isIdle {
-            return displayedIdleMode
+            return IdleMode(phase: model.idlePhase)
         }
         if model.isCompleted {
             return IdleMode(phase: model.completionOffer.phase)
         }
         return IdleMode(phase: model.phase)
-    }
-
-    /// An end-control transition can land directly on a Ready screen. Use its
-    /// next phase for the first render, before `onChange` updates the selector.
-    private var displayedIdleMode: IdleMode {
-        if model.isIdle, let phase = model.idleReturnPhase {
-            return IdleMode(phase: phase)
-        }
-        return idleMode
-    }
-
-    private var displayedIdleModeBinding: Binding<IdleMode> {
-        Binding(
-            get: { displayedIdleMode },
-            set: { mode in
-                model.clearIdleReturnPhase()
-                idleMode = mode
-            }
-        )
     }
 
     private var ambient: AmbientPose {
@@ -126,32 +105,6 @@ struct PopoverRootView: View {
             )
         )
         .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
-        .onAppear {
-            if let override = LaunchIdleMode.override {
-                idleMode = override
-                model.clearIdleReturnPhase()
-            } else if let phase = model.idleReturnPhase {
-                idleMode = IdleMode(phase: phase)
-                model.clearIdleReturnPhase()
-            } else {
-                normalizeIdleSelection()
-            }
-        }
-        .onChange(of: model.isIdle) { _, isIdle in
-            if isIdle {
-                if let phase = model.idleReturnPhase {
-                    idleMode = IdleMode(phase: phase)
-                    model.clearIdleReturnPhase()
-                } else {
-                    normalizeIdleSelection()
-                }
-            }
-        }
-    }
-
-    private func normalizeIdleSelection() {
-        guard model.isIdle else { return }
-        idleMode = .focus
     }
 
     @ViewBuilder
@@ -162,7 +115,7 @@ struct PopoverRootView: View {
             TimerPopoverView(
                 model: model,
                 ambient: ambient,
-                idleMode: displayedIdleModeBinding
+                completionStartSweep: model.completionStartSweepPending
             )
         }
     }
@@ -171,13 +124,14 @@ struct PopoverRootView: View {
 struct TimerPopoverView: View {
     @ObservedObject var model: TimerModel
     let ambient: AmbientPose
-    @Binding var idleMode: IdleMode
+    let completionStartSweep: Bool
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @FocusState private var isEndControlFocused: Bool
     @State private var readoutFlow = 0.0
 
     private var palette: Palette { Palette.forScheme(scheme) }
+    private var idleMode: IdleMode { IdleMode(phase: model.idlePhase) }
     private var modeColors: ModeColors {
         palette.modeColors(for: model.isIdle ? idleMode.phase : model.phase)
     }
@@ -266,6 +220,9 @@ struct TimerPopoverView: View {
                     .padding(.top, 10)
             }
         }
+        .onAppear {
+            model.consumeCompletionStartSweep()
+        }
     }
 
     private var dialRow: some View {
@@ -274,6 +231,8 @@ struct TimerPopoverView: View {
                 modeArrow(offset: -1)
             }
             Spacer(minLength: 0)
+            // Keep one dial from Ready into the selected running mode so its
+            // ring can sweep from empty before beginning to drain.
             DialView(
                 timeText: model.isIdle ? idleTime : model.timeText,
                 caption: dialCaption,
@@ -293,9 +252,9 @@ struct TimerPopoverView: View {
                     : model.isPaused
                         ? L10n.format("timer.a11y.paused_value", model.timeText)
                         : L10n.format("timer.a11y.running_value", model.timeText),
-                ambient: ambient
+                ambient: ambient,
+                sweepsOnAppear: completionStartSweep && model.isRunning && !reduceMotion
             )
-            .id(model.phase)
             Spacer(minLength: 0)
             if model.isIdle {
                 modeArrow(offset: 1)
@@ -312,7 +271,7 @@ struct TimerPopoverView: View {
                         // The modes are ordered left to right on screen, so a
                         // jump to a later one slides the strip left.
                         readoutFlow = mode.rawValue > idleMode.rawValue ? -1 : 1
-                        idleMode = mode
+                        model.selectIdlePhase(mode.phase)
                     } label: {
                         Capsule()
                             .fill(accent)
@@ -344,7 +303,7 @@ struct TimerPopoverView: View {
                 // The mode being taken sits on the arrow's side of the dial,
                 // so the strip travels the other way to bring it in.
                 readoutFlow = Double(-offset)
-                idleMode = target
+                model.selectIdlePhase(target.phase)
             }
         } label: {
             Image(systemName: offset < 0 ? "chevron.left" : "chevron.right")
@@ -402,11 +361,7 @@ struct TimerPopoverView: View {
     private var primaryButton: some View {
         Button {
             if model.isIdle {
-                if idleMode == .focus {
-                    model.startFocus()
-                } else {
-                    model.startBreak(idleMode.phase)
-                }
+                model.startIdleInterval()
             } else {
                 model.togglePause()
             }
