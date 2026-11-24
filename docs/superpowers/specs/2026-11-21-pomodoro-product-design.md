@@ -209,8 +209,8 @@ The popover contains only:
 
 - A short status line, such as `Ready to focus`.
 - Duration chips: `15m`, `25m`, and `45m`.
-- A primary button labelled with the selected duration, such as
-  `Start 25-minute focus`.
+- A primary button labelled `Start`; the selected mode and duration remain
+  visible in the mode selector and dial.
 - A settings control that switches the popover to Settings without opening
   another window.
 
@@ -232,9 +232,15 @@ duration chooser with live interval information.
 It contains:
 
 - The analog dial with a precise central digital readout.
-- The same primary button position, switched to pause/resume.
+- The same primary button position, switched to `Pause`.
 - A quiet end-interval action with an inline confirmation.
 - A quiet `Ends at…` line based on the current expected finish time.
+
+The primary has exactly two visible labels across Focus, Short break, Long
+break, and completion: `Start` while idle, paused, or ready to begin the
+offered interval, and `Pause` while running. The mode and duration are carried
+by the surrounding title, dial, and status line rather than repeated in the
+button.
 
 It does not contain a task title, project, notes, checklist, or progress rating.
 
@@ -284,7 +290,7 @@ The focus-completion ready screen contains:
 - `Take a short break` or `Take a long break`.
 - A dial at `05:00` or `15:00` with the `READY` caption and the break accent.
 - `Focus complete. Ready for a break?`.
-- A primary action `Start 5-minute break` or `Start 15-minute break`:
+- A primary `Start` action that begins the offered break:
   - the 5-minute break normally;
   - the 15-minute break after every fourth completed focus interval.
 - A quiet `Done for now` action that returns to the idle state.
@@ -323,7 +329,7 @@ No task completion is recorded or requested.
   - `Ready to focus`;
   - a `25:00` dial with the `READY` caption;
   - `Break complete. Ready for another focus?`;
-  - a primary `Start 25-minute focus` action;
+  - a primary `Start` action;
   - a quiet `Done for now` action.
 - No countdown starts until the user chooses.
 - Break sessions are not stored.
@@ -370,7 +376,7 @@ on the idle screen.
 
 - Readout remains at the paused remaining time.
 - Popover and menu bar clearly indicate pause.
-- Primary control becomes `Resume`.
+- Primary control returns to `Start`.
 - Clicking elsewhere in the popover does not resume accidentally.
 
 ### Focus complete
@@ -391,7 +397,7 @@ on the idle screen.
 ### Break complete
 
 - While Auto-start focus is off, the popover shows the next focus ready to
-  start, with `Start 25-minute focus` and `Done for now`.
+  start, with `Start` and `Done for now`.
 - With Auto-start focus on, the running focus screen appears immediately and
   the countdown holds at full until the break chime finishes. This ready state
   is skipped.
@@ -480,8 +486,8 @@ Dark mode:
   the Black values in the three-mode color system.
 - Contrast is maintained without turning the popover into a glowing object.
 
-The primary action uses the active mode fill in every state: Start, Pause,
-Resume, and completion. Only the label and play/pause glyph change; there is no
+The primary action uses the active mode fill in every state: Start, Pause, and
+completion. Only the label and play/pause glyph change; there is no
 second ink-key or rail treatment. Mode remains explicit through the channel arc,
 the mode dots, the mode label, and the running caption. Each fill is tuned for
 a legible label rather than reusing one constant action color.
@@ -706,7 +712,7 @@ No task, project, note, or session-history data is stored.
 - The single Completion chime switch mutes both phase variants.
 - A notification appears once when authorized and appropriate.
 - With Auto-start break off, focus completion automatically shows the
-  recommended break's duration and a Start break action without a second modal.
+  recommended break's duration and a Start action without a second modal.
 - With Auto-start break on, focus completion goes directly to the running break
   screen; the break's end date includes the chime, so the countdown holds at
   full until the chime finishes. With the chime off, it starts immediately.

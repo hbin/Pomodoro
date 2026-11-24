@@ -218,7 +218,8 @@ It does not:
 - The status line sits in the mode row below the dial.
 - The existing break dial, colors, copy, and menu-bar cup icon remain.
 - Pause freezes the remaining break time and cancels the pending notification.
-- Resume creates a new end date and reschedules the notification.
+- Starting again after a pause creates a new end date and reschedules the
+  notification.
 - End early returns to that break's idle screen; it does not jump to Focus or
   start a focus. The idle selector stays on the break that was ended.
 - Sleep, screen lock, quit, and relaunch use the existing reconciliation path.
@@ -284,8 +285,7 @@ Required semantic keys and English source values:
 | `timer.mode.focus` | **Focus** |
 | `timer.mode.short_break` | **Short break** |
 | `timer.mode.long_break` | **Long break** |
-| `timer.action.start` | **Start %lld-minute focus** |
-| `timer.action.start_break` | **Start %lld-minute break** |
+| `timer.action.start` | **Start** |
 | `timer.action.previous_mode` | **Previous mode** |
 | `timer.action.next_mode` | **Next mode** |
 | `timer.a11y.start_break_hint` | **Starts a break interval in this popover** |

@@ -812,31 +812,13 @@
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "前のモード" } }
       }
     },
-    "timer.action.resume" : {
-      "comment" : "Primary button title while paused. Native review pending.",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Resume" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "继续" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "繼續" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "再開" } }
-      }
-    },
     "timer.action.start" : {
-      "comment" : "Primary button title when idle; %lld is the configured focus length in minutes. Native review pending.",
+      "comment" : "Primary button title when idle, paused, or starting the offered interval. Native review pending.",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start %lld-minute focus" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "开始 %lld 分钟专注" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "開始 %lld 分鐘專注" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分間の集中を開始" } }
-      }
-    },
-    "timer.action.start_break" : {
-      "comment" : "Primary button when an idle break mode is selected; %lld is the break length in minutes. Native review pending.",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start %lld-minute break" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "开始 %lld 分钟休息" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "開始 %lld 分鐘休息" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分間の休憩を開始" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "开始" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "開始" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "開始" } }
       }
     },
     "timer.a11y.break_dial" : {
@@ -909,15 +891,6 @@
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分钟，准备就绪" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分鐘，準備就緒" } },
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分、準備完了" } }
-      }
-    },
-    "timer.a11y.resume_hint" : {
-      "comment" : "Accessibility hint for the resume action. Native review pending.",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Resumes the timer" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "继续计时" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "繼續計時" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマーを再開します" } }
       }
     },
     "timer.a11y.running_value" : {

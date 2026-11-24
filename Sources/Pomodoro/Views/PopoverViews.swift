@@ -430,32 +430,25 @@ struct TimerPopoverView: View {
     }
 
     private var primaryButtonTitle: String {
-        if model.isIdle {
-            return idleMode.primaryLabel(in: model.durations)
-        }
-        return model.isPaused
-            ? L10n.string("timer.action.resume")
-            : L10n.string("timer.action.pause")
+        model.isRunning
+            ? L10n.string("timer.action.pause")
+            : L10n.string("timer.action.start")
     }
 
     private var primaryButtonIcon: String {
-        if model.isIdle {
-            return "play.fill"
-        }
-        return model.isPaused ? "play.fill" : "pause.fill"
+        model.isRunning ? "pause.fill" : "play.fill"
     }
 
     private var primaryButtonHint: String {
-        if model.isIdle {
-            return L10n.string(
-                idleMode.isBreak
-                    ? "timer.a11y.start_break_hint"
-                    : "timer.a11y.start_hint"
-            )
+        if model.isRunning {
+            return L10n.string("timer.a11y.pause_hint")
         }
-        return model.isPaused
-            ? L10n.string("timer.a11y.resume_hint")
-            : L10n.string("timer.a11y.pause_hint")
+        let mode = model.isIdle ? idleMode : IdleMode(phase: model.phase)
+        return L10n.string(
+            mode.isBreak
+                ? "timer.a11y.start_break_hint"
+                : "timer.a11y.start_hint"
+        )
     }
 }
 
@@ -477,9 +470,7 @@ struct CompletionPopoverView: View {
     }
 
     private var actionTitle: String {
-        offer.phase == .focus
-            ? L10n.format("timer.action.start", offer.minutes)
-            : L10n.format("timer.action.start_break", offer.minutes)
+        L10n.string("timer.action.start")
     }
 
     private var actionHint: String {

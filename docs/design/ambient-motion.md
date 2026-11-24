@@ -61,7 +61,7 @@ Focus 25 upper left, Short break 5 overhead, Long break 15 upper right.
 The pointer rotates independently over 700 ms. On the idle surface it points at
 the selected duration's minute position on the 60-minute dial: 25 minutes at
 five o'clock, 5 at one o'clock, 15 at three o'clock. The primary takes the
-selected mode's fill; Start, Pause, and Resume keep that fill, so starting an
+selected mode's fill; Start and Pause keep that fill, so starting an
 interval needs no button-color transition.
 
 ## Theme treatment
@@ -117,8 +117,8 @@ interval needs no button-color transition.
   44-point hit area.
 - The native primary uses the active mode fill in every state: Focus brick,
   Short break leaf, Long break deep sage. It has a centered label, a trailing
-  play/pause glyph, and a label color tuned per fill. Start, Pause, Resume, and
-  completion share the mode fill; the button uses a clean highlight and a
+  play/pause glyph, and a label color tuned per fill. Start, Pause, and the
+  completion Start share the mode fill; the button uses a clean highlight and a
   subtle black shadow without a colored glow.
 - The ambient light is limited to the clock page; Settings uses the plain card
   background.

@@ -37,8 +37,8 @@ automated tests.
 - [ ] Natural completion increments the focus count and moves the popover to the
       recommended break ready to start while Auto-start break is off.
 - [ ] The focus-completion screen shows the recommended configured short or
-      long break, its duration on the dial with `READY`, and a Start break
-      action; no countdown starts.
+      long break, its duration on the dial with `READY`, and a Start action; no
+      countdown starts.
 - [ ] Auto-start break defaults off, survives relaunch, older state files without
       the field load as off, and an explicit on choice is preserved.
 - [ ] With Auto-start break on, a natural focus completion goes directly from
@@ -82,7 +82,7 @@ automated tests.
 - [ ] Declining an offered long break with `Done for now` resets the rhythm
       before the next focus.
 - [ ] Completing a break moves the popover to the configured focus ready
-      screen with `Start N-minute focus`; no countdown starts.
+      screen with a `Start` action; no countdown starts.
 - [ ] Starting a short or long break from idle uses the configured break
       duration and preserves the completed focus count and rhythm.
 
@@ -171,9 +171,12 @@ automated tests.
       dot is wider. A single current-mode label below the dots names the mode;
       the 32-point arrows expose hover help and announce the current mode.
 - [ ] The primary uses the active mode fill in every state: Focus brick,
-      Short break leaf, Long break deep sage. Start, Pause, Resume and
-      completion share the fill; labels pass 4.5:1 and there is no second
-      ink-key or rail style.
+      Short break leaf, Long break deep sage. Start, Pause, and completion share
+      the fill; labels pass 4.5:1 and there is no second ink-key or rail style.
+- [ ] The primary exposes exactly two labels in every mode: `Start` while idle
+      or paused and `Pause` while running. Focus, Short break, and Long break
+      do not add mode or duration text to the button, and the completion screen
+      also uses `Start`.
 - [ ] The idle ambient light follows the selected mode dot: Focus upper left,
       Short break overhead, Long break upper right.
 - [ ] The idle dial has no hand and an empty recessed channel between thin

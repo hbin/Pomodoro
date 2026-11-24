@@ -44,7 +44,7 @@ unchanged.
    - title `Take a short break` or `Take a long break`;
    - dial at `05:00` or `15:00`, caption `READY`, break accent;
    - body `Focus complete. Ready for a break?`;
-   - primary `Start 5-minute break` or `Start 15-minute break`;
+   - primary `Start`;
    - quiet `Done for now`.
 4. The fourth naturally completed focus recommends the 15-minute long break.
 5. Starting the break uses the existing recommended-break action and schedules
@@ -65,7 +65,7 @@ unchanged.
    - title `Ready to focus`;
    - dial at `25:00`, caption `READY`, focus accent;
    - body `Break complete. Ready for another focus?`;
-   - primary `Start 25-minute focus`;
+   - primary `Start`;
    - quiet `Done for now`.
 4. Starting another focus uses the existing start-another action.
 5. `Done for now` returns to idle. The completed focus count and rhythm are
@@ -116,8 +116,7 @@ The screen reuses existing semantic keys and updates two body strings.
 | `timer.title.long_break` | **Take a long break** |
 | `timer.title.idle` | **Ready to focus** |
 | `timer.caption.ready` | **READY** |
-| `timer.action.start_break` | **Start %lld-minute break** |
-| `timer.action.start` | **Start %lld-minute focus** |
+| `timer.action.start` | **Start** |
 | `completion.body.focus_done` | **Focus complete. Ready for a break?** |
 | `completion.body.break_ready` | **Break complete. Ready for another focus?** |
 | `completion.action.done` | **Done for now** |

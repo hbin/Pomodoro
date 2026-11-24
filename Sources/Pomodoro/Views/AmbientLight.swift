@@ -40,15 +40,6 @@ enum IdleMode: Int, CaseIterable, Identifiable {
         }
     }
 
-    func primaryLabel(in durations: IntervalDurations) -> String {
-        switch self {
-        case .focus:
-            L10n.format("timer.action.start", minutes(in: durations))
-        case .shortBreak, .longBreak:
-            L10n.format("timer.action.start_break", minutes(in: durations))
-        }
-    }
-
     func accessibilityLabel(in durations: IntervalDurations) -> String {
         switch self {
         case .focus:

@@ -13,13 +13,16 @@
 > This is the change-specific to-do list. It is not a roadmap. The pre-flight
 > choices are resolved; the source, localization, and documentation changes are
 > in the working tree. Nothing has been committed, tagged, or released.
+>
+> **Follow-up 2026-11-24.** The primary's visible copy is now limited to
+> `Start` and `Pause`; references below to `Resume` record the earlier state.
 
 ## 0. Confirmed decisions
 
 - [x] Long break stays in the same green family as Short break and is the
       deeper tier. Brass does not become the Long-break mode color or Start
       fill.
-- [x] The primary keeps the mode fill in every state: Start, Pause, Resume
+- [x] The primary keeps the mode fill in every state: Start, Pause,
       and completion. No second ink-key/rail button style.
 - [x] The running/paused dial caption becomes `FOCUS` / `SHORT BREAK` /
       `LONG BREAK`; `READY` stays unchanged.
@@ -83,7 +86,7 @@ The implementation request accepted the recommended values for all four.
       color, existing shadow, radius, press scale and Reduce Motion.
 - [x] Use the same filled style for idle, completion, running and paused
       primary actions; only the label and glyph change between Start, Pause
-      and Resume.
+      and the paused Start state.
 - [x] Keep `PrimaryButtonLabel` unchanged; no separate icon-color override is
       needed.
 - [x] Confirm the 49 pt height, 12 pt radius, shadow and press behavior did
@@ -127,7 +130,7 @@ The implementation request accepted the recommended values for all four.
       keys. The old `timer.title.break` key may remain unused or be removed in
       a separate cleanup.
 - [x] Confirm the paused state remains clear from the `Paused` title and the
-      `Resume` button.
+      `Start` button.
 - [x] Check the title fits `Short break` / `Long break` in all four languages
       without clipping or a layout shift.
 
@@ -185,7 +188,7 @@ The implementation request accepted the recommended values for all four.
       them.
 - [x] Confirm the 0% dial still reads as an instrument: the thin brass edges,
       recessed channel, fixed tick ring, face shadow, plaque and time remain.
-- [x] Confirm Pause and Resume use the same mode fill as Start and do not
+- [x] Confirm Pause and the paused Start use the same mode fill as idle Start and do not
       introduce a second button color; the label and pause glyph are
       unambiguous.
 - [x] Confirm the stop control and the `End` confirmation are unchanged.
@@ -210,7 +213,7 @@ The implementation request accepted the recommended values for all four.
   four states and both themes, with explicit mode text as the fallback.
 - Both breaks stay in one green family; Long is the deeper tier; brass is not
   a mode color.
-- The primary keeps the mode fill in every state; Start, Pause and Resume use
+- The primary keeps the mode fill in every state; Start and Pause use
   the same button color for a given mode, with only the label and glyph
   changing.
 - The dial uses the empty recessed channel; the mode-colored arc drains while

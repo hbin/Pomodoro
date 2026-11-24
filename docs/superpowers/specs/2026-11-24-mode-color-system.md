@@ -24,9 +24,15 @@
 > green family, with Long as the deeper tier. The revised proposal uses deep
 > green for the Long mode accent and Start button; brass stays as the ambient
 > light and instrument trim unless the fully green ambient variant is chosen.
-> The primary keeps the mode fill in every state, including Pause and Resume;
+> The primary keeps the mode fill in every state, including Pause and the
+> paused Start state;
 > the earlier ink-key + rail treatment is not used. The brass study is kept in
 > §6 for comparison.
+>
+> **Follow-up 2026-11-24.** The primary's visible copy is simplified to two
+> labels: `Start` while idle, paused, or offering the next interval, and
+> `Pause` while running. The mode-fill treatment is unchanged; the existing
+> captures still show the earlier `Resume` copy.
 >
 > **Revision 2026-11-24 (bezel).** The bezel is confirmed as an empty
 > recessed channel with thin brass edges. The thick brass fill track and the
@@ -44,7 +50,7 @@
 | Long-break palette | Light deep sage `#5F6B52 → #4E5A43`; Black forest `#2F6B3A → #285D32` | Brass; marginally darker forest | **Confirmed** |
 | Short-break palette | Light leaf `#7FA160 → #789A58`; Black leaf `#7FA160 → #789A58` on the dark card | Deep leaf in Black; pale sage | **Confirmed** |
 | Black Short button | Light leaf fill with ink text, leaving the deep forest tier for Long | Keep deep forest; make Long only marginally darker | **Confirmed** |
-| Primary-button treatment | Filled mode color in **every state**: Start, Pause, Resume and completion | Ink key + rail (earlier proposal); constant key | **Confirmed** |
+| Primary-button treatment | Filled mode color in **every state**: Start, Pause and completion | Ink key + rail (earlier proposal); constant key | **Confirmed** |
 | Focus color | Light brick `#B84A37 → #A53D2E`; Black coral `#D46A54 → #CE6853` | Deep tomato in both themes | **Confirmed** |
 | Long-break ambient | Keep the existing brass light as a material accent, not a mode color | Switch the ambient to the deep-green accent | **Confirmed** |
 | Running/paused mode text | Replace `REMAINING` / `PAUSED` in the dial caption with `FOCUS` / `SHORT BREAK` / `LONG BREAK` | Add new title keys; add an eyebrow label | **Confirmed** |
@@ -57,7 +63,8 @@ The implemented result is:
 - Focus reads as tomato; both breaks read as green, with Short as the fresh,
   lighter tier and Long as the deep, quieter tier. The mode family is
   semantically coherent.
-- The primary uses the mode fill in every state, including Pause and Resume;
+- The primary uses the mode fill in every state, including Pause and the
+  paused Start state;
   only the label and play/pause glyph change. This removes the second ink-key
   style and keeps one button color per mode.
 - The dial bezel becomes an empty recessed channel with thin brass edges. The
@@ -183,7 +190,7 @@ third hue); both are weaker than the light/deep hierarchy.
   prefers a fully green long-break screen, the ambient can be switched to the
   long accent; the captures still show the current brass light.
 - **Primary button (all states):** full mode fill, label color from the
-  table, trailing play/pause glyph in the label color. Start, Pause, Resume
+  table, trailing play/pause glyph in the label color. Start, Pause,
   and the completion action all use the same fill for their mode; only the
   label and glyph change. Height 49, corner radius 12, existing shadow and
   press behavior. No ink key, no rail, no second button color.
@@ -221,7 +228,7 @@ title also names the mode; Focus keeps `Focus in progress`, paused keeps
 With both breaks green, the running caption and the break title name the mode
 directly. The 05:00 versus 15:00 readout and the green value step remain
 secondary cues, and the mode name is the non-color fallback. When paused, the
-large title still says `Paused` and the primary button says `Resume`, so the
+large title still says `Paused` and the primary button returns to `Start`, so the
 caption can name the mode without losing the pause state. The strings reuse the
 existing `timer.mode.*` keys; no new visible copy or layout is introduced.
 
@@ -253,7 +260,7 @@ distinction. The recommended direction is deep green.
 
 ### 4.5 Active interval
 
-![Pause/Resume: the chosen filled mode color, with the earlier ink-key proposal for comparison](images/mode-colors-active.webp)
+![Pause and paused Start: the chosen filled mode color, with the earlier ink-key proposal for comparison](images/mode-colors-active.webp)
 
 The left column is the chosen treatment: the mode fill stays on the primary
 when it becomes Pause, so the button color always matches the mode. The label
@@ -348,7 +355,7 @@ confirmed.
 The primary label is 13.5 pt DemiBold (Avenir Next in English; PingFang or
 Hiragino in CJK), so the WCAG target is 4.5:1. The mode label is 9 pt DemiBold
 in the same language-aware faces, also 4.5:1. The channel arc is non-text UI,
-target 3:1. Pause and Resume reuse the Start fill, so the same button pairs
+target 3:1. Pause and the paused Start reuse the Start fill, so the same button pairs
 apply.
 
 | Mode | Theme | Start fill | Label | Label contrast (top / bottom) | Accent on card |
@@ -381,7 +388,7 @@ Additional checks:
 
 ### A. Filled mode color in every state — chosen
 
-Every primary — Start, Pause, Resume and completion — takes the mode fill.
+Every primary — Start, Pause and completion — takes the mode fill.
 
 - **Strengths:** one button color per mode; the button, channel arc and mode
   accent always agree; the simplest implementation and the strongest mode
@@ -394,8 +401,8 @@ Every primary — Start, Pause, Resume and completion — takes the mode fill.
 
 ### B. Filled Start, ink key while active — earlier proposal
 
-The idle and completion Start buttons take the mode fill; running and paused
-Pause/Resume use a stable ink key with a mode rail.
+The idle, paused, and completion Start buttons take the mode fill; running
+Pause uses a stable ink key with a mode rail.
 
 - **Strengths:** the active key shape stays constant; no red Pause; the mode
   is carried by the rail, channel arc and caption rather than the fill.
@@ -486,9 +493,9 @@ The full brass study is preserved as
   mode color.
 - **Increased contrast.** The fills and labels are already high contrast; no
   extra mode-specific treatment is required.
-- **Mode fill in every state.** Pause/Resume must keep the mode fill so the
+- **Mode fill in every state.** Pause and the paused Start must keep the mode fill so the
   running screen looks like the same mode as its idle screen. The action is
-  distinguished by the `Pause` / `Resume` label and the play/pause glyph, not
+  distinguished by the `Pause` / `Start` label and the play/pause glyph, not
   by a second button color.
 - **Black Short button.** The light leaf fill must not read as disabled. Its
   ink label, play glyph and mode label are the affordance; check the pressed
@@ -571,7 +578,7 @@ No timer, persistence, notification, sound or update behavior changes.
   fallback.
 - The Black Short leaf button does not read as disabled; its ink label and play
   glyph are legible in the resting, pressed, and increased-contrast states.
-- Pause and Resume keep the same mode fill as Start and do not introduce a
+- Pause and the paused Start keep the same mode fill as idle Start and do not introduce a
   second button color; the label and pause glyph are legible. The stop control
   and the End confirmation are unchanged.
 - The running/paused dial caption names the mode in all four languages.
