@@ -7,6 +7,10 @@ final class SoundPlayer: @unchecked Sendable {
     /// auto-starting a break so the break does not begin under the chime.
     static let focusChimeDuration: TimeInterval = 0.98
 
+    /// Length of the break-completion chime. TimerModel waits for this before
+    /// auto-starting the next focus.
+    static let breakChimeDuration: TimeInterval = 0.94
+
     private enum Chime {
         case focus
         case breakTime
@@ -14,7 +18,7 @@ final class SoundPlayer: @unchecked Sendable {
         var duration: TimeInterval {
             switch self {
             case .focus: SoundPlayer.focusChimeDuration
-            case .breakTime: 0.94
+            case .breakTime: SoundPlayer.breakChimeDuration
             }
         }
 

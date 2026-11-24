@@ -9,25 +9,30 @@
 | Platform | macOS 15+ |
 | Amends | `2026-11-21-pomodoro-product-design.md`, `2026-11-24-guided-next-step-design.md` |
 
+> **Amended 2026-11-24:** Auto-start pomodoro adds the reverse break-to-focus
+> transition, off by default; see
+> [`2026-11-24-auto-start-pomodoro-design.md`](2026-11-24-auto-start-pomodoro-design.md).
+
 ## 1. Summary
 
-Auto-start break is a setting, on by default. When it is on, a naturally
+Auto-start break is a setting, off by default. When it is on, a naturally
 completed focus starts the recommended short or long break immediately in the
 running state, but the break's end date is pushed out by the completion chime,
 so the countdown stays at full until the chime finishes. When it is off, the
 existing guided break-ready screen waits for Start.
 
-The setting applies only to the focus-to-break transition. A completed break
-still shows the focus-ready screen and never starts the next focus by itself.
+The setting applies only to the focus-to-break transition. The next focus is
+controlled independently by Auto-start pomodoro, which is off by default. With
+both settings on, the focus-to-break-to-focus cycle continues automatically.
 
 ## 2. Behavior
 
 ### 2.1 Setting
 
 - Location: Settings → FOCUS → `Auto-start break`.
-- Default: on.
+- Default: off.
 - Persisted as `autoStartBreak` in `PersistedState`; older state files without
-  the field decode as on. An explicit off choice is preserved.
+  the field decode as off. An explicit on choice is preserved.
 - Changing the setting takes effect at the next observed focus completion.
   Turning it on while a focus is running applies to that focus.
 - Turning it on while the focus-completion ready screen is already visible does
@@ -69,8 +74,9 @@ ready screen, and the user presses Start.
 
 ### 2.4 Break completion
 
-Auto-start break does not apply here. A completed break shows the focus-ready
-screen, and the next focus always waits for Start.
+Auto-start break does not apply here. With Auto-start pomodoro off, a completed
+break shows the focus-ready screen and waits for Start. With it on, the
+break-to-focus transition is handled by that setting.
 
 ### 2.5 Restoration
 
@@ -115,7 +121,8 @@ notification explanation, and the footer all fit without a scrollbar.
 
 ## 5. Non-goals
 
-- Starting the next focus automatically after a break.
+- Starting the next focus automatically is handled by Auto-start pomodoro, not
+  this setting.
 - Starting a break retroactively when an expired focus is restored at launch.
 - Auto-starting a break after an early-ended focus.
 - Making the chime wait configurable or changing the chime length.
@@ -128,8 +135,8 @@ notification explanation, and the footer all fit without a scrollbar.
 
 ## 6. Acceptance criteria
 
-- `Auto-start break` is on by default, including for older state files; an
-  explicit off choice is preserved.
+- `Auto-start break` is off by default, including for older state files; an
+  explicit on choice is preserved.
 - The setting survives quit and relaunch.
 - With the setting on, a natural focus completion goes directly to the running
   break screen; no completion or break-ready screen appears.
@@ -146,12 +153,13 @@ notification explanation, and the footer all fit without a scrollbar.
 - An early-ended focus does not start a break.
 - An expired focus restored at launch shows the break-ready screen instead of
   starting a break retroactively.
-- A completed break still waits for Start focus.
+- With Auto-start pomodoro off, a completed break waits for Start focus; with
+  it on, the break-to-focus transition is controlled by that setting.
 - Turning the setting on during a running focus applies to that completion.
 - Turning the setting on while the focus-completion ready screen is visible does
   not retroactively start the break.
-- Settings shows the new FOCUS section and toggle in all four languages, in both
-  themes, without clipping or a visible scrollbar.
+- Settings shows both FOCUS toggles in all four languages, in both themes,
+  without clipping or a visible scrollbar.
 - `swift test` and `./scripts/build-app.sh debug` pass.
 
 ## 7. Verification
@@ -161,7 +169,7 @@ showed the break-ready screen; the on path went directly from the focus-running
 screen to the running break screen without a completion flash. The countdown
 held at the full duration during the chime and then decreased; with the chime
 off, it decreased immediately. The existing break-start path continues to own
-the menu-bar update and the break-end notification. Default-on and explicit-off
+the menu-bar update and the break-end notification. Default-off and explicit-on
 decoding, round-trip persistence, restore-at-launch, and break-completion paths
-were checked. The Settings row was inspected in both themes and all four
-languages.
+were checked. Both FOCUS rows were inspected in both themes and all four
+languages; the card grew to fit the footer without a scrollbar.

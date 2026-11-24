@@ -214,7 +214,10 @@ public struct TimerEngine {
     }
 
     @discardableResult
-    public mutating func startFocus(minutes: Int? = nil) -> Date? {
+    public mutating func startFocus(
+        minutes: Int? = nil,
+        after delay: TimeInterval = 0
+    ) -> Date? {
         let minutes = minutes ?? state.selectedFocusMinutes
         guard Self.focusChoices.contains(minutes) else { return nil }
 
@@ -227,7 +230,7 @@ public struct TimerEngine {
         state.phase = .focus
         state.totalSeconds = TimeInterval(minutes * 60)
         state.remainingSeconds = state.totalSeconds
-        state.endDate = now().addingTimeInterval(state.totalSeconds)
+        state.endDate = now().addingTimeInterval(max(0, delay) + state.totalSeconds)
         state.runState = .running
         return state.endDate
     }
@@ -263,13 +266,15 @@ public struct TimerEngine {
         return state.endDate
     }
 
+    /// Starts the next focus with its end date pushed out by `delay`, used to
+    /// hold the countdown while the break chime finishes.
     @discardableResult
-    public mutating func startAnother() -> Date? {
+    public mutating func startAnother(after delay: TimeInterval = 0) -> Date? {
         guard state.runState == .completed else { return nil }
         if state.phase == .focus, recommendedBreak.phase == .longBreak {
             state.completedFocusCount = 0
         }
-        return startFocus(minutes: state.selectedFocusMinutes)
+        return startFocus(minutes: state.selectedFocusMinutes, after: delay)
     }
 
     @discardableResult

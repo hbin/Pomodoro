@@ -38,8 +38,8 @@ automated tests.
 - [ ] The focus-completion screen shows the recommended 5- or 15-minute break,
       its duration on the dial with `READY`, and a Start break action; no
       countdown starts.
-- [ ] Auto-start break defaults on, survives relaunch, older state files without
-      the field load as on, and an explicit off choice is preserved.
+- [ ] Auto-start break defaults off, survives relaunch, older state files without
+      the field load as off, and an explicit on choice is preserved.
 - [ ] With Auto-start break on, a natural focus completion goes directly from
       the focus-running screen to the running break screen; no completion or
       break-ready screen flashes.
@@ -51,7 +51,26 @@ automated tests.
 - [ ] Auto-start break still selects the 15-minute long break on the fourth
       completed focus.
 - [ ] Auto-start break does not start a break after an early-ended focus.
-- [ ] Auto-start break does not start the next focus after a break completes.
+- [ ] With Auto-start pomodoro off, a completed break waits for Start focus;
+      Auto-start break alone does not start it.
+- [ ] Auto-start pomodoro defaults off, survives relaunch, older state files
+      without the field load as off, and an explicit on choice is preserved.
+- [ ] With Auto-start pomodoro on, a natural break completion goes directly from
+      the break-running screen to the running focus screen; no focus-ready or
+      completion screen flashes.
+- [ ] The auto-started focus's countdown stays at full during the break chime
+      and begins decreasing after the chime; with the chime off it decreases
+      immediately.
+- [ ] Pause and End work during the focus chime hold; disabling Auto-start
+      pomodoro during the hold does not stop the running focus.
+- [ ] Auto-start pomodoro does not start a break.
+- [ ] An early-ended break does not start a focus, and an expired break restored
+      at launch shows the focus-ready screen instead of starting retroactively.
+- [ ] With both Auto-start break and Auto-start pomodoro on, the focus-to-break
+      and break-to-focus cycle continues with the correct durations.
+- [ ] Enabling Auto-start pomodoro while a break runs applies to that
+      completion; enabling it on the completed focus-ready screen does not
+      retroactively start the focus.
 - [ ] Enabling Auto-start break while focus runs applies to that completion;
       enabling it on the completed ready screen does not retroactively start
       the break.
@@ -132,9 +151,9 @@ automated tests.
 - [ ] Settings uses the plain card background; no ambient rim, glow, or shade
       is visible there.
 - [ ] The Settings back control returns to the timer without closing the popover.
-- [ ] Settings shows the FOCUS section and Auto-start break toggle, on by
-      default, and the choice survives relaunch.
-- [ ] The Settings card grows to fit its content: the Auto-start break row, the
+- [ ] Settings shows the FOCUS section with Auto-start break and Auto-start
+      pomodoro both off by default; both choices survive relaunch.
+- [ ] The Settings card grows to fit its content: both FOCUS rows, the
       notifications explanation, and the footer all stay visible with no
       scrollbar, in all four languages, both themes, and with notifications
       allowed or denied. The card is never shorter than the timer page's card
@@ -175,8 +194,11 @@ automated tests.
 - [ ] Notification permission states are represented correctly.
 - [ ] The focus-completion notification reads `Time for a break.` and fits both
       a waiting break and an auto-started break.
-- [ ] Break-completion notifications name the next focus and fire once when the
-      popover is closed.
+- [ ] The break-completion notification reads `Time to focus.`, fits both a
+      waiting focus and an auto-started focus, and fires once when the popover
+      is closed.
+- [ ] An auto-started focus schedules its focus-end notification and updates the
+      menu bar to the running focus state.
 - [ ] An auto-started break schedules its break-end notification and updates the
       menu bar to the running break state.
 - [ ] Starting, pausing, resuming, ending, and switching language keep the

@@ -57,6 +57,7 @@ final class TimerModel: ObservableObject {
     @Published private(set) var tickEnabled: Bool
     @Published private(set) var showMenuBarMinutes: Bool
     @Published private(set) var autoStartBreak: Bool
+    @Published private(set) var autoStartFocus: Bool
     @Published private(set) var themePreference: ThemePreference
     @Published private(set) var languagePreference: LanguagePreference
     @Published private(set) var firstRunTipDismissed: Bool
@@ -106,6 +107,7 @@ final class TimerModel: ObservableObject {
         self.tickEnabled = loaded.state.tickEnabled
         self.showMenuBarMinutes = loaded.state.showMenuBarMinutes
         self.autoStartBreak = loaded.state.autoStartBreak
+        self.autoStartFocus = loaded.state.autoStartFocus
         self.themePreference = loaded.state.themePreference
         self.languagePreference = languagePreference
         self.firstRunTipDismissed = loaded.state.firstRunTipDismissed
@@ -375,7 +377,13 @@ final class TimerModel: ObservableObject {
     }
 
     func startAnother() {
-        guard let endDate = engine.startAnother() else { return }
+        startAnother(after: 0)
+    }
+
+    /// Starts the next focus with its end date pushed out by `delay`, so the
+    /// countdown holds at full while the break chime finishes.
+    private func startAnother(after delay: TimeInterval) {
+        guard let endDate = engine.startAnother(after: delay) else { return }
         snapshot = engine.state
         now = Date()
         lastTickSecond = nil
@@ -474,6 +482,12 @@ final class TimerModel: ObservableObject {
         save()
     }
 
+    func setAutoStartFocus(_ enabled: Bool) {
+        guard autoStartFocus != enabled else { return }
+        autoStartFocus = enabled
+        save()
+    }
+
     func setThemePreference(_ preference: ThemePreference) {
         if themePreference != preference {
             themePreference = preference
@@ -554,7 +568,17 @@ final class TimerModel: ObservableObject {
                     announce(L10n.format("announcements.focus_complete", recommendedBreakMinutes))
                 }
             } else {
-                announce(L10n.string("announcements.break_complete"))
+                if autoStartFocus {
+                    if chimeEnabled {
+                        startAnother(
+                            after: SoundPlayer.breakChimeDuration + Self.autoStartChimeBuffer
+                        )
+                    } else {
+                        startAnother()
+                    }
+                } else {
+                    announce(L10n.string("announcements.break_complete"))
+                }
             }
         }
     }
@@ -630,6 +654,7 @@ final class TimerModel: ObservableObject {
             tickEnabled: tickEnabled,
             showMenuBarMinutes: showMenuBarMinutes,
             autoStartBreak: autoStartBreak,
+            autoStartFocus: autoStartFocus,
             themePreference: themePreference,
             firstRunTipDismissed: firstRunTipDismissed
         )

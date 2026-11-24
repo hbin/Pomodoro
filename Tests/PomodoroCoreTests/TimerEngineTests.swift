@@ -160,6 +160,33 @@ final class TimerEngineTests: XCTestCase {
         XCTAssertEqual(engine.displaySeconds(), 299)
     }
 
+    func testStartAnotherAfterChimeDelayKeepsFullCountdown() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+        engine.startFocus(minutes: 25)
+        clock.advance(1500)
+        XCTAssertEqual(engine.refresh(), .completed(.focus))
+        engine.startRecommendedBreak()
+        clock.advance(300)
+        XCTAssertEqual(engine.refresh(), .completed(.shortBreak))
+
+        let end = engine.startAnother(after: 1)
+
+        XCTAssertEqual(end, clock.date.addingTimeInterval(1501))
+        XCTAssertEqual(engine.state.runState, .running)
+        XCTAssertEqual(engine.state.phase, .focus)
+        XCTAssertEqual(engine.state.totalSeconds, 1500)
+        XCTAssertEqual(engine.displaySeconds(), 1500)
+
+        clock.advance(0.2)
+        XCTAssertNil(engine.refresh())
+        XCTAssertEqual(engine.state.endDate, end)
+        XCTAssertEqual(engine.displaySeconds(), 1500)
+
+        clock.advance(1.8)
+        XCTAssertEqual(engine.displaySeconds(), 1499)
+    }
+
     func testStartingShortBreakDirectlyFromIdle() {
         let clock = TestClock()
         var engine = makeEngine(clock)
@@ -409,6 +436,7 @@ final class PersistenceTests: XCTestCase {
         state.chimeEnabled = false
         state.showMenuBarMinutes = false
         state.autoStartBreak = true
+        state.autoStartFocus = true
         state.themePreference = .dark
         state.firstRunTipDismissed = true
 
@@ -477,11 +505,12 @@ final class PersistenceTests: XCTestCase {
         XCTAssertEqual(result.state.timer.selectedFocusMinutes, 15)
         XCTAssertTrue(result.state.chimeEnabled)
         XCTAssertFalse(result.state.tickEnabled)
-        XCTAssertTrue(result.state.autoStartBreak)
+        XCTAssertFalse(result.state.autoStartBreak)
+        XCTAssertFalse(result.state.autoStartFocus)
         XCTAssertEqual(result.state.themePreference, .system)
     }
 
-    func testDecodingLegacyStateUsesAutoStartBreakDefault() throws {
+    func testDecodingLegacyStateUsesAutoStartDefaults() throws {
         let store = StateStore(directory: directory)
         let json = """
         {
@@ -505,7 +534,8 @@ final class PersistenceTests: XCTestCase {
         let result = store.load()
 
         XCTAssertNil(result.recoveryIssue)
-        XCTAssertTrue(result.state.autoStartBreak)
+        XCTAssertFalse(result.state.autoStartBreak)
+        XCTAssertFalse(result.state.autoStartFocus)
         XCTAssertEqual(result.state.timer.completedFocusCount, 2)
     }
 

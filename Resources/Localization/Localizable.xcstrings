@@ -281,12 +281,12 @@
       }
     },
     "notifications.break.body" : {
-      "comment" : "Body of the notification delivered when a break finishes. Native review pending.",
+      "comment" : "Body of the notification delivered when a break finishes; neutral so it fits both manual and auto-started focus. Native review pending.",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start another focus when you’re ready." } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "准备好后，开始下一次专注。" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "準備好後，開始下一次專注。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "準備ができたら、次の集中を始めましょう。" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time to focus." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "该专注了。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "該專注了。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中の時間です。" } }
       }
     },
     "notifications.break.title" : {
@@ -377,6 +377,24 @@
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自动开始休息" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "自動開始休息" } },
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩を自動で開始" } }
+      }
+    },
+    "settings.focus.auto_pomodoro.detail" : {
+      "comment" : "Detail for the auto-start-next-focus setting, which waits for the break chime. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Starts the next focus when a break ends." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息结束后自动开始下一次专注。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息結束後自動開始下一次專注。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩が終わると、次の集中を自動で開始します。" } }
+      }
+    },
+    "settings.focus.auto_pomodoro.title" : {
+      "comment" : "Title for the auto-start-next-focus setting. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Auto-start pomodoro" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自动开始番茄钟" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "自動開始番茄鐘" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ポモドーロを自動開始" } }
       }
     },
     "settings.language.detail" : {

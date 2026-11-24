@@ -104,6 +104,18 @@ struct SettingsView: View {
                             )
                         )
 
+                        Hairline()
+                            .padding(.vertical, 6)
+
+                        settingRow(
+                            title: L10n.string("settings.focus.auto_pomodoro.title"),
+                            detail: L10n.string("settings.focus.auto_pomodoro.detail"),
+                            isOn: Binding(
+                                get: { model.autoStartFocus },
+                                set: { model.setAutoStartFocus($0) }
+                            )
+                        )
+
                         sectionLabel(L10n.string("settings.section.menu_bar"))
                             .padding(.top, 13)
                         Hairline()

@@ -12,6 +12,7 @@ public struct PersistedState: Codable, Sendable, Equatable {
     public var tickEnabled: Bool
     public var showMenuBarMinutes: Bool
     public var autoStartBreak: Bool
+    public var autoStartFocus: Bool
     public var themePreference: ThemePreference
     public var firstRunTipDismissed: Bool
 
@@ -20,7 +21,8 @@ public struct PersistedState: Codable, Sendable, Equatable {
         chimeEnabled: Bool = true,
         tickEnabled: Bool = false,
         showMenuBarMinutes: Bool = true,
-        autoStartBreak: Bool = true,
+        autoStartBreak: Bool = false,
+        autoStartFocus: Bool = false,
         themePreference: ThemePreference = .system,
         firstRunTipDismissed: Bool = false
     ) {
@@ -29,6 +31,7 @@ public struct PersistedState: Codable, Sendable, Equatable {
         self.tickEnabled = tickEnabled
         self.showMenuBarMinutes = showMenuBarMinutes
         self.autoStartBreak = autoStartBreak
+        self.autoStartFocus = autoStartFocus
         self.themePreference = themePreference
         self.firstRunTipDismissed = firstRunTipDismissed
     }
@@ -39,6 +42,7 @@ public struct PersistedState: Codable, Sendable, Equatable {
         case tickEnabled
         case showMenuBarMinutes
         case autoStartBreak
+        case autoStartFocus
         case themePreference
         case firstRunTipDismissed
     }
@@ -51,6 +55,7 @@ public struct PersistedState: Codable, Sendable, Equatable {
         tickEnabled = try container.decodeIfPresent(Bool.self, forKey: .tickEnabled) ?? defaults.tickEnabled
         showMenuBarMinutes = try container.decodeIfPresent(Bool.self, forKey: .showMenuBarMinutes) ?? defaults.showMenuBarMinutes
         autoStartBreak = try container.decodeIfPresent(Bool.self, forKey: .autoStartBreak) ?? defaults.autoStartBreak
+        autoStartFocus = try container.decodeIfPresent(Bool.self, forKey: .autoStartFocus) ?? defaults.autoStartFocus
         themePreference = try container.decodeIfPresent(ThemePreference.self, forKey: .themePreference) ?? defaults.themePreference
         firstRunTipDismissed = try container.decodeIfPresent(Bool.self, forKey: .firstRunTipDismissed) ?? defaults.firstRunTipDismissed
     }
