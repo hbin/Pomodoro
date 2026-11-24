@@ -1,46 +1,94 @@
 import AVFoundation
 import Foundation
+import PomodoroCore
 
 final class SoundPlayer: @unchecked Sendable {
-    /// Length of the generated completion chime. TimerModel waits for this
-    /// before auto-starting a break so the break does not begin under the
-    /// chime.
-    static let chimeDuration: TimeInterval = 0.98
+    /// Length of the focus-completion chime. TimerModel waits for this before
+    /// auto-starting a break so the break does not begin under the chime.
+    static let focusChimeDuration: TimeInterval = 0.98
+
+    private enum Chime {
+        case focus
+        case breakTime
+
+        var duration: TimeInterval {
+            switch self {
+            case .focus: SoundPlayer.focusChimeDuration
+            case .breakTime: 0.94
+            }
+        }
+
+        var notes: [(start: Double, frequency: Double, duration: Double, gain: Double)] {
+            switch self {
+            case .focus:
+                [(0.0, 587.33, 0.58, 0.9), (0.26, 880.0, 0.66, 0.8)]
+            case .breakTime:
+                [(0.0, 880.0, 0.52, 0.72), (0.26, 587.33, 0.64, 0.66)]
+            }
+        }
+
+        var amplitude: Double {
+            switch self {
+            case .focus: 0.32
+            case .breakTime: 0.30
+            }
+        }
+    }
 
     private let queue = DispatchQueue(
         label: "com.hb.pomodoro.sound",
         qos: .userInitiated
     )
     private let stateLock = NSLock()
-    private let chimeData: Data
+    private let focusChimeData: Data
+    private let breakChimeData: Data
     private let tickData: Data
-    private var chimePlayer: AVAudioPlayer?
+    private var focusChimePlayer: AVAudioPlayer?
+    private var breakChimePlayer: AVAudioPlayer?
     private var tickPlayer: AVAudioPlayer?
     private var isTickPending = false
     private var generation: UInt64 = 0
 
     init() {
-        chimeData = Self.makeChimeData(sampleRate: 44_100)
+        focusChimeData = Self.makeChimeData(sampleRate: 44_100, chime: .focus)
+        breakChimeData = Self.makeChimeData(sampleRate: 44_100, chime: .breakTime)
         tickData = Self.makeTickData(sampleRate: 44_100)
     }
 
-    func playChime() {
+    func playChime(for phase: Phase) {
         stateLock.lock()
         let requestGeneration = generation
         stateLock.unlock()
 
+        let isBreak = phase.isBreak
         queue.async { [weak self] in
             guard let self, self.isCurrent(requestGeneration) else { return }
-            self.chimePlayer?.stop()
-            if self.chimePlayer == nil {
-                self.chimePlayer = try? AVAudioPlayer(data: self.chimeData)
+            self.focusChimePlayer?.stop()
+            self.breakChimePlayer?.stop()
+
+            let player: AVAudioPlayer?
+            if isBreak {
+                if self.breakChimePlayer == nil {
+                    self.breakChimePlayer = try? AVAudioPlayer(data: self.breakChimeData)
+                }
+                player = self.breakChimePlayer
+            } else {
+                if self.focusChimePlayer == nil {
+                    self.focusChimePlayer = try? AVAudioPlayer(data: self.focusChimeData)
+                }
+                player = self.focusChimePlayer
             }
-            guard let player = self.chimePlayer else { return }
+
+            guard let player else { return }
             player.currentTime = 0
             player.volume = 0.72
             player.prepareToPlay()
             if !player.play() {
-                self.chimePlayer = nil
+                if isBreak {
+                    self.breakChimePlayer = nil
+                } else {
+                    self.focusChimePlayer = nil
+                }
             }
         }
     }
@@ -108,23 +156,21 @@ final class SoundPlayer: @unchecked Sendable {
     private func stopPlayers() {
         tickPlayer?.stop()
         tickPlayer = nil
-        chimePlayer?.stop()
-        chimePlayer = nil
+        focusChimePlayer?.stop()
+        focusChimePlayer = nil
+        breakChimePlayer?.stop()
+        breakChimePlayer = nil
     }
 
-    private static func makeChimeData(sampleRate: Double) -> Data {
-        let duration = Self.chimeDuration
+    private static func makeChimeData(sampleRate: Double, chime: Chime) -> Data {
+        let duration = chime.duration
         let frameCount = Int(duration * sampleRate)
         var samples = [Float](repeating: 0, count: frameCount)
-        let notes: [(start: Double, frequency: Double, duration: Double, gain: Double)] = [
-            (0.0, 587.33, 0.58, 0.9),
-            (0.26, 880.0, 0.66, 0.8)
-        ]
 
         for index in 0..<frameCount {
             let time = Double(index) / sampleRate
             var value = 0.0
-            for note in notes {
+            for note in chime.notes {
                 let local = time - note.start
                 guard local >= 0, local < note.duration else { continue }
                 let attack = min(1.0, local / 0.006)
@@ -140,7 +186,7 @@ final class SoundPlayer: @unchecked Sendable {
                     + 0.025 * sin(phase * 4.17)
                 value += body * envelope
             }
-            samples[index] = Float(value * 0.32)
+            samples[index] = Float(value * chime.amplitude)
         }
         return makeWAVData(samples: samples, sampleRate: Int(sampleRate))
     }

@@ -182,6 +182,8 @@ automated tests.
 - [ ] Starting, pausing, resuming, ending, and switching language keep the
       pending notification consistent with the timer.
 - [ ] Chime and ticking settings behave as labeled.
+- [ ] Focus completion plays the rising chime; break completion plays the lower
+      descending mirror; the single Completion chime switch mutes both.
 - [ ] Sleep/wake does not cause duplicate completion notifications or sounds.
 
 ### Updates

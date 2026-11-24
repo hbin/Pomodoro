@@ -539,13 +539,13 @@ final class TimerModel: ObservableObject {
         switch event {
         case .completed(let phase):
             if chimeEnabled {
-                sounds.playChime()
+                sounds.playChime(for: phase)
             }
             if phase == .focus {
                 if autoStartBreak {
                     if chimeEnabled {
                         startRecommendedBreak(
-                            after: SoundPlayer.chimeDuration + Self.autoStartChimeBuffer
+                            after: SoundPlayer.focusChimeDuration + Self.autoStartChimeBuffer
                         )
                     } else {
                         takeBreak()

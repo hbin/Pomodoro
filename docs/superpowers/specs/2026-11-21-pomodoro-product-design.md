@@ -492,20 +492,23 @@ only in how full they are at the start.
 
 ### 9.6 Sound
 
-- One short, original two-note chime for natural completion.
-- Warm, soft, wood or marimba-like character.
-- Under one second.
+- A short, original two-note chime for natural completion, in two related
+  variants: a rising phrase for focus and a lower, descending mirror for break.
+- Both variants share the warm, soft, wood or marimba-like character.
+- Each variant is under one second and plays once.
 - Optional ticking: a quiet, mechanical tick once per second while a focus
   interval is actively running.
 - Tick sound is off by default and is independent of the completion chime.
 - Tick sound stops on pause, end, completion, or lost active timer state.
-- Breaks remain silent; the tick is a focus cue.
+- Tick sound never plays during breaks; the completion chime still plays when a
+  break ends.
 - Tick volume should sit below the completion chime and should be comfortable
   for long sessions.
 - The tick must be generated from the timer's second boundary and must not
   double-play after sleep or wake.
 - No sound on every button press.
-- Settings can mute the chime and tick sound independently.
+- The single Completion chime switch mutes both phase variants; Settings can
+  mute the chime and tick sound independently.
 - Do not layer the system notification sound on top of the app chime.
 
 ### 9.7 Icons
@@ -633,7 +636,9 @@ No task, project, note, or session-history data is stored.
 
 ### Completion and breaks
 
-- Natural completion plays the chime once when enabled.
+- Natural completion plays its phase's chime once when enabled: the rising
+  phrase after focus and the lower descending mirror after break.
+- The single Completion chime switch mutes both phase variants.
 - A notification appears once when authorized and appropriate.
 - With Auto-start break off, focus completion automatically shows the
   recommended break's duration and a Start break action without a second modal.
@@ -723,6 +728,44 @@ Guardrails if this work is promoted:
 
 Possible increment: choose deterministically from a bundled copy list once per
 app launch.
+
+### Multiple completion sound schemes
+
+**Status:** Future consideration; the phase-aware Focus/Break pair ships with
+one pass. Repetition and alternative sound sets remain future work.
+
+**Intent:** If real use shows that one pass is missed, or users want a different
+character, add a two-pass variant and a small curated set of completion sound
+schemes. Decide after real user feedback; do not add sound settings
+speculatively.
+
+Current baseline:
+
+- Focus completion: rising two-note phrase.
+- Break completion: descending mirror of the same two notes, slightly lower and
+  shorter.
+- Both play once and share the Completion chime switch.
+
+Guardrails if this work is promoted:
+
+- A repeat must be at most two passes, with the second pass softer; the pair
+  must read as one gesture, not an alarm.
+- Keep both variants under roughly 2.5 seconds.
+- Keep the existing Completion chime switch as the only sound control until
+  users ask for more; do not add per-phase toggles or a sound picker first.
+- Preserve the quiet instrument character: no alarm-style variation, no sound
+  on every button press, and no custom audio import.
+- Sound remains optional and never the only signal; keep the visual ready
+  screens, notifications, and accessibility announcements.
+- Evaluate with real users before choosing a repeat count or adding alternative
+  sound sets.
+- Keep any alternative sound sets local and bundled; no network or account data.
+
+Possible increments:
+
+1. A two-pass variant if users report missing the single chime.
+2. A small curated set of completion sound schemes in Settings, only if the
+   first increment proves useful.
 
 ### Project and task tracking
 
