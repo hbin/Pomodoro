@@ -112,6 +112,7 @@ struct TimerPopoverView: View {
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var confirmingEnd = false
+    @State private var readoutFlow = 0.0
 
     private var palette: Palette { Palette.forScheme(scheme) }
     private var accent: Color {
@@ -213,6 +214,7 @@ struct TimerPopoverView: View {
                 size: 215,
                 showsCountdown: !model.isIdle,
                 handProgress: model.isIdle ? idleMode.handProgress : model.dialHandProgress,
+                readoutFlow: model.isIdle ? readoutFlow : 0,
                 accessibilityLabel: (model.isIdle ? idleMode.isBreak : model.isBreak)
                     ? L10n.string("timer.a11y.break_dial")
                     : L10n.string("timer.a11y.focus_dial"),
@@ -237,6 +239,8 @@ struct TimerPopoverView: View {
             HStack(spacing: 6) {
                 ForEach(IdleMode.allCases) { mode in
                     Button {
+                        guard mode != idleMode else { return }
+                        readoutFlow = mode.rawValue > idleMode.rawValue ? 1 : -1
                         idleMode = mode
                     } label: {
                         Capsule()
@@ -262,8 +266,13 @@ struct TimerPopoverView: View {
     }
 
     private func modeArrow(offset: Int) -> some View {
-        Button {
-            idleMode = idleMode.shifted(by: offset)
+        let target = idleMode.neighbour(by: offset)
+        let isAvailable = target != nil
+        return Button {
+            if let target {
+                readoutFlow = Double(offset)
+                idleMode = target
+            }
         } label: {
             Image(systemName: offset < 0 ? "chevron.left" : "chevron.right")
                 .font(.system(size: 12.5, weight: .semibold))
@@ -294,7 +303,13 @@ struct TimerPopoverView: View {
         .help(
             L10n.string(offset < 0 ? "timer.action.previous_mode" : "timer.action.next_mode")
         )
+        .opacity(isAvailable ? 1 : 0)
+        .scaleEffect(isAvailable ? 1 : 0.84)
+        .offset(x: isAvailable ? 0 : CGFloat(offset) * 6)
+        .allowsHitTesting(isAvailable)
+        .accessibilityHidden(!isAvailable)
         .animation(reduceMotion ? nil : AmbientMotion.curve, value: ambient)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.22), value: idleMode)
     }
 
     @ViewBuilder

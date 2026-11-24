@@ -101,6 +101,16 @@ automated tests.
       state, menu-bar treatment, notification, and completion flow.
 - [ ] The idle mode dots and arrows select Focus 25, Short break 5, and
       Long break 15; the primary starts the selected mode.
+- [ ] The arrows do not wrap: Focus shows only the next arrow, Long break only
+      the previous one, Short break both. A hidden arrow keeps its slot, so the
+      dial does not move, and it cannot be clicked or reached by VoiceOver.
+- [ ] Changing the idle mode slides the dial readout out toward the arrow that
+      was pressed, cut off at the plaque edge rather than floating over its
+      face, and the next duration follows it in from the other side; the hand
+      sweeps to the new position at the same time. Reduce Motion swaps it
+      without motion.
+- [ ] Rapid mode changes leave no stuck or duplicated readout: each swap
+      replaces the previous one, and the duration always settles centered.
 - [ ] All three mode dots use the mode accent at full opacity; only the active
       dot is wider. A single current-mode label below the dots names the mode;
       the 32-point arrows expose hover help and announce the current mode.

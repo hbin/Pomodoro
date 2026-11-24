@@ -129,19 +129,24 @@ The idle surface follows the approved design study. From top to bottom it shows:
   minute position on the 60-minute dial (25 at five o'clock, 5 at one o'clock,
   15 at three o'clock);
 - the three mode dots with previous and next arrows; the current mode label
-  below the dots;
+  below the dots. The arrows do not wrap: Focus has no previous arrow and Long
+  break has no next arrow, so the end of the range is the end of the control;
 - the primary Start button;
 - the existing footer.
 
 The three dots are the mode selector, ordered Focus (25), Short break (5),
 Long break (15). The current mode name is shown below the dots in the mode
-accent; the active dot is wider, and the arrows cycle the three modes. The
-ambient light follows the selected mode: left, overhead, right. The idle pointer
-keeps the tomato color while the selector changes; only the running phase accent
-changes the pointer.
+accent; the active dot is wider, and the arrows step through the three modes
+without wrapping. The ambient light follows the selected mode: left, overhead,
+right. The idle pointer keeps the tomato color while the selector changes; only
+the running phase accent changes the pointer.
 
 Selecting a mode updates the title, dial duration, accent, primary copy, and
-ambient light. Pressing Start starts the selected mode:
+ambient light. The readout slides instead of rolling: the outgoing duration
+leaves the way the arrow points, cut off at the edge of the plaque, and the
+incoming one follows it in from the other side. The two never share the plaque,
+and the hand sweeps to the new position while they trade places. Pressing Start
+starts the selected mode:
 
 - Focus starts a 25-minute focus.
 - Short break starts the existing five-minute direct break.
@@ -291,6 +296,11 @@ a localized label and duration.
 - The three mode dots sit above a 9-point uppercase current-mode label in the
   mode accent; the active dot is wider and all three use the mode accent. The
   arrows are 32-point outlined circles with a 44-point hit area and hover help.
+  Each arrow keeps its 44-point slot when it is unavailable, so hiding it does
+  not move the dial: it fades out, shrinks slightly, and drifts toward its own
+  edge. The title and the mode label swap at once, because cross-fading two
+  different strings reads as a smudge; only the readout moves, and it moves
+  sideways behind its own clipped box.
   The primary Start is the only filled action; it uses the leaf-green fill with
   a centered label and a trailing play glyph. A clean 0.8-point highlight and a
   subtle black shadow replace any colored glow.

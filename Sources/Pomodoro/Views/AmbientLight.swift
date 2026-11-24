@@ -81,9 +81,10 @@ enum IdleMode: Int, CaseIterable, Identifiable {
         }
     }
 
-    func shifted(by delta: Int) -> IdleMode {
-        let count = IdleMode.allCases.count
-        return IdleMode(rawValue: (rawValue + delta + count) % count) ?? self
+    /// The neighbouring mode, or `nil` past either end. The selector has a
+    /// first and a last entry and does not wrap around.
+    func neighbour(by delta: Int) -> IdleMode? {
+        IdleMode(rawValue: rawValue + delta)
     }
 }
 

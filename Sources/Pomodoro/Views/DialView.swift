@@ -8,6 +8,9 @@ struct DialView: View {
     let size: CGFloat
     var showsCountdown = false
     var handProgress = 0.0
+    /// Which way the readout travels when the value changes: `-1` to the left,
+    /// `1` to the right, `0` for no horizontal motion.
+    var readoutFlow = 0.0
     let accessibilityLabel: String
     let accessibilityValue: String
     let ambient: AmbientPose
@@ -16,6 +19,13 @@ struct DialView: View {
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.colorSchemeContrast) private var contrast
+
+    /// The duration that is leaving, drawn beside the incoming one until it
+    /// has cleared the plaque.
+    @State private var leavingText: String?
+    @State private var leavingOffset = 0.0
+    @State private var enteringOffset = 0.0
+    @State private var swapGeneration = 0
 
     private var palette: Palette { Palette.forScheme(scheme) }
     private var travelScale: CGFloat { scheme == .dark ? 1.3 : 1.0 }
@@ -38,6 +48,7 @@ struct DialView: View {
                     x: ambient.dialShadowX * travelScale,
                     y: 3
                 )
+                .animation(reduceMotion ? nil : AmbientMotion.curve, value: ambient)
 
             AmbientCircleFace(
                 center: ambient.dialCenter,
@@ -55,6 +66,7 @@ struct DialView: View {
                         .strokeBorder(palette.ink.opacity(contrast == .increased ? 0.14 : 0.07), lineWidth: 0.8)
                         .padding(faceInset)
                 }
+                .animation(reduceMotion ? nil : AmbientMotion.curve, value: ambient)
 
             Circle()
                 .strokeBorder(
@@ -108,6 +120,7 @@ struct DialView: View {
                 .rotationEffect(.degrees(-90))
                 .padding(size / 2 - (tickRadius + 6.5))
                 .animation(reduceMotion ? nil : .linear(duration: 0.22), value: arcProgress)
+                .animation(reduceMotion ? nil : AmbientMotion.curve, value: accent)
                 .accessibilityHidden(true)
 
             handView(
@@ -120,7 +133,6 @@ struct DialView: View {
 
         }
         .frame(width: size, height: size)
-        .animation(reduceMotion ? nil : AmbientMotion.curve, value: ambient)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(accessibilityLabel))
         .accessibilityValue(Text(accessibilityValue))
@@ -195,13 +207,10 @@ struct DialView: View {
                     x: ambient.plaqueShadowX * travelScale,
                     y: 2
                 )
+                .animation(reduceMotion ? nil : AmbientMotion.curve, value: ambient)
 
             VStack(spacing: diameter * 0.045) {
-                Text(timeText)
-                    .font(Typo.digits(diameter * 0.285))
-                    .foregroundStyle(palette.ink)
-                    .contentTransition(reduceMotion ? .identity : .numericText(countsDown: true))
-                    .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: timeText)
+                timeReadout(diameter: diameter)
                 Text(caption)
                     .font(Typo.label(max(7.4, diameter * 0.047)))
                     .tracking(Typo.tracking(diameter * 0.011))
@@ -210,6 +219,86 @@ struct DialView: View {
             .offset(y: -diameter * 0.012)
         }
         .frame(width: diameter, height: diameter)
+    }
+
+    /// The digits roll while a countdown ticks. A ready duration instead
+    /// leaves through one side of the plaque while the next one arrives
+    /// through the other, like a strip passing behind a window.
+    @ViewBuilder
+    private func timeReadout(diameter: CGFloat) -> some View {
+        let font = Typo.digits(diameter * 0.285)
+
+        if showsCountdown {
+            Text(timeText)
+                .font(font)
+                .foregroundStyle(palette.ink)
+                .contentTransition(reduceMotion ? .identity : .numericText(countsDown: true))
+                .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: timeText)
+        } else {
+            ZStack {
+                if let leavingText {
+                    Text(leavingText)
+                        .font(font)
+                        .foregroundStyle(palette.ink)
+                        .offset(x: leavingOffset)
+                }
+                Text(timeText)
+                    .font(font)
+                    .foregroundStyle(palette.ink)
+                    .offset(x: enteringOffset)
+            }
+            // The plaque is the window the strip passes behind, so a
+            // half-slid number is cut at its edge rather than floating over
+            // the face.
+            .frame(width: diameter * 0.94)
+            .clipped()
+            .onChange(of: timeText) { old, _ in
+                swapReadout(from: old, window: diameter)
+            }
+        }
+    }
+
+    private static let readoutExit = Animation.easeIn(duration: 0.15)
+    private static let readoutEntry = Animation.easeOut(duration: 0.20)
+    private static let entryStart = 0.15
+    private static let swapEnd = 0.38
+
+    private func swapReadout(from old: String, window: CGFloat) {
+        // A readout with no direction to travel, as on the completion screen,
+        // swaps at once rather than sliding two values through one spot.
+        guard !reduceMotion, readoutFlow != 0, old != timeText, !showsCountdown else { return }
+        swapGeneration += 1
+        let generation = swapGeneration
+        // A little more than the readout's own width, so a value clears the
+        // window instead of leaving a sliver behind.
+        let travel = window * 0.86 * readoutFlow
+
+        // Park the outgoing value at rest and the incoming one offstage
+        // before the strip starts to move.
+        var instant = Transaction()
+        instant.disablesAnimations = true
+        withTransaction(instant) {
+            leavingText = old
+            leavingOffset = 0
+            enteringOffset = -travel
+        }
+
+        DispatchQueue.main.async {
+            guard generation == swapGeneration else { return }
+            withAnimation(Self.readoutExit) {
+                leavingOffset = travel
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + Self.entryStart) {
+                guard generation == swapGeneration else { return }
+                withAnimation(Self.readoutEntry) {
+                    enteringOffset = 0
+                }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + Self.swapEnd) {
+                guard generation == swapGeneration else { return }
+                leavingText = nil
+            }
+        }
     }
 
     private func point(center: CGPoint, radius: CGFloat, angle: Angle) -> CGPoint {
