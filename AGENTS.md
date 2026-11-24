@@ -136,6 +136,10 @@ nested components in the required order, and verifies entitlements.
 - Do not regenerate the README screenshots with each UI change. Refresh
   `docs/screenshots` only when preparing a release, and tell the user the
   screenshots are stale instead of updating them mid-cycle.
+- Do not touch the README hero copy (the centered title block) unless the task
+  explicitly asks for it. Never add usage or Settings instructions to the
+  tagline; keep it to what the app is plus the focus-rhythm line. Leave
+  `README.md` unchanged for UI or feature work the user did not ask to document.
 
 ## Dependencies and platform services
 

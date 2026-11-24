@@ -5,7 +5,6 @@
 
 <p align="center">
   A quiet focus timer for the macOS menu bar.<br>
-  Choose the focus, short-break, and long-break lengths in Settings.<br>
   <strong>Enjoy your focus rhythm!</strong>
 </p>
 
