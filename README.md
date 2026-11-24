@@ -16,7 +16,6 @@
 
 <p align="center">
   <img alt="macOS 15 or later" src="https://img.shields.io/badge/macOS-15%2B-2B2520?style=flat-square&logo=apple&logoColor=FFFFFF">
-  <img alt="Swift 6" src="https://img.shields.io/badge/Swift-6-F05138?style=flat-square&logo=swift&logoColor=FFFFFF">
   <img alt="Free" src="https://img.shields.io/badge/price-free-3E8E5A?style=flat-square">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-3E8E5A?style=flat-square"></a>
 </p>
@@ -40,17 +39,6 @@ Alternatively, clear the quarantine flag in Terminal:
 xattr -dr com.apple.quarantine /Applications/Pomodoro.app
 open /Applications/Pomodoro.app
 ```
-
-## Beta builds
-
-Test builds ship to the `beta` channel before a release. Open **Settings**,
-click the dot next to the version, and switch on **Beta updates**. Pomodoro then
-checks the [beta release](https://github.com/hbin/Pomodoro/releases/tag/beta)
-feed instead of the stable one.
-
-Turning the switch off returns you to stable updates. A beta build stays
-installed until a stable release has a higher build number, so the switch does
-not downgrade the app.
 
 ## License
 
