@@ -13,7 +13,7 @@ struct PopoverRootView: View {
     /// The Settings card is at least this tall, and grows to fit its content
     /// so no row or explanation has to scroll.
     static let settingsHeight: CGFloat = 592
-    static let settingsMaxHeight: CGFloat = 700
+    static let settingsMaxHeight: CGFloat = 760
 
     /// The outer padding of the Settings card; the rest of its height is the
     /// measured content plus footer.
@@ -104,9 +104,6 @@ struct PopoverRootView: View {
     private func normalizeIdleSelection() {
         guard model.isIdle else { return }
         idleMode = .focus
-        if model.selectedFocusMinutes != 25 {
-            model.selectFocusMinutes(25)
-        }
     }
 
     @ViewBuilder
@@ -148,7 +145,7 @@ struct TimerPopoverView: View {
     }
 
     private var idleTime: String {
-        String(format: "%02d:00", idleMode.minutes)
+        String(format: "%02d:00", idleMode.minutes(in: model.durations))
     }
 
     private var activeStatusText: String {
@@ -227,13 +224,18 @@ struct TimerPopoverView: View {
                 accent: accent,
                 size: 215,
                 showsCountdown: !model.isIdle,
-                handProgress: model.isIdle ? idleMode.handProgress : model.dialHandProgress,
+                handProgress: model.isIdle
+                    ? idleMode.handProgress(in: model.durations)
+                    : model.dialHandProgress,
                 readoutFlow: model.isIdle ? readoutFlow : 0,
                 accessibilityLabel: (model.isIdle ? idleMode.isBreak : model.isBreak)
                     ? L10n.string("timer.a11y.break_dial")
                     : L10n.string("timer.a11y.focus_dial"),
                 accessibilityValue: model.isIdle
-                    ? L10n.format("timer.a11y.ready_value", idleMode.minutes)
+                    ? L10n.format(
+                        "timer.a11y.ready_value",
+                        idleMode.minutes(in: model.durations)
+                    )
                     : model.isPaused
                         ? L10n.format("timer.a11y.paused_value", model.timeText)
                         : L10n.format("timer.a11y.running_value", model.timeText),
@@ -264,7 +266,7 @@ struct TimerPopoverView: View {
                             .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(mode.accessibilityLabel)
+                    .accessibilityLabel(mode.accessibilityLabel(in: model.durations))
                     .accessibilityAddTraits(mode == idleMode ? [.isSelected] : [])
                 }
             }
@@ -345,7 +347,6 @@ struct TimerPopoverView: View {
         Button {
             if model.isIdle {
                 if idleMode == .focus {
-                    model.selectFocusMinutes(25)
                     model.startFocus()
                 } else {
                     model.startBreak(idleMode.phase)
@@ -410,7 +411,7 @@ struct TimerPopoverView: View {
 
     private var primaryButtonTitle: String {
         if model.isIdle {
-            return idleMode.primaryLabel
+            return idleMode.primaryLabel(in: model.durations)
         }
         return model.isPaused
             ? L10n.string("timer.action.resume")
@@ -483,7 +484,7 @@ struct CompletionPopoverView: View {
                 progress: 0,
                 accent: accent,
                 size: 215,
-                handProgress: Double(offer.minutes) / 60.0,
+                handProgress: min(Double(offer.minutes) / 60.0, 1),
                 accessibilityLabel: offer.phase.isBreak
                     ? L10n.string("timer.a11y.break_dial")
                     : L10n.string("timer.a11y.focus_dial"),

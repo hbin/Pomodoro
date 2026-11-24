@@ -8,6 +8,7 @@ public enum ThemePreference: String, Codable, Sendable, Equatable, Hashable, Cas
 
 public struct PersistedState: Codable, Sendable, Equatable {
     public var timer: TimerState
+    public var durations: IntervalDurations
     public var chimeEnabled: Bool
     public var tickEnabled: Bool
     public var showMenuBarMinutes: Bool
@@ -18,6 +19,7 @@ public struct PersistedState: Codable, Sendable, Equatable {
 
     public init(
         timer: TimerState = .initial,
+        durations: IntervalDurations = .defaults,
         chimeEnabled: Bool = true,
         tickEnabled: Bool = false,
         showMenuBarMinutes: Bool = true,
@@ -27,6 +29,7 @@ public struct PersistedState: Codable, Sendable, Equatable {
         firstRunTipDismissed: Bool = false
     ) {
         self.timer = timer
+        self.durations = durations
         self.chimeEnabled = chimeEnabled
         self.tickEnabled = tickEnabled
         self.showMenuBarMinutes = showMenuBarMinutes
@@ -38,6 +41,7 @@ public struct PersistedState: Codable, Sendable, Equatable {
 
     private enum CodingKeys: String, CodingKey {
         case timer
+        case durations
         case chimeEnabled
         case tickEnabled
         case showMenuBarMinutes
@@ -51,6 +55,7 @@ public struct PersistedState: Codable, Sendable, Equatable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let defaults = PersistedState()
         timer = try container.decodeIfPresent(TimerState.self, forKey: .timer) ?? defaults.timer
+        durations = try container.decodeIfPresent(IntervalDurations.self, forKey: .durations) ?? defaults.durations
         chimeEnabled = try container.decodeIfPresent(Bool.self, forKey: .chimeEnabled) ?? defaults.chimeEnabled
         tickEnabled = try container.decodeIfPresent(Bool.self, forKey: .tickEnabled) ?? defaults.tickEnabled
         showMenuBarMinutes = try container.decodeIfPresent(Bool.self, forKey: .showMenuBarMinutes) ?? defaults.showMenuBarMinutes

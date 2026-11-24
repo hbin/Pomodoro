@@ -18,12 +18,8 @@ enum IdleMode: Int, CaseIterable, Identifiable {
         }
     }
 
-    var minutes: Int {
-        switch self {
-        case .focus: 25
-        case .shortBreak: 5
-        case .longBreak: 15
-        }
+    func minutes(in durations: IntervalDurations) -> Int {
+        durations.minutes(for: phase)
     }
 
     var isBreak: Bool { self != .focus }
@@ -36,9 +32,11 @@ enum IdleMode: Int, CaseIterable, Identifiable {
         }
     }
 
-    /// The hand points at the selected duration on the 60-minute dial.
-    var handProgress: Double {
-        Double(minutes) / 60.0
+    /// The hand points at the selected duration on the 60-minute dial. Lengths
+    /// beyond 60 minutes sit at the full-hour mark; the central readout still
+    /// shows the true duration.
+    func handProgress(in durations: IntervalDurations) -> Double {
+        min(Double(minutes(in: durations)) / 60.0, 1)
     }
 
     var title: String {
@@ -49,19 +47,23 @@ enum IdleMode: Int, CaseIterable, Identifiable {
         }
     }
 
-    var primaryLabel: String {
+    func primaryLabel(in durations: IntervalDurations) -> String {
         switch self {
-        case .focus: L10n.format("timer.action.start", 25)
-        case .shortBreak: L10n.format("timer.action.start_break", 5)
-        case .longBreak: L10n.format("timer.action.start_break", 15)
+        case .focus:
+            L10n.format("timer.action.start", minutes(in: durations))
+        case .shortBreak, .longBreak:
+            L10n.format("timer.action.start_break", minutes(in: durations))
         }
     }
 
-    var accessibilityLabel: String {
+    func accessibilityLabel(in durations: IntervalDurations) -> String {
         switch self {
-        case .focus: L10n.format("timer.a11y.focus_chip", 25)
-        case .shortBreak: L10n.format("timer.break.short_with_minutes", 5)
-        case .longBreak: L10n.format("timer.break.long_with_minutes", 15)
+        case .focus:
+            L10n.format("timer.a11y.focus_chip", minutes(in: durations))
+        case .shortBreak:
+            L10n.format("timer.break.short_with_minutes", minutes(in: durations))
+        case .longBreak:
+            L10n.format("timer.break.long_with_minutes", minutes(in: durations))
         }
     }
 

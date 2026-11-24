@@ -9,9 +9,13 @@
 | Platform | macOS 15+ |
 | Amends | `2026-11-21-pomodoro-product-design.md`, `2026-11-24-guided-next-step-design.md` |
 
-> **Amended 2026-11-24:** Auto-start pomodoro adds the reverse break-to-focus
+> **Amended 2026-11-24:** Auto-start focus adds the reverse break-to-focus
 > transition, off by default; see
 > [`2026-11-24-auto-start-pomodoro-design.md`](2026-11-24-auto-start-pomodoro-design.md).
+>
+> **Amended 2026-11-24:** The recommended break length now comes from the
+> configurable interval durations; see
+> [`2026-11-24-configurable-durations-design.md`](2026-11-24-configurable-durations-design.md).
 
 ## 1. Summary
 
@@ -22,14 +26,14 @@ so the countdown stays at full until the chime finishes. When it is off, the
 existing guided break-ready screen waits for Start.
 
 The setting applies only to the focus-to-break transition. The next focus is
-controlled independently by Auto-start pomodoro, which is off by default. With
+controlled independently by Auto-start focus, which is off by default. With
 both settings on, the focus-to-break-to-focus cycle continues automatically.
 
 ## 2. Behavior
 
 ### 2.1 Setting
 
-- Location: Settings → FOCUS → `Auto-start break`.
+- Location: Settings → TIMER → `Auto-start break`.
 - Default: off.
 - Persisted as `autoStartBreak` in `PersistedState`; older state files without
   the field decode as off. An explicit on choice is preserved.
@@ -74,7 +78,7 @@ ready screen, and the user presses Start.
 
 ### 2.4 Break completion
 
-Auto-start break does not apply here. With Auto-start pomodoro off, a completed
+Auto-start break does not apply here. With Auto-start focus off, a completed
 break shows the focus-ready screen and waits for Start. With it on, the
 break-to-focus transition is handled by that setting.
 
@@ -102,7 +106,7 @@ normal running break and restores with its delayed end date.
 
 | Key | English source |
 | --- | --- |
-| `settings.section.focus` | **FOCUS** |
+| `settings.section.timer` | **TIMER** |
 | `settings.focus.auto_break.title` | **Auto-start break** |
 | `settings.focus.auto_break.detail` | **Starts the recommended break after the focus chime ends.** |
 | `notifications.focus.body` | **Time for a break.** |
@@ -121,7 +125,7 @@ notification explanation, and the footer all fit without a scrollbar.
 
 ## 5. Non-goals
 
-- Starting the next focus automatically is handled by Auto-start pomodoro, not
+- Starting the next focus automatically is handled by Auto-start focus, not
   this setting.
 - Starting a break retroactively when an expired focus is restored at launch.
 - Auto-starting a break after an early-ended focus.
@@ -153,12 +157,12 @@ notification explanation, and the footer all fit without a scrollbar.
 - An early-ended focus does not start a break.
 - An expired focus restored at launch shows the break-ready screen instead of
   starting a break retroactively.
-- With Auto-start pomodoro off, a completed break waits for Start focus; with
+- With Auto-start focus off, a completed break waits for Start focus; with
   it on, the break-to-focus transition is controlled by that setting.
 - Turning the setting on during a running focus applies to that completion.
 - Turning the setting on while the focus-completion ready screen is visible does
   not retroactively start the break.
-- Settings shows both FOCUS toggles in all four languages, in both themes,
+- Settings shows both auto-start toggles in all four languages, in both themes,
   without clipping or a visible scrollbar.
 - `swift test` and `./scripts/build-app.sh debug` pass.
 
@@ -171,5 +175,5 @@ held at the full duration during the chime and then decreased; with the chime
 off, it decreased immediately. The existing break-start path continues to own
 the menu-bar update and the break-end notification. Default-off and explicit-on
 decoding, round-trip persistence, restore-at-launch, and break-completion paths
-were checked. Both FOCUS rows were inspected in both themes and all four
+were checked. Both auto-start rows were inspected in both themes and all four
 languages; the card grew to fit the footer without a scrollbar.

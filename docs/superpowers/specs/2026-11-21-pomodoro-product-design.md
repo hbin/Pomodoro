@@ -13,9 +13,12 @@ Later changes amend this spec: see
 `2026-11-23-four-language-localization.md`,
 `2026-11-23-in-app-language-picker.md`,
 `2026-11-24-guided-next-step-design.md`,
-`2026-11-24-auto-start-break-design.md`, and
-`2026-11-24-auto-start-pomodoro-design.md`. Statements below about local-only
-delivery and no network requests describe the original v1 scope.
+`2026-11-24-auto-start-break-design.md`,
+`2026-11-24-auto-start-pomodoro-design.md`, and
+`2026-11-24-configurable-durations-design.md`. Statements below about local-only
+delivery and no network requests describe the original v1 scope. Statements
+that fix the focus, short-break, or long-break length at 25, 5, or 15 minutes
+are superseded by configurable interval durations.
 
 ## 1. Summary
 
@@ -80,7 +83,7 @@ Version one does not include:
 - AI features.
 - Multiple concurrent timers.
 - Automatic focus/break countdown cycles, except for the Auto-start break and
-  Auto-start pomodoro settings.
+  Auto-start focus settings.
 - Launch at login.
 - A global keyboard shortcut.
 - iOS, iPadOS, Windows, or web versions.
@@ -102,7 +105,7 @@ reaches zero.
 
 The app may move the completion screen to the next break or focus step. It
 starts an interval automatically only when the corresponding Auto-start setting
-is enabled. Auto-start break and Auto-start pomodoro are both off by default
+is enabled. Auto-start break and Auto-start focus are both off by default
 and can be enabled independently.
 
 ### Classic rhythm, light flexibility
@@ -293,7 +296,7 @@ No countdown starts until the user chooses, unless Settings → Focus →
 Auto-start break is on. With that option on, the popover goes directly to the
 running break screen; the break's end date includes the chime, so the countdown
 stays at full until the chime finishes. The option is off by default. The focus
-after a break is controlled independently by Auto-start pomodoro, which is also
+after a break is controlled independently by Auto-start focus, which is also
 off by default.
 
 No task completion is recorded or requested.
@@ -311,7 +314,7 @@ No task completion is recorded or requested.
 - Break copy is supportive and non-judgmental, for example `Step away` and
   `Break`.
 - The user may end or skip a break early.
-- The next focus does not start automatically by default. Auto-start pomodoro
+- The next focus does not start automatically by default. Auto-start focus
   can start it after the break chime; it is off by default.
 - When a break reaches zero, the popover moves automatically to the focus
   ready screen:
@@ -334,7 +337,7 @@ Settings stays intentionally small:
 - Auto-start break on/off; default off. When on, a completed focus goes directly
   to the running break; the break's end date includes the chime, so the
   countdown stays at full until the chime finishes.
-- Auto-start pomodoro on/off; default off. When on, a completed break goes
+- Auto-start focus on/off; default off. When on, a completed break goes
   directly to the running focus; the focus's end date includes the break chime,
   so the countdown stays at full until the chime finishes.
 - Show remaining minutes in the menu bar on/off.
@@ -382,12 +385,12 @@ on the idle screen.
 
 ### Break complete
 
-- While Auto-start pomodoro is off, the popover shows the next focus ready to
+- While Auto-start focus is off, the popover shows the next focus ready to
   start, with `Start 25-minute focus` and `Done for now`.
-- With Auto-start pomodoro on, the running focus screen appears immediately and
+- With Auto-start focus on, the running focus screen appears immediately and
   the countdown holds at full until the break chime finishes. This ready state
   is skipped.
-- Nothing counts down until the user chooses unless Auto-start pomodoro is on.
+- Nothing counts down until the user chooses unless Auto-start focus is on.
 
 ### Notifications unavailable
 
@@ -569,7 +572,7 @@ The app stores only what the timer needs:
 - Absolute end timestamp while running.
 - Remaining duration while paused.
 - Completed-focus count for the long-break rhythm.
-- Completion chime, tick sound, auto-start break, auto-start pomodoro, and
+- Completion chime, tick sound, auto-start break, auto-start focus, and
   menu-bar display preferences.
 - First-run tip state.
 
@@ -658,15 +661,15 @@ No task, project, note, or session-history data is stored.
   full until the chime finishes. With the chime off, it starts immediately.
 - Auto-start break defaults off, survives relaunch, and older state files
   without the field load as off; an explicit on choice is preserved.
-- Auto-start break does not start the next focus; Auto-start pomodoro is the
+- Auto-start break does not start the next focus; Auto-start focus is the
   separate setting for that transition.
-- Auto-start pomodoro defaults off, survives relaunch, and older state files
+- Auto-start focus defaults off, survives relaunch, and older state files
   without the field load as off; an explicit on choice is preserved.
-- With Auto-start pomodoro on, break completion goes directly to the running
+- With Auto-start focus on, break completion goes directly to the running
   focus screen; the focus's end date includes the break chime, so the countdown
   holds at full until the chime finishes. With the chime off, it starts
   immediately.
-- Auto-start pomodoro does not start a break.
+- Auto-start focus does not start a break.
 - An early-ended focus does not start a break, and an expired focus restored at
   launch shows the break-ready screen instead of starting retroactively.
 - An early-ended break does not start a focus, and an expired break restored at
@@ -674,7 +677,7 @@ No task, project, note, or session-history data is stored.
 - A long break is offered after every fourth completed focus interval.
 - No countdown starts automatically unless the corresponding Auto-start setting
   is enabled.
-- While Auto-start pomodoro is off, break completion shows the next focus ready
+- While Auto-start focus is off, break completion shows the next focus ready
   to start; `Done for now` remains the idle path. With it on, the running focus
   appears immediately.
 - The completion dial shows the next interval's duration with `READY`, not
@@ -701,10 +704,10 @@ No task, project, note, or session-history data is stored.
 - Classic 25/5 rhythm with 15/25/45 focus choices.
 - Long break after every four completed focus intervals.
 - Guided transitions that present the next interval without starting it,
-  except the Auto-start break and Auto-start pomodoro settings.
+  except the Auto-start break and Auto-start focus settings.
 - Auto-start break off by default; it starts only the recommended break after
   focus.
-- Auto-start pomodoro off by default; it starts only the focus after a break.
+- Auto-start focus off by default; it starts only the focus after a break.
 - Quiet analog visual direction.
 - Chime plus notification.
 - Optional tick sound, off by default.

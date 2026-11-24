@@ -409,11 +409,12 @@ struct PopoverBackground: View {
 }
 
 struct Hairline: View {
+    var height: CGFloat = 0.7
     @Environment(\.colorScheme) private var scheme
 
     var body: some View {
         Rectangle()
             .fill(Palette.forScheme(scheme).lightBrass.opacity(0.5))
-            .frame(height: 0.7)
+            .frame(height: height)
     }
 }

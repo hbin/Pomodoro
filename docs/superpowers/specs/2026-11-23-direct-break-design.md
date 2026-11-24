@@ -16,13 +16,19 @@
 > **Amended 2026-11-24:** The completion presentation now moves directly to the
 > recommended break's ready screen. The later Auto-start break and Auto-start
 > pomodoro settings can start the next interval without waiting for Start,
-> holding its countdown until that interval's chime ends; they add two FOCUS
+> holding its countdown until that interval's chime ends; they add two auto-start
 > rows and grow the Settings card. The direct-break behavior in this spec is
 > unchanged; see
 > [`2026-11-24-guided-next-step-design.md`](2026-11-24-guided-next-step-design.md),
 > [`2026-11-24-auto-start-break-design.md`](2026-11-24-auto-start-break-design.md),
 > and
 > [`2026-11-24-auto-start-pomodoro-design.md`](2026-11-24-auto-start-pomodoro-design.md).
+>
+> **Amended 2026-11-24:** Focus, short-break, and long-break lengths are now
+> configurable. The fixed 25/5/15 values and the “no configurable break
+> durations” non-goal below describe the original direct-break release; the
+> mode-selector and direct-break behavior are unchanged. See
+> [`2026-11-24-configurable-durations-design.md`](2026-11-24-configurable-durations-design.md).
 
 ## Contents
 

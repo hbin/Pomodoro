@@ -56,6 +56,7 @@ final class TimerModel: ObservableObject {
     @Published private(set) var chimeEnabled: Bool
     @Published private(set) var tickEnabled: Bool
     @Published private(set) var showMenuBarMinutes: Bool
+    @Published private(set) var durations: IntervalDurations
     @Published private(set) var autoStartBreak: Bool
     @Published private(set) var autoStartFocus: Bool
     @Published private(set) var themePreference: ThemePreference
@@ -98,7 +99,10 @@ final class TimerModel: ObservableObject {
         self.sounds = sounds
 
         let loaded = store.load()
-        var engine = TimerEngine(state: loaded.state.timer)
+        var engine = TimerEngine(
+            state: loaded.state.timer,
+            durations: loaded.state.durations
+        )
         let restoredEvent = engine.restore()
         self.engine = engine
         self.snapshot = engine.state
@@ -106,6 +110,7 @@ final class TimerModel: ObservableObject {
         self.chimeEnabled = loaded.state.chimeEnabled
         self.tickEnabled = loaded.state.tickEnabled
         self.showMenuBarMinutes = loaded.state.showMenuBarMinutes
+        self.durations = loaded.state.durations
         self.autoStartBreak = loaded.state.autoStartBreak
         self.autoStartFocus = loaded.state.autoStartFocus
         self.themePreference = loaded.state.themePreference
@@ -238,7 +243,6 @@ final class TimerModel: ObservableObject {
     var isPaused: Bool { snapshot.runState == .paused }
     var isCompleted: Bool { snapshot.runState == .completed }
     var isBreak: Bool { snapshot.phase.isBreak }
-    var selectedFocusMinutes: Int { snapshot.selectedFocusMinutes }
     var recommendedBreakMinutes: Int { engine.recommendedBreak.minutes }
     var recommendedBreakPhase: Phase { engine.recommendedBreak.phase }
     var completedFocusCount: Int { snapshot.completedFocusCount }
@@ -250,7 +254,7 @@ final class TimerModel: ObservableObject {
     /// finished; this offer derives the guided next step without starting it.
     var completionOffer: CompletionOffer {
         if snapshot.phase.isBreak {
-            return CompletionOffer(phase: .focus, minutes: snapshot.selectedFocusMinutes)
+            return CompletionOffer(phase: .focus, minutes: durations.focusMinutes)
         }
         return CompletionOffer(
             phase: recommendedBreakPhase,
@@ -330,14 +334,8 @@ final class TimerModel: ObservableObject {
 
     // MARK: - Actions
 
-    func selectFocusMinutes(_ minutes: Int) {
-        engine.selectFocusMinutes(minutes)
-        snapshot = engine.state
-        save()
-    }
-
-    func startFocus(minutes: Int? = nil) {
-        guard let endDate = engine.startFocus(minutes: minutes) else { return }
+    func startFocus() {
+        guard let endDate = engine.startFocus() else { return }
         snapshot = engine.state
         now = Date()
         lastTickSecond = nil
@@ -474,6 +472,16 @@ final class TimerModel: ObservableObject {
         showMenuBarMinutes = enabled
         save()
         updateMenuBar(force: true)
+    }
+
+    func setDurationMinutes(_ minutes: Int, for phase: Phase) {
+        var updated = durations
+        updated.setMinutes(minutes, for: phase)
+        guard updated != durations else { return }
+        durations = updated
+        engine.applyDurations(updated)
+        snapshot = engine.state
+        save()
     }
 
     func setAutoStartBreak(_ enabled: Bool) {
@@ -650,6 +658,7 @@ final class TimerModel: ObservableObject {
         syncTimerActivity()
         let persisted = PersistedState(
             timer: engine.state,
+            durations: durations,
             chimeEnabled: chimeEnabled,
             tickEnabled: tickEnabled,
             showMenuBarMinutes: showMenuBarMinutes,

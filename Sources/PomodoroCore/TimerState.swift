@@ -21,6 +21,9 @@ public struct TimerState: Codable, Sendable, Equatable {
     public static let currentVersion = 1
 
     public var version: Int
+    /// The focus length captured when the current or last focus started.
+    /// New intervals read `IntervalDurations.focusMinutes`; this field remains
+    /// for older state files and the active-interval snapshot.
     public var selectedFocusMinutes: Int
     public var phase: Phase
     public var runState: RunState
@@ -82,9 +85,8 @@ public enum TimerEvent: Equatable, Sendable {
 
 public struct TimerEngine {
     public private(set) var state: TimerState
+    public private(set) var durations: IntervalDurations
     public var now: @Sendable () -> Date
-
-    public static let focusChoices = [15, 25, 45]
 
     /// Allows a running interval's end date to sit slightly more than its total
     /// duration in the future. Auto-start break uses this window to hold its
@@ -94,22 +96,40 @@ public struct TimerEngine {
 
     public init(
         state: TimerState = .initial,
+        durations: IntervalDurations = .defaults,
         now: @escaping @Sendable () -> Date = { Date() }
     ) {
         self.now = now
-        self.state = Self.sanitized(state)
+        self.durations = durations
+        self.state = Self.sanitized(state, durations: durations)
     }
 
-    private static func sanitized(_ raw: TimerState) -> TimerState {
+    /// Updates the lengths used by the next interval. Idle state follows the
+    /// new focus length immediately; a running, paused, or completed interval
+    /// keeps the duration it captured when it started.
+    public mutating func applyDurations(_ durations: IntervalDurations) {
+        self.durations = durations
+        guard state.runState == .idle else { return }
+        state.selectedFocusMinutes = durations.focusMinutes
+        state.totalSeconds = TimeInterval(durations.focusMinutes * 60)
+        state.remainingSeconds = state.totalSeconds
+        state.endDate = nil
+    }
+
+    private static func sanitized(
+        _ raw: TimerState,
+        durations: IntervalDurations
+    ) -> TimerState {
         var state = raw
-        if !focusChoices.contains(state.selectedFocusMinutes) {
-            state.selectedFocusMinutes = 25
+        if !IntervalDurations.allowedMinutes.contains(state.selectedFocusMinutes) {
+            state.selectedFocusMinutes = durations.focusMinutes
         }
         state.completedFocusCount = max(0, state.completedFocusCount)
 
         switch state.runState {
         case .idle:
             state.phase = .focus
+            state.selectedFocusMinutes = durations.focusMinutes
             state.totalSeconds = TimeInterval(state.selectedFocusMinutes * 60)
             state.remainingSeconds = state.totalSeconds
             state.endDate = nil
@@ -172,11 +192,9 @@ public struct TimerEngine {
 
     public var recommendedBreak: (minutes: Int, phase: Phase) {
         let isLong = state.completedFocusCount > 0 && state.completedFocusCount % 4 == 0
-        return isLong ? (15, .longBreak) : (5, .shortBreak)
-    }
-
-    public var selectedDurationSeconds: TimeInterval {
-        TimeInterval(state.selectedFocusMinutes * 60)
+        return isLong
+            ? (durations.longBreakMinutes, .longBreak)
+            : (durations.shortBreakMinutes, .shortBreak)
     }
 
     // MARK: - Lifecycle
@@ -214,18 +232,13 @@ public struct TimerEngine {
     }
 
     @discardableResult
-    public mutating func startFocus(
-        minutes: Int? = nil,
-        after delay: TimeInterval = 0
-    ) -> Date? {
-        let minutes = minutes ?? state.selectedFocusMinutes
-        guard Self.focusChoices.contains(minutes) else { return nil }
-
+    public mutating func startFocus(after delay: TimeInterval = 0) -> Date? {
         if state.runState == .completed, state.phase == .focus,
            recommendedBreak.phase == .longBreak {
             state.completedFocusCount = 0
         }
 
+        let minutes = durations.focusMinutes
         state.selectedFocusMinutes = minutes
         state.phase = .focus
         state.totalSeconds = TimeInterval(minutes * 60)
@@ -235,17 +248,10 @@ public struct TimerEngine {
         return state.endDate
     }
 
-    public mutating func selectFocusMinutes(_ minutes: Int) {
-        guard state.runState == .idle, Self.focusChoices.contains(minutes) else { return }
-        state.selectedFocusMinutes = minutes
-        state.totalSeconds = TimeInterval(minutes * 60)
-        state.remainingSeconds = state.totalSeconds
-    }
-
     @discardableResult
     public mutating func startBreak(_ phase: Phase) -> Date? {
         guard state.runState == .idle, phase.isBreak else { return nil }
-        let minutes = phase == .longBreak ? 15 : 5
+        let minutes = durations.minutes(for: phase)
         state.phase = phase
         state.totalSeconds = TimeInterval(minutes * 60)
         state.remainingSeconds = state.totalSeconds
@@ -274,7 +280,7 @@ public struct TimerEngine {
         if state.phase == .focus, recommendedBreak.phase == .longBreak {
             state.completedFocusCount = 0
         }
-        return startFocus(minutes: state.selectedFocusMinutes, after: delay)
+        return startFocus(after: delay)
     }
 
     @discardableResult
@@ -328,9 +334,9 @@ public struct TimerEngine {
     private mutating func toIdle() {
         state.phase = .focus
         state.runState = .idle
-        state.selectedFocusMinutes = 25
-        state.totalSeconds = 25 * 60
-        state.remainingSeconds = 25 * 60
+        state.selectedFocusMinutes = durations.focusMinutes
+        state.totalSeconds = TimeInterval(durations.focusMinutes * 60)
+        state.remainingSeconds = state.totalSeconds
         state.endDate = nil
     }
 

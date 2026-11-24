@@ -36,9 +36,9 @@ automated tests.
 - [ ] Pausing at zero completes the interval once without double-counting.
 - [ ] Natural completion increments the focus count and moves the popover to the
       recommended break ready to start while Auto-start break is off.
-- [ ] The focus-completion screen shows the recommended 5- or 15-minute break,
-      its duration on the dial with `READY`, and a Start break action; no
-      countdown starts.
+- [ ] The focus-completion screen shows the recommended configured short or
+      long break, its duration on the dial with `READY`, and a Start break
+      action; no countdown starts.
 - [ ] Auto-start break defaults off, survives relaunch, older state files without
       the field load as off, and an explicit on choice is preserved.
 - [ ] With Auto-start break on, a natural focus completion goes directly from
@@ -49,14 +49,14 @@ automated tests.
       immediately.
 - [ ] Pause and End work during the chime hold; disabling Auto-start break
       during the hold does not stop the running break.
-- [ ] Auto-start break still selects the 15-minute long break on the fourth
+- [ ] Auto-start break still selects the configured long break on the fourth
       completed focus.
 - [ ] Auto-start break does not start a break after an early-ended focus.
-- [ ] With Auto-start pomodoro off, a completed break waits for Start focus;
+- [ ] With Auto-start focus off, a completed break waits for Start focus;
       Auto-start break alone does not start it.
-- [ ] Auto-start pomodoro defaults off, survives relaunch, older state files
+- [ ] Auto-start focus defaults off, survives relaunch, older state files
       without the field load as off, and an explicit on choice is preserved.
-- [ ] With Auto-start pomodoro on, a natural break completion goes directly from
+- [ ] With Auto-start focus on, a natural break completion goes directly from
       the break-running screen to the running focus screen; no focus-ready or
       completion screen flashes.
 - [ ] The auto-started focus's countdown stays at full during the break chime
@@ -64,12 +64,12 @@ automated tests.
       immediately.
 - [ ] Pause and End work during the focus chime hold; disabling Auto-start
       pomodoro during the hold does not stop the running focus.
-- [ ] Auto-start pomodoro does not start a break.
+- [ ] Auto-start focus does not start a break.
 - [ ] An early-ended break does not start a focus, and an expired break restored
       at launch shows the focus-ready screen instead of starting retroactively.
-- [ ] With both Auto-start break and Auto-start pomodoro on, the focus-to-break
+- [ ] With both Auto-start break and Auto-start focus on, the focus-to-break
       and break-to-focus cycle continues with the correct durations.
-- [ ] Enabling Auto-start pomodoro while a break runs applies to that
+- [ ] Enabling Auto-start focus while a break runs applies to that
       completion; enabling it on the completed focus-ready screen does not
       retroactively start the focus.
 - [ ] Enabling Auto-start break while focus runs applies to that completion;
@@ -78,13 +78,40 @@ automated tests.
 - [ ] Ending a focus early does not advance the focus count or long-break rhythm.
 - [ ] Ending a focus early asks for confirmation before discarding the interval;
       ending a break does not.
-- [ ] The fourth completed focus recommends a 15-minute long break.
+- [ ] The fourth completed focus recommends the configured long break.
 - [ ] Declining an offered long break with `Done for now` resets the rhythm
       before the next focus.
-- [ ] Completing a break moves the popover to the 25-minute focus ready screen
-      with `Start 25-minute focus`; no countdown starts.
-- [ ] Starting a short or long break from idle uses the 5- or 15-minute
+- [ ] Completing a break moves the popover to the configured focus ready
+      screen with `Start N-minute focus`; no countdown starts.
+- [ ] Starting a short or long break from idle uses the configured break
       duration and preserves the completed focus count and rhythm.
+
+### Configurable durations
+
+- [ ] TIMER shows the Time (minutes) caption above the three duration fields;
+      the fields show bare numbers without a repeated unit. Spacing, not a
+      hairline, separates the duration block from the Auto-start rows.
+- [ ] A new install and an older state file without durations show 25/5/15.
+- [ ] Clicking a number focuses and selects it; typed digits replace the
+      selection, Enter or clicking another duration field commits the value,
+      empty input reverts, and values outside 1–180 clamp.
+- [ ] Minus and plus buttons flank each editable number, adjust by one minute,
+      disable at 1 and 180, save immediately at rest, and commit an active
+      draft before stepping.
+- [ ] Duration changes survive relaunch; a partial durations object uses
+      per-field defaults.
+- [ ] The three columns align and the value fits in English, Simplified
+      Chinese, Traditional Chinese, and Japanese in both themes.
+- [ ] VoiceOver can read, enter, and commit each duration field.
+- [ ] A focus started after changing the focus length uses the new length; the
+      idle dial, primary label, and accessibility value match it.
+- [ ] Direct short and long breaks use their configured lengths.
+- [ ] The recommended break, fourth-focus long break, completion offer, and
+      auto-start paths use the configured lengths.
+- [ ] Editing a duration while an interval runs or is paused leaves the active
+      interval untouched; the next interval uses the new length.
+- [ ] The menu-bar countdown reflects the actual active interval after a
+      duration change.
 
 ### Restoration and wake recovery
 
@@ -119,8 +146,8 @@ automated tests.
       interval is running, paused, or completed.
 - [ ] Selecting a break dot and pressing Start begins the existing break
       state, menu-bar treatment, notification, and completion flow.
-- [ ] The idle mode dots and arrows select Focus 25, Short break 5, and
-      Long break 15; the primary starts the selected mode.
+- [ ] The idle mode dots and arrows select Focus, Short break, and Long break
+      using the configured lengths; the primary starts the selected mode.
 - [ ] The arrows do not wrap: Focus shows only the next arrow, Long break only
       the previous one, Short break both. A hidden arrow keeps its slot, so the
       dial does not move, and it cannot be clicked or reached by VoiceOver.
@@ -139,8 +166,9 @@ automated tests.
       colored glow.
 - [ ] The idle ambient light follows the selected mode dot: Focus upper left,
       Short break overhead, Long break upper right.
-- [ ] The idle pointer points at the selected duration: 25m at five o'clock,
-      5m at one o'clock, 15m at three o'clock.
+- [ ] The idle pointer points at the selected duration on the 60-minute dial;
+      durations above 60 minutes clamp the hand at the full-hour position while
+      the readout shows the true value.
 - [ ] Switching idle modes does not recolor the pointer.
 - [ ] Starting a focus or break keeps the dial and primary in place; the status
       line appears in the mode row below the dial.
@@ -152,14 +180,23 @@ automated tests.
 - [ ] Settings uses the plain card background; no ambient rim, glow, or shade
       is visible there.
 - [ ] The Settings back control returns to the timer without closing the popover.
-- [ ] Settings shows the FOCUS section with Auto-start break and Auto-start
+- [ ] Settings shows the TIMER section with Auto-start break and Auto-start
       pomodoro both off by default; both choices survive relaunch.
-- [ ] The Settings card grows to fit its content: both FOCUS rows, the
-      notifications explanation, and the footer all stay visible with no
-      scrollbar, in all four languages, both themes, and with notifications
-      allowed or denied. The card is never shorter than the timer page's card
-      plus the settings rows, and switching Settings on and off returns the
-      popover to 506 points.
+- [ ] Inside APPEARANCE, SOUND, and TIMER, rows and controls are separated by
+      spacing rather than hairlines. The separator hairline sits above each
+      section label, keeping the label attached to its content; the footer
+      keeps its own rule.
+- [ ] Every section rule is visible at 1x, including the rule between SOUND
+      and APPEARANCE; no rule disappears to hairline anti-aliasing.
+- [ ] Settings starts with TIMER, SOUND, and MENU BAR, then APPEARANCE and
+      NOTIFICATIONS. MENU BAR remains a separate section and is not merged with
+      appearance or notifications.
+- [ ] The Settings card grows to fit its content: the three duration fields,
+      both Auto-start rows, the notifications explanation, and the footer all
+      stay visible with no scrollbar, in all four languages, both themes, and
+      with notifications allowed or denied. The card is never shorter than the
+      timer page's card plus the settings rows, and switching Settings on and
+      off returns the popover to 506 points.
 - [ ] Changing the mode animates the light over 850 ms; with Reduce Motion
       enabled the pose updates without movement.
 - [ ] Reduce Transparency keeps the ambient layers legible and does not

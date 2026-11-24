@@ -101,7 +101,7 @@
       }
     },
     "common.minutes_compact" : {
-      "comment" : "Compact integer minutes used by duration chips and the menu-bar title. Native review pending.",
+      "comment" : "Compact integer minutes used by the menu-bar title. Native review pending.",
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "%lldm" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分钟" } },
@@ -361,6 +361,60 @@
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "戻る" } }
       }
     },
+    "settings.durations.a11y_hint" : {
+      "comment" : "VoiceOver hint for the editable duration field. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit a length from 1 to 180 minutes." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "编辑 1 到 180 分钟。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "編輯 1 到 180 分鐘。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "1〜180分で編集できます。" } }
+      }
+    },
+    "settings.durations.decrease" : {
+      "comment" : "VoiceOver label and tooltip for the button that subtracts one minute; %@ is the interval name. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Decrease %@" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "减少%@" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "減少%@" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@を減らす" } }
+      }
+    },
+    "settings.durations.help" : {
+      "comment" : "Tooltip and accessibility hint for the duration steppers. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Click a number to type a length from 1 to 180 minutes." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "点击数字，输入 1 到 180 分钟。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "點擊數字，輸入 1 到 180 分鐘。" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "数字をクリックして、1〜180分で入力できます。" } }
+      }
+    },
+    "settings.durations.increase" : {
+      "comment" : "VoiceOver label and tooltip for the button that adds one minute; %@ is the interval name. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Increase %@" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "增加%@" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "增加%@" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@を増やす" } }
+      }
+    },
+    "settings.durations.time_header" : {
+      "comment" : "Caption above the three duration fields; the fields themselves show only the number. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time (minutes)" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "时间（分钟）" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "時間（分鐘）" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "時間（分）" } }
+      }
+    },
+    "settings.durations.value" : {
+      "comment" : "Duration value in the Settings stepper; %lld is a whole number of minutes. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld min" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分钟" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分鐘" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分" } }
+      }
+    },
     "settings.focus.auto_break.detail" : {
       "comment" : "Detail for the auto-start-break setting, which waits for the completion chime. Native review pending.",
       "localizations" : {
@@ -391,10 +445,10 @@
     "settings.focus.auto_pomodoro.title" : {
       "comment" : "Title for the auto-start-next-focus setting. Native review pending.",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Auto-start pomodoro" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自动开始番茄钟" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "自動開始番茄鐘" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ポモドーロを自動開始" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Auto-start focus" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自动开始专注" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "自動開始專注" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を自動開始" } }
       }
     },
     "settings.language.detail" : {
@@ -487,15 +541,6 @@
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "外観" } }
       }
     },
-    "settings.section.focus" : {
-      "comment" : "Settings section label for focus behavior. Native review pending.",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "FOCUS" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中" } }
-      }
-    },
     "settings.section.menu_bar" : {
       "comment" : "Settings section label for menu-bar options. Native review pending.",
       "localizations" : {
@@ -521,6 +566,15 @@
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "声音" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "音效" } },
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "サウンド" } }
+      }
+    },
+    "settings.section.timer" : {
+      "comment" : "Settings section label for interval lengths and auto-start behavior. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "TIMER" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "计时器" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "計時器" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマー" } }
       }
     },
     "settings.sound.chime.detail" : {
@@ -768,7 +822,7 @@
       }
     },
     "timer.action.start" : {
-      "comment" : "Primary button title when idle; %lld is the selected focus length in minutes. Native review pending.",
+      "comment" : "Primary button title when idle; %lld is the configured focus length in minutes. Native review pending.",
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Start %lld-minute focus" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "开始 %lld 分钟专注" } },
@@ -795,7 +849,7 @@
       }
     },
     "timer.a11y.focus_chip" : {
-      "comment" : "Accessibility label for a focus-length chip; %lld is the length in minutes. Native review pending.",
+      "comment" : "Accessibility label for the idle Focus mode; %lld is the configured focus length in minutes. Native review pending.",
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld-minute focus" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注 %lld 分钟" } },

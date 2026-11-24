@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 import PomodoroCore
 import UserNotifications
@@ -10,6 +11,7 @@ struct SettingsView: View {
     let onContentHeight: (CGFloat) -> Void
     @Environment(\.colorScheme) private var scheme
     @State private var showsUpdatePanel = false
+    @State private var editingDuration: Phase?
     @State private var scrolledHeight: CGFloat = 0
     @State private var footerHeight: CGFloat = 0
 
@@ -50,49 +52,12 @@ struct SettingsView: View {
                             .frame(minHeight: Typo.lineHeight(10.7), alignment: .leading)
                             .padding(.top, 2)
 
-                        sectionLabel(L10n.string("settings.section.appearance"))
-                            .padding(.top, 13)
-                        Hairline()
-                            .padding(.top, 4)
+                        sectionHeader(L10n.string("settings.section.timer"))
 
-                        appearancePicker
+                        durationHeader
                             .padding(.top, 8)
 
-                        Hairline()
-                            .padding(.top, 10)
-
-                        languageRow
-                            .padding(.top, 8)
-
-                        sectionLabel(L10n.string("settings.section.sound"))
-                            .padding(.top, 13)
-                        Hairline()
-                            .padding(.top, 4)
-
-                        settingRow(
-                            title: L10n.string("settings.sound.chime.title"),
-                            detail: L10n.string("settings.sound.chime.detail"),
-                            isOn: Binding(
-                                get: { model.chimeEnabled },
-                                set: { model.setChimeEnabled($0) }
-                            )
-                        )
-
-                        Hairline()
-                            .padding(.vertical, 6)
-
-                        settingRow(
-                            title: L10n.string("settings.sound.tick.title"),
-                            detail: L10n.string("settings.sound.tick.detail"),
-                            isOn: Binding(
-                                get: { model.tickEnabled },
-                                set: { model.setTickEnabled($0) }
-                            )
-                        )
-
-                        sectionLabel(L10n.string("settings.section.focus"))
-                            .padding(.top, 13)
-                        Hairline()
+                        durationColumns
                             .padding(.top, 4)
 
                         settingRow(
@@ -103,9 +68,7 @@ struct SettingsView: View {
                                 set: { model.setAutoStartBreak($0) }
                             )
                         )
-
-                        Hairline()
-                            .padding(.vertical, 6)
+                        .padding(.top, 7)
 
                         settingRow(
                             title: L10n.string("settings.focus.auto_pomodoro.title"),
@@ -115,11 +78,30 @@ struct SettingsView: View {
                                 set: { model.setAutoStartFocus($0) }
                             )
                         )
+                        .padding(.top, 5)
 
-                        sectionLabel(L10n.string("settings.section.menu_bar"))
-                            .padding(.top, 13)
-                        Hairline()
-                            .padding(.top, 4)
+                        sectionHeader(L10n.string("settings.section.sound"))
+
+                        settingRow(
+                            title: L10n.string("settings.sound.chime.title"),
+                            detail: L10n.string("settings.sound.chime.detail"),
+                            isOn: Binding(
+                                get: { model.chimeEnabled },
+                                set: { model.setChimeEnabled($0) }
+                            )
+                        )
+
+                        settingRow(
+                            title: L10n.string("settings.sound.tick.title"),
+                            detail: L10n.string("settings.sound.tick.detail"),
+                            isOn: Binding(
+                                get: { model.tickEnabled },
+                                set: { model.setTickEnabled($0) }
+                            )
+                        )
+                        .padding(.top, 5)
+
+                        sectionHeader(L10n.string("settings.section.menu_bar"))
 
                         settingRow(
                             title: L10n.string("settings.menu_bar.minutes.title"),
@@ -130,10 +112,15 @@ struct SettingsView: View {
                             )
                         )
 
-                        sectionLabel(L10n.string("settings.section.notifications"))
-                            .padding(.top, 13)
-                        Hairline()
-                            .padding(.top, 4)
+                        sectionHeader(L10n.string("settings.section.appearance"))
+
+                        appearancePicker
+                            .padding(.top, 8)
+
+                        languageRow
+                            .padding(.top, 12)
+
+                        sectionHeader(L10n.string("settings.section.notifications"))
 
                         HStack(spacing: 8) {
                             Circle()
@@ -150,7 +137,7 @@ struct SettingsView: View {
                             }
                             .buttonStyle(QuietTextButtonStyle())
                         }
-                        .padding(.top, 10)
+                        .padding(.top, 8)
 
                         if model.notificationStatus == .denied {
                             Text(L10n.string("settings.notifications.denied_detail"))
@@ -160,6 +147,7 @@ struct SettingsView: View {
                                 .padding(.top, 1)
                         }
                     }
+                    .padding(.bottom, 8)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { height in
                         scrolledHeight = height
@@ -365,6 +353,15 @@ struct SettingsView: View {
         return "v\(version)"
     }
 
+    private func sectionHeader(_ text: String) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Hairline(height: 1)
+                .padding(.top, 12)
+            sectionLabel(text)
+                .padding(.top, 6)
+        }
+    }
+
     private func sectionLabel(_ text: String) -> some View {
         Text(text)
             .font(Typo.label(8.7))
@@ -396,5 +393,300 @@ struct SettingsView: View {
                 .accessibilityLabel(title)
         }
         .padding(.top, 7)
+    }
+
+    private var durationHeader: some View {
+        Text(L10n.string("settings.durations.time_header"))
+            .font(Typo.sans(10.5, weight: "Medium"))
+            .foregroundStyle(palette.ink.opacity(0.84))
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var durationColumns: some View {
+        HStack(alignment: .top, spacing: 8) {
+            durationColumn(.focus, title: L10n.string("timer.mode.focus"))
+            durationColumn(.shortBreak, title: L10n.string("timer.mode.short_break"))
+            durationColumn(.longBreak, title: L10n.string("timer.mode.long_break"))
+        }
+    }
+
+    private func durationColumn(_ phase: Phase, title: String) -> some View {
+        DurationColumn(
+            title: title,
+            minutes: model.durations.minutes(for: phase),
+            isEditing: editingDuration == phase,
+            range: IntervalDurations.allowedMinutes,
+            onBeginEditing: { editingDuration = phase },
+            onEndEditing: {
+                if editingDuration == phase {
+                    editingDuration = nil
+                }
+            },
+            onChange: { model.setDurationMinutes($0, for: phase) }
+        )
+    }
+}
+
+private struct DurationColumn: View {
+    let title: String
+    let minutes: Int
+    let isEditing: Bool
+    let range: ClosedRange<Int>
+    let onBeginEditing: () -> Void
+    let onEndEditing: () -> Void
+    let onChange: (Int) -> Void
+
+    @Environment(\.colorScheme) private var scheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var draft: String
+    @State private var isHovering = false
+    @FocusState private var isFocused: Bool
+
+    init(
+        title: String,
+        minutes: Int,
+        isEditing: Bool,
+        range: ClosedRange<Int>,
+        onBeginEditing: @escaping () -> Void,
+        onEndEditing: @escaping () -> Void,
+        onChange: @escaping (Int) -> Void
+    ) {
+        self.title = title
+        self.minutes = minutes
+        self.isEditing = isEditing
+        self.range = range
+        self.onBeginEditing = onBeginEditing
+        self.onEndEditing = onEndEditing
+        self.onChange = onChange
+        _draft = State(initialValue: String(minutes))
+    }
+
+    private var palette: Palette { Palette.forScheme(scheme) }
+    private var valueText: String { L10n.format("settings.durations.value", minutes) }
+    private var stepValueText: String {
+        L10n.format("settings.durations.value", adjustmentBase)
+    }
+    private var helpText: String { L10n.string("settings.durations.help") }
+    private var accessibilityHint: String { L10n.string("settings.durations.a11y_hint") }
+
+    private var adjustmentBase: Int {
+        guard isEditing, let parsed = Int(draft) else { return minutes }
+        return min(max(parsed, range.lowerBound), range.upperBound)
+    }
+
+    private var canDecrease: Bool { adjustmentBase > range.lowerBound }
+    private var canIncrease: Bool { adjustmentBase < range.upperBound }
+
+    var body: some View {
+        VStack(spacing: 5) {
+            Text(title)
+                .font(Typo.sans(10.5, weight: "Medium"))
+                .foregroundStyle(palette.mutedInk)
+                .lineLimit(1)
+                .minimumScaleFactor(0.82)
+                .frame(maxWidth: .infinity)
+
+            HStack(spacing: 0) {
+                DurationStepButton(
+                    symbol: "minus",
+                    isEnabled: canDecrease,
+                    accessibilityLabel: L10n.format(
+                        "settings.durations.decrease",
+                        title
+                    ),
+                    accessibilityValue: stepValueText,
+                    accessibilityHint: accessibilityHint,
+                    action: { adjust(by: -1) }
+                )
+
+                Group {
+                    if isEditing {
+                        editingField
+                    } else {
+                        valueButton
+                    }
+                }
+                .frame(maxWidth: .infinity)
+
+                DurationStepButton(
+                    symbol: "plus",
+                    isEnabled: canIncrease,
+                    accessibilityLabel: L10n.format(
+                        "settings.durations.increase",
+                        title
+                    ),
+                    accessibilityValue: stepValueText,
+                    accessibilityHint: accessibilityHint,
+                    action: { adjust(by: 1) }
+                )
+            }
+            .frame(maxWidth: .infinity, minHeight: 28)
+            .background {
+                RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    .fill(palette.plaque.opacity(isEditing ? 0.44 : 0.28))
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    .strokeBorder(
+                        isEditing
+                            ? palette.tomato.opacity(0.68)
+                            : palette.brass.opacity(isHovering ? 0.6 : 0.42),
+                        lineWidth: 1
+                    )
+            }
+            .contentShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
+            .onHover { hovering in
+                isHovering = hovering
+            }
+            .animation(reduceMotion ? nil : .easeOut(duration: 0.12), value: isEditing)
+            .animation(reduceMotion ? nil : .easeOut(duration: 0.12), value: isHovering)
+        }
+        .frame(maxWidth: .infinity)
+        .onChange(of: minutes) { _, newValue in
+            if !isEditing {
+                draft = String(newValue)
+            }
+        }
+        .onChange(of: isEditing) { wasEditing, editing in
+            if wasEditing, !editing {
+                commitDraft()
+                isFocused = false
+            }
+        }
+    }
+
+    private var valueButton: some View {
+        Button {
+            beginEditing()
+        } label: {
+            valueLabel
+                .frame(maxWidth: .infinity, minHeight: 28)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .help(helpText)
+        .accessibilityLabel(title)
+        .accessibilityValue(valueText)
+        .accessibilityHint(accessibilityHint)
+    }
+
+    private var editingField: some View {
+        TextField("", text: $draft)
+            .textFieldStyle(.plain)
+            .font(Typo.digits(13))
+            .multilineTextAlignment(.center)
+            .foregroundStyle(palette.ink.opacity(0.92))
+            .focused($isFocused)
+            .focusEffectDisabled()
+            .frame(maxWidth: .infinity, minHeight: 28)
+            .onSubmit { finishEditing() }
+            .accessibilityLabel(title)
+            .accessibilityHint(accessibilityHint)
+            .onAppear {
+                isFocused = true
+                DispatchQueue.main.async {
+                    NSApp.sendAction(#selector(NSText.selectAll(_:)), to: nil, from: nil)
+                }
+            }
+            .onChange(of: isFocused) { _, focused in
+                if !focused, isEditing {
+                    onEndEditing()
+                }
+            }
+            .onChange(of: draft) { _, newValue in
+                let filtered = String(newValue.filter(\.isNumber).prefix(3))
+                if filtered != newValue {
+                    draft = filtered
+                }
+            }
+            .help(helpText)
+    }
+
+    private var valueLabel: some View {
+        Text(String(minutes))
+            .font(Typo.digits(13))
+            .foregroundStyle(palette.ink.opacity(0.92))
+    }
+
+    private func beginEditing() {
+        draft = String(minutes)
+        onBeginEditing()
+    }
+
+    private func finishEditing() {
+        isFocused = false
+        onEndEditing()
+    }
+
+    private func adjust(by delta: Int) {
+        let next = min(
+            max(adjustmentBase + delta, range.lowerBound),
+            range.upperBound
+        )
+        if next != minutes {
+            onChange(next)
+        }
+        if isEditing {
+            draft = String(next)
+            isFocused = false
+            onEndEditing()
+        }
+    }
+
+    private func commitDraft() {
+        let parsed = Int(draft).map {
+            min(max($0, range.lowerBound), range.upperBound)
+        }
+        let resolved = parsed ?? minutes
+        draft = String(resolved)
+        if resolved != minutes {
+            onChange(resolved)
+        }
+    }
+}
+
+private struct DurationStepButton: View {
+    let symbol: String
+    let isEnabled: Bool
+    let accessibilityLabel: String
+    let accessibilityValue: String
+    let accessibilityHint: String
+    let action: () -> Void
+
+    @Environment(\.colorScheme) private var scheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var isHovering = false
+
+    private var palette: Palette { Palette.forScheme(scheme) }
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: symbol)
+                .font(.system(size: 10, weight: .bold))
+                .frame(width: 26, height: 28)
+                .foregroundStyle(
+                    palette.mutedInk.opacity(isEnabled ? 0.9 : 0.26)
+                )
+                .background {
+                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                        .fill(
+                            palette.ink.opacity(
+                                isHovering && isEnabled ? 0.065 : 0
+                            )
+                        )
+                        .padding(2)
+                }
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .disabled(!isEnabled)
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityValue(accessibilityValue)
+        .accessibilityHint(accessibilityHint)
+        .help(accessibilityLabel)
+        .onHover { hovering in
+            isHovering = hovering && isEnabled
+        }
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.1), value: isHovering)
     }
 }

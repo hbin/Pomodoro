@@ -11,11 +11,15 @@
 
 > **Amended 2026-11-24:** The Auto-start break setting can start the
 > recommended break directly from the focus-completion ready state, and the
-> Auto-start pomodoro setting can start the next focus directly from the
+> Auto-start focus setting can start the next focus directly from the
 > break-completion ready state. Both are off by default. See
 > [`2026-11-24-auto-start-break-design.md`](2026-11-24-auto-start-break-design.md)
 > and
 > [`2026-11-24-auto-start-pomodoro-design.md`](2026-11-24-auto-start-pomodoro-design.md).
+>
+> **Amended 2026-11-24:** The ready screens use the configurable interval
+> durations instead of fixed 25/5/15 values. See
+> [`2026-11-24-configurable-durations-design.md`](2026-11-24-configurable-durations-design.md).
 
 ## 1. Summary
 
@@ -23,7 +27,7 @@ When an interval reaches zero, the popover moves directly to the next
 interval's ready screen. A completed focus shows the recommended break; a
 completed break shows the next focus. Both ready screens wait for the user by
 default. Enabling Auto-start break starts the recommended break with its
-countdown holding until the chime finishes; enabling Auto-start pomodoro does
+countdown holding until the chime finishes; enabling Auto-start focus does
 the same for the next focus.
 
 This replaces the former `00:00` / `COMPLETE` completion screen. The chime,
@@ -66,7 +70,7 @@ unchanged.
 4. Starting another focus uses the existing start-another action.
 5. `Done for now` returns to idle. The completed focus count and rhythm are
    unchanged.
-6. No countdown starts until the user chooses, unless Auto-start pomodoro is on.
+6. No countdown starts until the user chooses, unless Auto-start focus is on.
    With it on, the running focus screen appears immediately and its countdown
    begins when the break chime finishes; no focus-ready screen or Start is
    required. Auto-start break continues to control the separate
@@ -150,11 +154,11 @@ presentation reads as the next mode, not as a second workflow.
 - A naturally completed fourth focus shows the 15-minute long break ready to
   start while Auto-start break is off.
 - A naturally completed break shows the 25-minute focus ready to start while
-  Auto-start pomodoro is off.
+  Auto-start focus is off.
 - Auto-start break is off by default; with it on, a focus completion goes
   directly to the running break screen and its countdown begins when the chime
   finishes.
-- Auto-start pomodoro is off by default; with it on, a break completion goes
+- Auto-start focus is off by default; with it on, a break completion goes
   directly to the running focus screen and its countdown begins when the break
   chime finishes.
 - Both ready screens show the next duration with `READY`, not `00:00` with
@@ -163,7 +167,7 @@ presentation reads as the next mode, not as a second workflow.
   setting is off.
 - With Auto-start break on, the running break screen is visible during the
   focus chime with its countdown held at full.
-- With Auto-start pomodoro on, the running focus screen is visible during the
+- With Auto-start focus on, the running focus screen is visible during the
   break chime with its countdown held at full.
 - The break-ready and focus-ready flows remain the completion behavior while
   the corresponding setting is off.

@@ -7,12 +7,22 @@
 | Status | Implemented |
 | Date | 2026-11-24 |
 | Platform | macOS 15+ |
-| Setting | `Auto-start pomodoro` |
+| Setting | `Auto-start focus` |
 | Amends | `2026-11-21-pomodoro-product-design.md`, `2026-11-24-guided-next-step-design.md`, `2026-11-24-auto-start-break-design.md` |
+
+> **Amended 2026-11-24:** The next focus length now comes from the configurable
+> interval durations; the `25:00` example below is the default rather than a
+> fixed length. See
+> [`2026-11-24-configurable-durations-design.md`](2026-11-24-configurable-durations-design.md).
+
+> **Amended 2026-11-24:** The Settings row is labeled **Auto-start focus** to
+> match the app's Focus terminology. The internal key
+> `settings.focus.auto_pomodoro.*` and the persisted field `autoStartFocus`
+> keep their historical names.
 
 ## 1. Summary
 
-Auto-start pomodoro is an off-by-default setting that starts the next focus
+Auto-start focus is an off-by-default setting that starts the next focus
 when a break reaches zero. It mirrors Auto-start break: the focus begins in the
 running state immediately, but its end date is pushed out by the break
 completion chime, so the countdown stays at `25:00` until the chime finishes.
@@ -25,7 +35,7 @@ focus-to-break-to-focus cycle.
 
 ### 2.1 Setting
 
-- Location: Settings → FOCUS → `Auto-start pomodoro`.
+- Location: Settings → TIMER → `Auto-start focus`.
 - Default: off, preserving the existing next-focus-waits behavior.
 - Persisted as `autoStartFocus` in `PersistedState`; older state files without
   the field decode as off. An explicit on choice is preserved.
@@ -66,13 +76,13 @@ the user presses Start.
 
 ### 2.4 Focus completion
 
-Auto-start pomodoro applies only to the break-to-focus transition. Auto-start
+Auto-start focus applies only to the break-to-focus transition. Auto-start
 break independently controls the focus-to-break transition. Neither setting
 implicitly enables the other.
 
 ### 2.5 Restoration
 
-Auto-start pomodoro is part of a live completion event. If the app launches
+Auto-start focus is part of a live completion event. If the app launches
 with an already-expired break, it completes the interval and shows the
 focus-ready screen; it does not start a focus retroactively.
 
@@ -93,7 +103,7 @@ normal running interval and restores with its delayed end date.
 
 | Key | English source |
 | --- | --- |
-| `settings.focus.auto_pomodoro.title` | **Auto-start pomodoro** |
+| `settings.focus.auto_pomodoro.title` | **Auto-start focus** |
 | `settings.focus.auto_pomodoro.detail` | **Starts the next focus when a break ends.** |
 | `notifications.break.body` | **Time to focus.** |
 
@@ -103,7 +113,7 @@ allowed or denied.
 
 ## 4. Accessibility
 
-- The toggle exposes `Auto-start pomodoro` as its accessible label.
+- The toggle exposes `Auto-start focus` as its accessible label.
 - The focus-start announcement follows the break chime; the break-complete
   announcement is not duplicated.
 - The toggle state is exposed by the standard switch control.
@@ -125,7 +135,7 @@ allowed or denied.
 
 ## 6. Acceptance criteria
 
-- `Auto-start pomodoro` is off by default, including for older state files; an
+- `Auto-start focus` is off by default, including for older state files; an
   explicit on choice is preserved.
 - The setting survives quit and relaunch.
 - With the setting on, a break completion goes directly to the running focus
@@ -141,14 +151,14 @@ allowed or denied.
 - An expired break restored at launch shows the focus-ready screen instead of
   starting a focus retroactively.
 - The focus completion still follows Auto-start break independently.
-- Settings shows both FOCUS toggles in all four languages and both themes,
+- Settings shows both auto-start toggles in all four languages and both themes,
   with the footer visible and no scrollbar, including the denied-notification
   detail.
 - `swift test` and `./scripts/build-app.sh debug` pass.
 
 ## 7. Verification
 
-The built debug app was inspected with Auto-start pomodoro off and on. The off
+The built debug app was inspected with Auto-start focus off and on. The off
 path left the focus-ready screen; the on path went directly from the
 break-running screen to the running focus at `25:00`, with no ready-screen
 flash. The focus end date included the break chime delay, and the countdown
