@@ -69,9 +69,11 @@ nested components in the required order, and verifies entitlements.
   Do not replace it with a counter that decrements on every UI tick.
 - The app ticker should call `refresh()` and reconcile restored, sleeping, or
   woken state rather than independently calculating remaining time.
-- Preserve the rhythm rules: only naturally completed focus intervals advance
-  `completedFocusCount`; ending early does not. The fourth completed focus
-  recommends a long break.
+- Preserve the rhythm rules: every Focus interval advances the four-focus
+  cycle, including one ended early; the fourth Focus interval recommends a long
+  break. Keep "counts toward the cycle" distinct from "completed naturally" so
+  the completion UI and any future completion count are not fabricated for an
+  early-ended Focus.
 - New timer behavior needs deterministic tests using `TestClock`. Do not use
   wall-clock sleeps or depend on the real current time in tests.
 

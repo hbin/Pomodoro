@@ -160,12 +160,14 @@ public struct IntervalDurations: Codable, Sendable, Equatable {
 - `startFocus` uses `focusMinutes`; the selected focus and absolute end date
   follow.
 - `startBreak` uses the matching configured short- or long-break length.
-- `recommendedBreak` uses `shortBreakMinutes` or `longBreakMinutes`. The fourth
-  naturally completed focus still selects the long break.
+- `recommendedBreak` uses `shortBreakMinutes` or `longBreakMinutes`. Every
+  fourth Focus interval in the cycle selects the long break, including one
+  ended early.
 - `startRecommendedBreak` and `startAnother` use the configured values, so the
   completion offer and the interval it starts always agree.
-- `toIdle` returns to the configured focus length after ending early, skipping
-  a break, or choosing `Done for now`.
+- `toIdle` returns to the configured focus length when skipping a break or
+  choosing `Done for now`. Ending an interval early instead advances to the
+  next phase and uses that phase's configured length.
 - Auto-start break and auto-start focus use the configured break and focus
   lengths, including the chime hold delay.
 - The menu-bar countdown, notification end date, pause/resume, sleep/wake, and
@@ -267,7 +269,7 @@ Traditional Chinese, and Japanese.
 - [x] Starting a focus uses the configured focus length.
 - [x] Direct short and long breaks use their configured lengths.
 - [x] The recommended break uses the configured short or long length, and the
-      fourth completed focus still selects the long break.
+      fourth Focus interval still selects the long break.
 - [x] The completion offer shows the configured next length and starts that
       same length.
 - [x] Auto-start break and auto-start focus use the configured lengths.

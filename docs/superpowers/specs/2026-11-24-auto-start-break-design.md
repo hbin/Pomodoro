@@ -16,14 +16,21 @@
 > **Amended 2026-11-24:** The recommended break length now comes from the
 > configurable interval durations; see
 > [`2026-11-24-configurable-durations-design.md`](2026-11-24-configurable-durations-design.md).
+>
+> **Amended 2026-11-24:** The setting also controls the break after a Focus
+> ended with the end control. That transition uses a fixed one-second
+> full-countdown handoff rather than the chime duration. See
+> [`2026-11-24-pause-end-control-design.md`](2026-11-24-pause-end-control-design.md).
 
 ## 1. Summary
 
 Auto-start break is a setting, off by default. When it is on, a naturally
 completed focus starts the recommended short or long break immediately in the
 running state, but the break's end date is pushed out by the completion chime,
-so the countdown stays at full until the chime finishes. When it is off, the
-existing guided break-ready screen waits for Start.
+so the countdown stays at full until the chime finishes. A focus ended with the
+end control uses the same setting and also enters the running break, with a
+fixed one-second full-countdown handoff. When it is off, the guided
+break-ready screen waits for Start.
 
 The setting applies only to the focus-to-break transition. The next focus is
 controlled independently by Auto-start focus, which is off by default. With
@@ -56,7 +63,7 @@ both settings on, the focus-to-break-to-focus cycle continues automatically.
    while the chime plays and begins moving when the chime ends. The wait is a
    fixed part of the behavior, not a setting.
 4. The break uses the existing 5- or 15-minute duration and the existing rhythm
-   recommendation. The fourth naturally completed focus still recommends the
+   recommendation. The fourth Focus interval in the cycle still recommends the
    15-minute long break.
 5. The break-end notification is scheduled for the delayed end date; pause,
    resume, end early, sleep/wake, and restoration use the existing break paths.
@@ -70,6 +77,20 @@ both settings on, the focus-to-break-to-focus cycle continues automatically.
 8. If the chime is off, the delay is zero and the countdown starts immediately.
 9. Pause and End remain normal break controls during the hold. Disabling the
    setting during the hold does not stop the already-started break.
+
+### 2.4 Focus ended with the end control
+
+1. The ended Focus counts toward the four-focus rhythm and the corresponding
+   completion chime plays when enabled.
+2. The interface moves directly to the recommended Short or Long Break; no
+   Completion page appears.
+3. With Auto-start break on, the running break screen appears immediately and
+   its countdown stays full for one second before starting. This one-second
+   handoff applies even when the completion chime is off.
+4. With Auto-start break off, the break waits on its ready screen.
+5. The original focus notification is cancelled. No extra foreground
+   notification is emitted; an auto-started break schedules its own end
+   notification.
 
 ### 2.3 Focus completion with the setting off
 
@@ -128,7 +149,6 @@ notification explanation, and the footer all fit without a scrollbar.
 - Starting the next focus automatically is handled by Auto-start focus, not
   this setting.
 - Starting a break retroactively when an expired focus is restored at launch.
-- Auto-starting a break after an early-ended focus.
 - Making the chime wait configurable or changing the chime length.
 - Notification action buttons that start a break.
 - New timer-state fields, a new run state, or a full automatic focus/break
@@ -147,14 +167,18 @@ notification explanation, and the footer all fit without a scrollbar.
 - The break's end date includes the chime delay, and the countdown stays at the
   full 5- or 15-minute value until the chime finishes.
 - With the setting on and the chime off, the countdown starts immediately.
+- With the setting on, a Focus ended with the end control goes directly to the
+  running break; its full countdown begins after one second, even with the
+  chime off.
 - Pause and End work normally during the chime hold; disabling the setting
   during the hold does not stop the already-started break.
-- The fourth completed focus still starts the 15-minute long break.
+- The fourth Focus interval in the cycle still starts the configured long break.
 - An auto-started break schedules its end notification and updates the menu bar.
 - The focus-completion notification body fits both the auto-started and
   still-waiting cases.
 - With the setting off, the focus-completion ready screen remains unchanged.
-- An early-ended focus does not start a break.
+- With the setting off, a Focus ended with the end control stops on the
+  recommended break-ready screen.
 - An expired focus restored at launch shows the break-ready screen instead of
   starting a break retroactively.
 - With Auto-start focus off, a completed break waits for Start focus; with

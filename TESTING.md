@@ -50,8 +50,9 @@ automated tests.
 - [ ] Pause and End work during the chime hold; disabling Auto-start break
       during the hold does not stop the running break.
 - [ ] Auto-start break still selects the configured long break on the fourth
-      completed focus.
-- [ ] Auto-start break does not start a break after an early-ended focus.
+      Focus interval, including one ended early.
+- [ ] With Auto-start break on, an early-ended Focus goes directly to the
+      running recommended break; with it off, the break-ready screen waits.
 - [ ] With Auto-start focus off, a completed break waits for Start focus;
       Auto-start break alone does not start it.
 - [ ] Auto-start focus defaults off, survives relaunch, older state files
@@ -75,10 +76,21 @@ automated tests.
 - [ ] Enabling Auto-start break while focus runs applies to that completion;
       enabling it on the completed ready screen does not retroactively start
       the break.
-- [ ] Ending a focus early does not advance the focus count or long-break rhythm.
-- [ ] Ending a focus early asks for confirmation before discarding the interval;
-      ending a break does not.
-- [ ] The fourth completed focus recommends the configured long break.
+- [ ] Ending a Focus early advances the four-focus rhythm without showing the
+      natural-completion screen: Focus 1–3 go to Short Break, and Focus 4 goes
+      to Long Break.
+- [ ] Ending a Short or Long Break early goes to the next Focus rather than
+      returning to the ended break's ready screen.
+- [ ] Ending either interval requires no confirmation.
+- [ ] With the matching Auto-start setting off, the next interval waits on its
+      ready screen. With it on, the next interval's running screen appears
+      immediately and its countdown stays at full for one second before
+      starting, even when the completion chime is off.
+- [ ] Ending an interval plays that phase's completion chime when enabled,
+      cancels the old pending notification, emits no extra foreground system
+      notification, and schedules the next interval's notification only when
+      it starts automatically.
+- [ ] The fourth Focus interval recommends the configured long break.
 - [ ] Declining an offered long break with `Done for now` resets the rhythm
       before the next focus.
 - [ ] Completing a break moves the popover to the configured focus ready
@@ -134,6 +146,9 @@ automated tests.
 - [ ] A corrupt state file is backed up and the app recovers with a clear message.
 - [ ] Recovery still reports a reset when the backup cannot be written.
 - [ ] Timer state and preferences survive a normal quit and relaunch.
+- [ ] A next-phase ready screen reached by ending an interval is not persisted:
+      relaunching while it waits returns to Focus ready. Running and paused
+      intervals still restore normally.
 
 ### Popover and menu bar
 
@@ -151,9 +166,9 @@ automated tests.
       state, menu-bar treatment, notification, and completion flow.
 - [ ] The idle mode dots and arrows select Focus, Short break, and Long break
       using the configured lengths; the primary starts the selected mode.
-- [ ] Ending a short or long break early returns to that break's ready screen,
-      not `Ready to focus`, and does not start focus. Ending focus early still
-      returns to the Focus ready screen.
+- [ ] Ending a short or long break early advances to Focus ready, or to a
+      running Focus when Auto-start focus is on. It does not return to the
+      ended break's ready screen.
 - [ ] In Japanese, switching Focus / Short break / Long break does not move
       the dial. The shortened `短い休憩をどうぞ` / `長い休憩をどうぞ` titles fit at
       the normal 34-point title size.
@@ -177,6 +192,27 @@ automated tests.
       or paused and `Pause` while running. Focus, Short break, and Long break
       do not add mode or duration text to the button, and the completion screen
       also uses `Start`.
+- [ ] The timer primary is fixed at 190×49 and centered in the 300-point row
+      in idle, running, and paused states. Start, Pause, resume, and pause keep
+      its width, edges, and centerline fixed. The completion primary remains
+      full-width and is not affected by the timer's fixed width.
+- [ ] The running row shows a `forward.end.fill` control with a 48×49 hit area
+      flush with the trailing edge, a 20-point glyph, and a 7-point gap from the
+      primary. Idle and paused show no end control and no one-sided placeholder;
+      the primary keeps 55 points on both sides.
+- [ ] The end control has no resting plate or border, uses muted ink, and draws
+      the 36-point plaque/brass disc only on hover or keyboard focus. Hover help
+      and VoiceOver use `End focus interval` / `End break` with the existing
+      hints. Reduce Motion removes the press scale; Reduce Transparency changes
+      the disc fill but not its size.
+- [ ] Clicking anywhere in the end control's 48×49 area acts without touching
+      the primary. Focus and break running both end immediately with no inline
+      confirmation or dialog. Focus advances to the recommended Short or Long
+      Break; Break advances to Focus. Each next phase is ready or auto-starts
+      according to its setting.
+- [ ] With keyboard navigation enabled, Tab moves from the primary to the end
+      control only while running, the focus disc is visible, and Return/Space
+      perform the same action. Paused removes the end control from the tab order.
 - [ ] The idle ambient light follows the selected mode dot: Focus upper left,
       Short break overhead, Long break upper right.
 - [ ] The idle dial has no hand and an empty recessed channel between thin
@@ -225,8 +261,10 @@ automated tests.
       and its measured height; opening Settings changes only the height, and
       closing it returns to 340×510 without moving the popover's center.
 - [ ] Switching languages on the timer changes only copy: the dial, mode
-      dots, arrows, primary/stop controls, header icon and footer keep their
-      frames and positions. The title slot stays fixed at full line height.
+      dots, arrows, primary/end controls, header icon and footer keep their
+      frames and positions. The primary keeps its 190-point width untruncated
+      and, while running, the end control keeps its 48-point trailing slot. The
+      title slot stays fixed at full line height.
 - [ ] Switching languages in Settings changes only copy and its measured
       height. The 340-point width, section hairlines, toggles, language picker
       and footer controls keep their horizontal insets; no separator is sized

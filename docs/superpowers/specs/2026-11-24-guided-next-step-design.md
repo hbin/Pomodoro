@@ -17,6 +17,12 @@
 > and
 > [`2026-11-24-auto-start-pomodoro-design.md`](2026-11-24-auto-start-pomodoro-design.md).
 >
+> **Amended 2026-11-24:** The end control is a separate next-phase path. It
+> skips the completion presentation, counts an early-ended Focus toward the
+> four-focus rhythm, and uses the same Auto-start settings with a one-second
+> full-countdown handoff. See
+> [`2026-11-24-pause-end-control-design.md`](2026-11-24-pause-end-control-design.md).
+>
 > **Amended 2026-11-24:** The ready screens use the configurable interval
 > durations instead of fixed 25/5/15 values. See
 > [`2026-11-24-configurable-durations-design.md`](2026-11-24-configurable-durations-design.md).
@@ -46,7 +52,7 @@ unchanged.
    - body `Focus complete. Ready for a break?`;
    - primary `Start`;
    - quiet `Done for now`.
-4. The fourth naturally completed focus recommends the 15-minute long break.
+4. The fourth Focus interval in the cycle recommends the configured long break.
 5. Starting the break uses the existing recommended-break action and schedules
    the existing break notification.
 6. `Done for now` declines the break and returns to idle. Declining an offered

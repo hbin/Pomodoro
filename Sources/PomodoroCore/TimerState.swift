@@ -30,7 +30,11 @@ public struct TimerState: Codable, Sendable, Equatable {
     public var totalSeconds: TimeInterval
     public var remainingSeconds: TimeInterval
     public var endDate: Date?
+    /// Focus intervals completed naturally in the current cycle.
     public var completedFocusCount: Int
+    /// Focus intervals that count toward the current four-focus cycle. Early
+    /// ends advance this without changing `completedFocusCount`.
+    public var focusCyclePosition: Int
 
     public init(
         version: Int = TimerState.currentVersion,
@@ -40,7 +44,8 @@ public struct TimerState: Codable, Sendable, Equatable {
         totalSeconds: TimeInterval = 25 * 60,
         remainingSeconds: TimeInterval = 25 * 60,
         endDate: Date? = nil,
-        completedFocusCount: Int = 0
+        completedFocusCount: Int = 0,
+        focusCyclePosition: Int? = nil
     ) {
         self.version = version
         self.selectedFocusMinutes = selectedFocusMinutes
@@ -50,6 +55,7 @@ public struct TimerState: Codable, Sendable, Equatable {
         self.remainingSeconds = remainingSeconds
         self.endDate = endDate
         self.completedFocusCount = completedFocusCount
+        self.focusCyclePosition = max(0, focusCyclePosition ?? completedFocusCount)
     }
 
     public static var initial: TimerState { TimerState() }
@@ -63,6 +69,7 @@ public struct TimerState: Codable, Sendable, Equatable {
         case remainingSeconds
         case endDate
         case completedFocusCount
+        case focusCyclePosition
     }
 
     public init(from decoder: Decoder) throws {
@@ -76,6 +83,11 @@ public struct TimerState: Codable, Sendable, Equatable {
         remainingSeconds = try container.decodeIfPresent(TimeInterval.self, forKey: .remainingSeconds) ?? defaults.remainingSeconds
         endDate = try container.decodeIfPresent(Date.self, forKey: .endDate)
         completedFocusCount = try container.decodeIfPresent(Int.self, forKey: .completedFocusCount) ?? defaults.completedFocusCount
+        focusCyclePosition = max(
+            0,
+            try container.decodeIfPresent(Int.self, forKey: .focusCyclePosition)
+                ?? completedFocusCount
+        )
     }
 }
 
@@ -87,6 +99,10 @@ public struct TimerEngine {
     public private(set) var state: TimerState
     public private(set) var durations: IntervalDurations
     public var now: @Sendable () -> Date
+
+    /// The fixed end-control handoff. The next interval is shown running
+    /// immediately, but its countdown stays full for this long.
+    public static let endControlHandoffDelay: TimeInterval = 1.0
 
     /// Allows a running interval's end date to sit slightly more than its total
     /// duration in the future. Auto-start break uses this window to hold its
@@ -104,14 +120,14 @@ public struct TimerEngine {
         self.state = Self.sanitized(state, durations: durations)
     }
 
-    /// Updates the lengths used by the next interval. Idle state follows the
-    /// new focus length immediately; a running, paused, or completed interval
-    /// keeps the duration it captured when it started.
+    /// Updates the lengths used by the next interval. An idle Ready interval
+    /// follows its phase's new length immediately; a running, paused, or
+    /// completed interval keeps the duration it captured when it started.
     public mutating func applyDurations(_ durations: IntervalDurations) {
         self.durations = durations
         guard state.runState == .idle else { return }
         state.selectedFocusMinutes = durations.focusMinutes
-        state.totalSeconds = TimeInterval(durations.focusMinutes * 60)
+        state.totalSeconds = TimeInterval(durations.minutes(for: state.phase) * 60)
         state.remainingSeconds = state.totalSeconds
         state.endDate = nil
     }
@@ -125,6 +141,7 @@ public struct TimerEngine {
             state.selectedFocusMinutes = durations.focusMinutes
         }
         state.completedFocusCount = max(0, state.completedFocusCount)
+        state.focusCyclePosition = max(0, state.focusCyclePosition)
 
         switch state.runState {
         case .idle:
@@ -187,7 +204,7 @@ public struct TimerEngine {
     }
 
     public var recommendedBreak: (minutes: Int, phase: Phase) {
-        let isLong = state.completedFocusCount > 0 && state.completedFocusCount % 4 == 0
+        let isLong = state.focusCyclePosition > 0 && state.focusCyclePosition % 4 == 0
         return isLong
             ? (durations.longBreakMinutes, .longBreak)
             : (durations.shortBreakMinutes, .shortBreak)
@@ -229,43 +246,20 @@ public struct TimerEngine {
 
     @discardableResult
     public mutating func startFocus(after delay: TimeInterval = 0) -> Date? {
-        if state.runState == .completed, state.phase == .focus,
-           recommendedBreak.phase == .longBreak {
-            state.completedFocusCount = 0
-        }
-
-        let minutes = durations.focusMinutes
-        state.selectedFocusMinutes = minutes
-        state.phase = .focus
-        state.totalSeconds = TimeInterval(minutes * 60)
-        state.remainingSeconds = state.totalSeconds
-        state.endDate = now().addingTimeInterval(max(0, delay) + state.totalSeconds)
-        state.runState = .running
-        return state.endDate
+        resetFocusCycleIfComplete()
+        return begin(.focus, after: delay)
     }
 
     @discardableResult
     public mutating func startBreak(_ phase: Phase) -> Date? {
         guard state.runState == .idle, phase.isBreak else { return nil }
-        let minutes = durations.minutes(for: phase)
-        state.phase = phase
-        state.totalSeconds = TimeInterval(minutes * 60)
-        state.remainingSeconds = state.totalSeconds
-        state.endDate = now().addingTimeInterval(state.totalSeconds)
-        state.runState = .running
-        return state.endDate
+        return begin(phase)
     }
 
     @discardableResult
     public mutating func startRecommendedBreak(after delay: TimeInterval = 0) -> Date? {
         guard state.runState == .completed, state.phase == .focus else { return nil }
-        let recommendation = recommendedBreak
-        state.phase = recommendation.phase
-        state.totalSeconds = TimeInterval(recommendation.minutes * 60)
-        state.remainingSeconds = state.totalSeconds
-        state.endDate = now().addingTimeInterval(max(0, delay) + state.totalSeconds)
-        state.runState = .running
-        return state.endDate
+        return begin(recommendedBreak.phase, after: delay)
     }
 
     /// Starts the next focus with its end date pushed out by `delay`, used to
@@ -273,9 +267,6 @@ public struct TimerEngine {
     @discardableResult
     public mutating func startAnother(after delay: TimeInterval = 0) -> Date? {
         guard state.runState == .completed else { return nil }
-        if state.phase == .focus, recommendedBreak.phase == .longBreak {
-            state.completedFocusCount = 0
-        }
         return startFocus(after: delay)
     }
 
@@ -301,10 +292,48 @@ public struct TimerEngine {
         return endDate
     }
 
-    /// Ends the current interval early. A focus interval ended this way never
-    /// advances the long-break rhythm.
-    public mutating func endEarly() {
-        toIdle()
+    /// Ends the running interval and advances to the next interval in the
+    /// Pomodoro cycle. An early-ended focus advances the cycle without counting
+    /// as a natural completion. Auto-start controls whether the next interval
+    /// begins running or waits in its Ready state.
+    @discardableResult
+    public mutating func endInterval(
+        autoStart: Bool,
+        handoffDelay: TimeInterval = TimerEngine.endControlHandoffDelay
+    ) -> TimerEndTransition? {
+        guard state.runState == .running else { return nil }
+
+        let endedPhase = state.phase
+        let nextPhase: Phase
+        switch endedPhase {
+        case .focus:
+            state.focusCyclePosition += 1
+            nextPhase = recommendedBreak.phase
+        case .shortBreak, .longBreak:
+            resetFocusCycleIfComplete()
+            nextPhase = .focus
+        }
+
+        let endDate: Date?
+        if autoStart {
+            endDate = begin(nextPhase, after: handoffDelay)
+        } else {
+            makeReady(nextPhase)
+            endDate = nil
+        }
+
+        return TimerEndTransition(
+            endedPhase: endedPhase,
+            nextPhase: nextPhase,
+            runState: state.runState,
+            endDate: endDate
+        )
+    }
+
+    /// Ends the running interval into the next interval's Ready state.
+    @discardableResult
+    public mutating func endEarly() -> TimerEndTransition? {
+        endInterval(autoStart: false)
     }
 
     /// Declines the offered break from the focus-complete state.
@@ -313,18 +342,42 @@ public struct TimerEngine {
             endEarly()
             return
         }
-        if recommendedBreak.phase == .longBreak {
-            state.completedFocusCount = 0
-        }
+        resetFocusCycleIfComplete()
         toIdle()
     }
 
     public mutating func doneForNow() {
-        if state.runState == .completed, state.phase == .focus,
-           recommendedBreak.phase == .longBreak {
-            state.completedFocusCount = 0
-        }
+        resetFocusCycleIfComplete()
         toIdle()
+    }
+
+    private mutating func begin(_ phase: Phase, after delay: TimeInterval = 0) -> Date {
+        let minutes = durations.minutes(for: phase)
+        state.selectedFocusMinutes = durations.focusMinutes
+        state.phase = phase
+        state.totalSeconds = TimeInterval(minutes * 60)
+        state.remainingSeconds = state.totalSeconds
+        let endDate = now().addingTimeInterval(max(0, delay) + state.totalSeconds)
+        state.endDate = endDate
+        state.runState = .running
+        return endDate
+    }
+
+    private mutating func makeReady(_ phase: Phase) {
+        state.selectedFocusMinutes = durations.focusMinutes
+        state.phase = phase
+        state.totalSeconds = TimeInterval(durations.minutes(for: phase) * 60)
+        state.remainingSeconds = state.totalSeconds
+        state.endDate = nil
+        state.runState = .idle
+    }
+
+    private mutating func resetFocusCycleIfComplete() {
+        guard state.focusCyclePosition > 0, state.focusCyclePosition % 4 == 0 else {
+            return
+        }
+        state.completedFocusCount = 0
+        state.focusCyclePosition = 0
     }
 
     private mutating func toIdle() {
@@ -343,7 +396,27 @@ public struct TimerEngine {
         state.remainingSeconds = 0
         if finishedPhase == .focus {
             state.completedFocusCount += 1
+            state.focusCyclePosition += 1
         }
         return .completed(finishedPhase)
+    }
+}
+
+public struct TimerEndTransition: Equatable, Sendable {
+    public let endedPhase: Phase
+    public let nextPhase: Phase
+    public let runState: RunState
+    public let endDate: Date?
+
+    public init(
+        endedPhase: Phase,
+        nextPhase: Phase,
+        runState: RunState,
+        endDate: Date?
+    ) {
+        self.endedPhase = endedPhase
+        self.nextPhase = nextPhase
+        self.runState = runState
+        self.endDate = endDate
     }
 }

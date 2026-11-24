@@ -89,7 +89,7 @@ Rules:
 | --- | --- |
 | App menu and status-item menu | About, Check for Updates, Settings, Quit |
 | Menu-bar item | Compact remaining minutes, tooltip, accessibility label/value |
-| Timer popover | Idle, running, paused, end-confirmation, completion, footer tips |
+| Timer popover | Idle, running, paused, end control, completion, footer tips |
 | Dial | Phase captions, ready/remaining/paused/complete captions, accessibility |
 | Settings | Headings, descriptions, theme and language names, notification status/actions |
 | Update controls | Dot help/accessibility, panel title, statuses, actions, modes |
@@ -403,7 +403,7 @@ while `System Default` is active.
 
 For each language, inspect:
 
-- Idle, running, paused, end-confirmation, focus-complete, and break-complete
+- Idle, running, paused, end control, focus-complete, and break-complete
   popover states.
 - Settings, all theme choices, notification states, and the update panel.
 - App menu titles, status-item menu, tooltip, and compact menu-bar title.

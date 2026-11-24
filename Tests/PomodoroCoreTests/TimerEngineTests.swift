@@ -81,7 +81,7 @@ final class TimerEngineTests: XCTestCase {
         XCTAssertEqual(engine.state.completedFocusCount, 1)
     }
 
-    func testEarlyEndDoesNotAdvanceRhythm() {
+    func testEarlyEndAdvancesCycleWithoutNaturalCompletion() {
         let clock = TestClock()
         var engine = makeEngine(
             clock,
@@ -94,8 +94,10 @@ final class TimerEngineTests: XCTestCase {
 
         XCTAssertEqual(engine.state.runState, .idle)
         XCTAssertEqual(engine.state.completedFocusCount, 0)
+        XCTAssertEqual(engine.state.focusCyclePosition, 1)
         XCTAssertEqual(engine.state.selectedFocusMinutes, 45)
-        XCTAssertEqual(engine.displaySeconds(), 2700)
+        XCTAssertEqual(engine.state.phase, .shortBreak)
+        XCTAssertEqual(engine.displaySeconds(), 300)
     }
 
     func testFourthCompletionOffersLongBreak() {
@@ -395,14 +397,20 @@ final class TimerEngineTests: XCTestCase {
         XCTAssertEqual(engine.displaySeconds(), 3000)
 
         engine.endEarly()
+        XCTAssertEqual(engine.state.phase, .shortBreak)
+        XCTAssertEqual(engine.state.runState, .idle)
+        XCTAssertEqual(engine.state.totalSeconds, 600)
         XCTAssertEqual(engine.state.selectedFocusMinutes, 50)
-        XCTAssertEqual(engine.displaySeconds(), 3000)
+        XCTAssertEqual(engine.displaySeconds(), 600)
 
         let shortEnd = engine.startBreak(.shortBreak)
         XCTAssertEqual(engine.state.totalSeconds, 600)
         XCTAssertEqual(shortEnd, clock.date.addingTimeInterval(600))
 
         engine.endEarly()
+        XCTAssertEqual(engine.state.phase, .focus)
+        XCTAssertEqual(engine.state.runState, .idle)
+        XCTAssertEqual(engine.state.totalSeconds, 3000)
         let longEnd = engine.startBreak(.longBreak)
         XCTAssertEqual(engine.state.totalSeconds, 1200)
         XCTAssertEqual(longEnd, clock.date.addingTimeInterval(1200))
@@ -485,7 +493,10 @@ final class TimerEngineTests: XCTestCase {
         XCTAssertEqual(engine.state.totalSeconds, 1500)
         XCTAssertEqual(engine.remaining(), 1440, accuracy: 0.001)
 
-        engine.endEarly()
+        XCTAssertNil(engine.endInterval(autoStart: false))
+        XCTAssertEqual(engine.state.runState, .paused)
+
+        engine.doneForNow()
         XCTAssertEqual(engine.state.runState, .idle)
         XCTAssertEqual(engine.state.selectedFocusMinutes, 60)
         XCTAssertEqual(engine.state.totalSeconds, 3600)
@@ -547,6 +558,287 @@ final class TimerEngineTests: XCTestCase {
         clock.advance(1)
         XCTAssertEqual(engine.refresh(), .completed(.focus))
     }
+
+    func testEarlyEndedFocusDestinationsFollowFourFocusCycle() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+
+        for position in 1...4 {
+            engine.startFocus()
+            clock.advance(60)
+
+            let transition = engine.endInterval(autoStart: false)
+            let expectedPhase: Phase = position == 4 ? .longBreak : .shortBreak
+
+            XCTAssertEqual(transition?.endedPhase, .focus)
+            XCTAssertEqual(transition?.nextPhase, expectedPhase)
+            XCTAssertEqual(transition?.runState, .idle)
+            XCTAssertNil(transition?.endDate)
+            XCTAssertEqual(engine.state.phase, expectedPhase)
+            XCTAssertEqual(engine.state.runState, .idle)
+            XCTAssertEqual(engine.state.focusCyclePosition, position)
+            XCTAssertEqual(engine.state.completedFocusCount, 0)
+            XCTAssertEqual(engine.state.totalSeconds, TimeInterval(
+                engine.durations.minutes(for: expectedPhase) * 60
+            ))
+        }
+    }
+
+    func testEarlyEndedShortBreakAdvancesToFocusReadyWithoutChangingCycle() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+
+        engine.startFocus()
+        clock.advance(60)
+        _ = engine.endInterval(autoStart: false)
+        engine.startBreak(.shortBreak)
+        clock.advance(30)
+
+        let transition = engine.endInterval(autoStart: false)
+
+        XCTAssertEqual(transition?.endedPhase, .shortBreak)
+        XCTAssertEqual(transition?.nextPhase, .focus)
+        XCTAssertEqual(engine.state.phase, .focus)
+        XCTAssertEqual(engine.state.runState, .idle)
+        XCTAssertEqual(engine.state.focusCyclePosition, 1)
+        XCTAssertEqual(engine.state.completedFocusCount, 0)
+        XCTAssertEqual(engine.state.totalSeconds, 1500)
+        XCTAssertEqual(engine.displaySeconds(), 1500)
+    }
+
+    func testEarlyEndedLongBreakAdvancesToNextFocusAndResetsCompletedCycle() {
+        let clock = TestClock()
+        let state = TimerState(
+            phase: .longBreak,
+            runState: .running,
+            totalSeconds: 900,
+            remainingSeconds: 600,
+            endDate: clock.date.addingTimeInterval(600),
+            completedFocusCount: 4,
+            focusCyclePosition: 4
+        )
+        var engine = makeEngine(clock, state: state)
+
+        let transition = engine.endInterval(autoStart: false)
+
+        XCTAssertEqual(transition?.endedPhase, .longBreak)
+        XCTAssertEqual(transition?.nextPhase, .focus)
+        XCTAssertEqual(engine.state.phase, .focus)
+        XCTAssertEqual(engine.state.runState, .idle)
+        XCTAssertEqual(engine.state.focusCyclePosition, 0)
+        XCTAssertEqual(engine.state.completedFocusCount, 0)
+        XCTAssertEqual(engine.displaySeconds(), 1500)
+    }
+
+    func testEarlyAndNaturalFocusEndsShareOneFourFocusCadence() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+
+        engine.startFocus()
+        clock.advance(60)
+        XCTAssertEqual(engine.endInterval(autoStart: false)?.nextPhase, .shortBreak)
+        engine.startBreak(.shortBreak)
+        clock.advance(300)
+        XCTAssertEqual(engine.refresh(), .completed(.shortBreak))
+        engine.startAnother()
+
+        clock.advance(1500)
+        XCTAssertEqual(engine.refresh(), .completed(.focus))
+        XCTAssertEqual(engine.state.focusCyclePosition, 2)
+        XCTAssertEqual(engine.state.completedFocusCount, 1)
+        XCTAssertEqual(engine.recommendedBreak.phase, .shortBreak)
+        engine.startRecommendedBreak()
+        clock.advance(300)
+        XCTAssertEqual(engine.refresh(), .completed(.shortBreak))
+        engine.startAnother()
+
+        clock.advance(60)
+        XCTAssertEqual(engine.endInterval(autoStart: false)?.nextPhase, .shortBreak)
+        engine.startBreak(.shortBreak)
+        clock.advance(300)
+        XCTAssertEqual(engine.refresh(), .completed(.shortBreak))
+        engine.startAnother()
+
+        clock.advance(1500)
+        XCTAssertEqual(engine.refresh(), .completed(.focus))
+        XCTAssertEqual(engine.state.focusCyclePosition, 4)
+        XCTAssertEqual(engine.state.completedFocusCount, 2)
+        XCTAssertEqual(engine.recommendedBreak.phase, .longBreak)
+
+        engine.startRecommendedBreak()
+        clock.advance(900)
+        XCTAssertEqual(engine.refresh(), .completed(.longBreak))
+        engine.startAnother()
+        XCTAssertEqual(engine.state.phase, .focus)
+        XCTAssertEqual(engine.state.runState, .running)
+        XCTAssertEqual(engine.state.focusCyclePosition, 0)
+        XCTAssertEqual(engine.state.completedFocusCount, 0)
+    }
+
+    func testEndControlAutoStartShowsNextIntervalRunningWithOneSecondHold() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+        engine.startFocus()
+        clock.advance(60)
+
+        let transition = engine.endInterval(autoStart: true)
+
+        XCTAssertEqual(TimerEngine.endControlHandoffDelay, 1.0)
+        XCTAssertEqual(transition?.nextPhase, .shortBreak)
+        XCTAssertEqual(transition?.runState, .running)
+        XCTAssertEqual(transition?.endDate, clock.date.addingTimeInterval(301))
+        XCTAssertEqual(engine.state.phase, .shortBreak)
+        XCTAssertEqual(engine.state.runState, .running)
+        XCTAssertEqual(engine.state.totalSeconds, 300)
+        XCTAssertEqual(engine.remaining(), 300, accuracy: 0.001)
+        XCTAssertEqual(engine.progress(), 0, accuracy: 0.0001)
+
+        clock.advance(0.5)
+        XCTAssertEqual(engine.displaySeconds(), 300)
+        XCTAssertEqual(engine.progress(), 0, accuracy: 0.0001)
+
+        clock.advance(0.5)
+        XCTAssertEqual(engine.remaining(), 300, accuracy: 0.001)
+        XCTAssertEqual(engine.displaySeconds(), 300)
+
+        clock.advance(1)
+        XCTAssertEqual(engine.remaining(), 299, accuracy: 0.001)
+        XCTAssertEqual(engine.displaySeconds(), 299)
+    }
+
+    func testEndControlAutoStartOffShowsFullReadyDurationWithoutCountingDown() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+        engine.startFocus()
+        clock.advance(60)
+
+        let transition = engine.endInterval(autoStart: false)
+
+        XCTAssertEqual(transition?.nextPhase, .shortBreak)
+        XCTAssertEqual(transition?.runState, .idle)
+        XCTAssertNil(transition?.endDate)
+        XCTAssertEqual(engine.state.phase, .shortBreak)
+        XCTAssertEqual(engine.state.runState, .idle)
+        XCTAssertEqual(engine.remaining(), 300, accuracy: 0.001)
+
+        clock.advance(30)
+        XCTAssertEqual(engine.remaining(), 300, accuracy: 0.001)
+        XCTAssertEqual(engine.displaySeconds(), 300)
+
+        let end = engine.startBreak(.shortBreak)
+        XCTAssertEqual(end, clock.date.addingTimeInterval(300))
+        XCTAssertEqual(engine.state.runState, .running)
+        XCTAssertEqual(engine.state.endDate, end)
+    }
+
+    func testAutoStartedLongBreakUsesSameOneSecondHold() {
+        let clock = TestClock()
+        let state = TimerState(
+            phase: .focus,
+            runState: .running,
+            totalSeconds: 1500,
+            remainingSeconds: 1200,
+            endDate: clock.date.addingTimeInterval(1200),
+            focusCyclePosition: 3
+        )
+        var engine = makeEngine(clock, state: state)
+
+        let transition = engine.endInterval(autoStart: true)
+
+        XCTAssertEqual(transition?.nextPhase, .longBreak)
+        XCTAssertEqual(transition?.endDate, clock.date.addingTimeInterval(901))
+        XCTAssertEqual(engine.state.phase, .longBreak)
+        XCTAssertEqual(engine.state.runState, .running)
+        XCTAssertEqual(engine.state.focusCyclePosition, 4)
+        XCTAssertEqual(engine.state.completedFocusCount, 0)
+        XCTAssertEqual(engine.displaySeconds(), 900)
+    }
+
+    func testEndControlAutoStartedFocusHoldsFullCountdownForOneSecond() {
+        let clock = TestClock()
+        let state = TimerState(
+            phase: .shortBreak,
+            runState: .running,
+            totalSeconds: 300,
+            remainingSeconds: 180,
+            endDate: clock.date.addingTimeInterval(180),
+            focusCyclePosition: 2
+        )
+        var engine = makeEngine(clock, state: state)
+
+        let transition = engine.endInterval(autoStart: true)
+
+        XCTAssertEqual(transition?.endedPhase, .shortBreak)
+        XCTAssertEqual(transition?.nextPhase, .focus)
+        XCTAssertEqual(transition?.endDate, clock.date.addingTimeInterval(1501))
+        XCTAssertEqual(engine.state.phase, .focus)
+        XCTAssertEqual(engine.state.runState, .running)
+        XCTAssertEqual(engine.state.focusCyclePosition, 2)
+        XCTAssertEqual(engine.state.completedFocusCount, 0)
+        XCTAssertEqual(engine.state.totalSeconds, 1500)
+        XCTAssertEqual(engine.displaySeconds(), 1500)
+
+        clock.advance(1)
+        XCTAssertEqual(engine.remaining(), 1500, accuracy: 0.001)
+        clock.advance(1)
+        XCTAssertEqual(engine.displaySeconds(), 1499)
+    }
+
+    func testAutoStartedFocusAfterEndingLongBreakResetsCycleAndHolds() {
+        let clock = TestClock()
+        let state = TimerState(
+            phase: .longBreak,
+            runState: .running,
+            totalSeconds: 900,
+            remainingSeconds: 600,
+            endDate: clock.date.addingTimeInterval(600),
+            completedFocusCount: 4,
+            focusCyclePosition: 4
+        )
+        var engine = makeEngine(clock, state: state)
+
+        let transition = engine.endInterval(autoStart: true)
+
+        XCTAssertEqual(transition?.endedPhase, .longBreak)
+        XCTAssertEqual(transition?.nextPhase, .focus)
+        XCTAssertEqual(transition?.endDate, clock.date.addingTimeInterval(1501))
+        XCTAssertEqual(engine.state.phase, .focus)
+        XCTAssertEqual(engine.state.runState, .running)
+        XCTAssertEqual(engine.state.focusCyclePosition, 0)
+        XCTAssertEqual(engine.state.completedFocusCount, 0)
+        XCTAssertEqual(engine.displaySeconds(), 1500)
+    }
+
+    func testEarlyEndCannotCountTwice() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+        engine.startFocus()
+        clock.advance(60)
+
+        XCTAssertEqual(engine.endInterval(autoStart: false)?.nextPhase, .shortBreak)
+        XCTAssertNil(engine.endInterval(autoStart: false))
+        XCTAssertEqual(engine.state.focusCyclePosition, 1)
+        XCTAssertEqual(engine.state.completedFocusCount, 0)
+
+        clock.advance(1500)
+        XCTAssertNil(engine.refresh())
+        XCTAssertEqual(engine.state.focusCyclePosition, 1)
+        XCTAssertEqual(engine.state.completedFocusCount, 0)
+    }
+
+    func testPausedIntervalHasNoEndControlTransition() {
+        let clock = TestClock()
+        var engine = makeEngine(clock)
+        engine.startFocus()
+        clock.advance(60)
+        engine.pause()
+
+        XCTAssertNil(engine.endInterval(autoStart: true))
+        XCTAssertNil(engine.endEarly())
+        XCTAssertEqual(engine.state.runState, .paused)
+        XCTAssertEqual(engine.state.focusCyclePosition, 0)
+        XCTAssertEqual(engine.state.completedFocusCount, 0)
+    }
 }
 
 final class PersistenceTests: XCTestCase {
@@ -571,6 +863,7 @@ final class PersistenceTests: XCTestCase {
         state.timer.totalSeconds = 2700
         state.timer.remainingSeconds = 412
         state.timer.completedFocusCount = 3
+        state.timer.focusCyclePosition = 2
         state.tickEnabled = true
         state.chimeEnabled = false
         state.showMenuBarMinutes = false
@@ -682,6 +975,7 @@ final class PersistenceTests: XCTestCase {
         XCTAssertFalse(result.state.autoStartBreak)
         XCTAssertFalse(result.state.autoStartFocus)
         XCTAssertEqual(result.state.timer.completedFocusCount, 2)
+        XCTAssertEqual(result.state.timer.focusCyclePosition, 2)
         XCTAssertEqual(result.state.durations, .defaults)
     }
 
@@ -749,5 +1043,68 @@ final class PersistenceTests: XCTestCase {
 
         XCTAssertNil(result.recoveryIssue)
         XCTAssertFalse(result.state.autoStartBreak)
+    }
+
+    func testNextPhaseReadyIsPersistedAsFocusReadyWithCyclePosition() throws {
+        let store = StateStore(directory: directory)
+        let readyBreak = TimerState(
+            phase: .shortBreak,
+            runState: .idle,
+            totalSeconds: 300,
+            remainingSeconds: 300,
+            completedFocusCount: 0,
+            focusCyclePosition: 1
+        )
+
+        try store.save(PersistedState(timer: readyBreak))
+        let result = store.load()
+
+        XCTAssertEqual(result.state.timer.phase, .focus)
+        XCTAssertEqual(result.state.timer.runState, .idle)
+        XCTAssertEqual(result.state.timer.totalSeconds, 1500)
+        XCTAssertEqual(result.state.timer.remainingSeconds, 1500)
+        XCTAssertEqual(result.state.timer.focusCyclePosition, 1)
+        XCTAssertEqual(result.state.timer.completedFocusCount, 0)
+
+        let restored = TimerEngine(state: result.state.timer, durations: result.state.durations)
+        XCTAssertEqual(restored.state.phase, .focus)
+        XCTAssertEqual(restored.state.runState, .idle)
+        XCTAssertEqual(restored.state.focusCyclePosition, 1)
+    }
+
+    func testRunningAndPausedRestoreKeepNaturalAndCycleCounts() {
+        let clock = TestClock()
+        let runningState = TimerState(
+            phase: .shortBreak,
+            runState: .running,
+            totalSeconds: 300,
+            remainingSeconds: 240,
+            endDate: clock.date.addingTimeInterval(240),
+            completedFocusCount: 2,
+            focusCyclePosition: 3
+        )
+        var running = TimerEngine(
+            state: runningState,
+            durations: .defaults,
+            now: { clock.date }
+        )
+        XCTAssertNil(running.restore())
+        XCTAssertEqual(running.state.runState, .running)
+        XCTAssertEqual(running.state.completedFocusCount, 2)
+        XCTAssertEqual(running.state.focusCyclePosition, 3)
+
+        var pausedState = runningState
+        pausedState.runState = .paused
+        pausedState.remainingSeconds = 120
+        pausedState.endDate = nil
+        var paused = TimerEngine(
+            state: pausedState,
+            durations: .defaults,
+            now: { clock.date }
+        )
+        XCTAssertNil(paused.restore())
+        XCTAssertEqual(paused.state.runState, .paused)
+        XCTAssertEqual(paused.state.completedFocusCount, 2)
+        XCTAssertEqual(paused.state.focusCyclePosition, 3)
     }
 }

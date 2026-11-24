@@ -7,7 +7,7 @@
 | Status | Implemented and verified in the working tree. Not committed or released. |
 | Date | 2026-11-24 |
 | Design | [`2026-11-24-mode-color-system.md`](2026-11-24-mode-color-system.md) |
-| Scope | Popover presentation only; no timer, persistence, notification, sound, menu-bar or Settings behavior changes. The stop control and `End` confirmation are excluded and scheduled separately. |
+| Scope | Popover presentation only; no timer, persistence, notification, sound, menu-bar or Settings behavior changes. The end control and its direct-end behavior were left to a separate change; see `2026-11-24-pause-end-control-design.md`. |
 | Owner | Product owner |
 
 > This is the change-specific to-do list. It is not a roadmap. The pre-flight
@@ -16,6 +16,12 @@
 >
 > **Follow-up 2026-11-24.** The primary's visible copy is now limited to
 > `Start` and `Pause`; references below to `Resume` record the earlier state.
+>
+> **Follow-up 2026-11-24 (end control).** The running end control is superseded
+> by `2026-11-24-pause-end-control-design.md`: a quiet muted-ink
+> `forward.end.fill` shown only while running, with no resting plate and no
+> tomato or mode fill. Checked items below describe this earlier color change
+> only; the current end action ends immediately without confirmation.
 
 ## 0. Confirmed decisions
 
@@ -110,8 +116,8 @@ The implementation request accepted the recommended values for all four.
       light, with only the 12, 3, 6 and 9 o'clock marks longer and heavier. Do
       not tie ticks to the arc, hide them at 0%, or clip them against the arc.
 - [x] Completion screen uses the offered mode's fill and channel-arc accent.
-- [x] Do not change the stop glyph or the `End` confirmation; the stop control
-      is out of scope and scheduled separately.
+- [x] At the time of this color change, do not change the stop glyph or end
+      confirmation; the stop control was out of scope and scheduled separately.
 - [x] Verify no button uses `palette.leaf` unconditionally after the change.
 
 ## 4. Dial caption and running title
@@ -191,7 +197,8 @@ The implementation request accepted the recommended values for all four.
 - [x] Confirm Pause and the paused Start use the same mode fill as idle Start and do not
       introduce a second button color; the label and pause glyph are
       unambiguous.
-- [x] Confirm the stop control and the `End` confirmation are unchanged.
+- [x] At the time of this color change, the stop control and end confirmation
+      were unchanged; the later end-control change supersedes both.
 - [x] Switch all four languages at runtime; confirm the caption, running
       title and a11y labels update without a relaunch.
 - [x] Confirm the running Short/Long title reads `Short break` / `Long break`;

@@ -64,9 +64,8 @@ final class TimerModel: ObservableObject {
     @Published private(set) var firstRunTipDismissed: Bool
     @Published private(set) var notificationStatus: UNAuthorizationStatus = .notDetermined
     @Published private(set) var isFirstRun: Bool
-    /// Set when a break is ended before its natural completion. The idle
-    /// screen consumes it to keep that break selected instead of jumping to
-    /// Focus; a completed break still uses the normal Focus-ready flow.
+    /// Set when ending an interval leaves the next phase in its Ready state.
+    /// The idle screen consumes it before its own mode selection takes over.
     @Published private(set) var idleReturnPhase: Phase?
 
     @Published private var error: TimerModelError?
@@ -419,15 +418,34 @@ final class TimerModel: ObservableObject {
     }
 
     func endInterval() {
-        let endedPhase = snapshot.phase
-        engine.endEarly()
-        idleReturnPhase = endedPhase.isBreak ? endedPhase : nil
+        guard engine.state.runState == .running else { return }
+        let endedPhase = engine.state.phase
+        let autoStart = endedPhase.isBreak ? autoStartFocus : autoStartBreak
+        guard let transition = engine.endInterval(autoStart: autoStart) else { return }
+
+        idleReturnPhase = transition.runState == .idle ? transition.nextPhase : nil
         snapshot = engine.state
         now = Date()
+        lastTickSecond = nil
+        lastTickDate = nil
         notifications.cancel()
+        if chimeEnabled {
+            sounds.playChime(for: endedPhase)
+        }
         save()
         updateMenuBar(force: true)
-        announce(L10n.string("announcements.interval_ended"))
+        if transition.runState == .running, let endDate = transition.endDate {
+            announce(
+                L10n.string(
+                    transition.nextPhase.isBreak
+                        ? "announcements.break_started"
+                        : "announcements.focus_started"
+                )
+            )
+            scheduleNotification(endDate: endDate, phase: transition.nextPhase)
+        } else {
+            announce(L10n.string("announcements.interval_ended"))
+        }
     }
 
     func clearIdleReturnPhase() {

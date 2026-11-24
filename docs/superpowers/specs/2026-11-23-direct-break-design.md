@@ -35,6 +35,19 @@
 > an interval starts. This supersedes the pointer details in the original
 > direct-break design. See
 > [`2026-11-24-session-dial-design.md`](2026-11-24-session-dial-design.md).
+>
+> **Amended 2026-11-24:** The paused state no longer exposes the end control, so
+> ending a paused break requires resuming it first. This supersedes the
+> "running or paused … end-early" wording in §3; the running-state behavior and
+> the rhythm rules described below are unchanged. See
+> [`2026-11-24-pause-end-control-design.md`](2026-11-24-pause-end-control-design.md).
+>
+> **Amended 2026-11-24 (next-phase end behavior):** Ending any Focus or Break
+> now advances to the next interval instead of returning to an Idle screen.
+> An early-ended Focus counts toward the four-focus long-break rhythm but is
+> not a natural completion. This supersedes the early-end statements in §5.3,
+> §6, §13, and §14, and replaces the old anti-goal that excluded an early-ended
+> Focus from the rhythm. Auto-start uses a one-second full-countdown handoff.
 
 ## Contents
 
@@ -100,10 +113,10 @@ while idle. Mid-interval switching remains excluded.
 - Selecting Long break and pressing Start begins an accurate fifteen-minute
   interval.
 - Manual breaks do not change the completed focus count.
-- The fourth naturally completed focus still recommends a long break.
+- The fourth Focus interval still recommends a long break.
 - The mode selector is available only in idle.
-- A running or paused break supports the existing pause, resume, end-early,
-  notification, sleep/wake, and relaunch behavior.
+- A running break supports the existing pause, resume, end, notification,
+  sleep/wake, and relaunch behavior. Ending it advances to Focus.
 - The idle screen remains usable in all four supported languages.
 - The idle light follows the selected mode dot — 25m upper left, 5m overhead,
   15m upper right — in both themes.
@@ -129,7 +142,6 @@ while idle. Mid-interval switching remains excluded.
 The feature fails if it:
 
 - makes a manual break look like a primary workflow;
-- makes an early-ended focus count toward rhythm;
 - changes the fourth-focus long-break recommendation;
 - allows an accidental destructive phase switch; or
 - makes the idle screen feel like a control panel.
@@ -220,8 +232,9 @@ It does not:
 - Pause freezes the remaining break time and cancels the pending notification.
 - Starting again after a pause creates a new end date and reschedules the
   notification.
-- End early returns to that break's idle screen; it does not jump to Focus or
-  start a focus. The idle selector stays on the break that was ended.
+- End early advances to the next Focus. With Auto-start Focus off it stops on
+  the Focus-ready screen; with Auto-start Focus on it enters the running Focus
+  while holding the countdown at full for one second.
 - Sleep, screen lock, quit, and relaunch use the existing reconciliation path.
 - Completion uses the existing break-complete state.
 - A completed manual break offers **Start another focus** and **Done for now**
@@ -245,8 +258,9 @@ It does not:
 - The operation must reject focus phases and any non-idle run state.
 - It must use the existing short- and long-break durations.
 - It must preserve `completedFocusCount`.
-- Completion, pause, resume, restore, and early-end behavior reuse existing
-  break logic.
+- Completion, pause, resume, and restore reuse existing break logic.
+- Ending a break advances to Focus; ending a Focus advances to the recommended
+  Short or Long Break and counts that Focus toward the four-focus rhythm.
 
 Deterministic tests must use `TestClock`; no wall-clock sleeps.
 
@@ -413,8 +427,9 @@ Black. The repeatable study measurements are in the
 
 ## 13. Edge cases
 
-- A direct break can be started immediately after ending a focus early, because
-  ending early returns the app to idle.
+- Ending a focus early lands on the next break-ready screen, where the existing
+  idle mode selector remains available; a direct break can still be selected
+  before starting that offered break.
 - A manual long break does not reset a partially completed four-focus cadence.
 - A manual break cannot begin while any other interval is active or paused.
 - Closing the popover leaves the break running.
@@ -442,10 +457,11 @@ Black. The repeatable study measurements are in the
 - Settings shows the plain card background without the ambient light.
 - Selecting a break does not change `completedFocusCount` or the long-break
   cadence.
-- The fourth natural focus completion still recommends a long break.
+- The fourth Focus interval in the cycle recommends a long break, whether it
+  completed naturally or was ended early.
 - The mode selector is absent during running, paused, and completed states.
-- A manual break supports pause, resume, end early, notifications, sleep/wake,
-  and relaunch.
+- A manual break supports pause, resume, end, notifications, sleep/wake, and
+  relaunch. Ending it advances to Focus.
 - The menu-bar break icon and minutes are correct.
 - The idle and break screens fit in all four languages.
 - The idle light follows the selected mode: 25m upper left, 5m overhead,
@@ -464,7 +480,8 @@ Black. The repeatable study measurements are in the
   rule; the measured direction gates pass.
 - `swift test` passes.
 - New deterministic `TestClock` tests cover direct break start, pause/resume,
-  completion, early end, restoration, and unchanged focus counting.
+  completion, next-phase early end, restoration, and unchanged direct-break
+  focus counting.
 - `swift scripts/check-localizations.swift .` passes.
 - `./scripts/build-app.sh debug` passes.
 - The built app is inspected in the affected states and appearances.

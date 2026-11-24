@@ -779,10 +779,10 @@
     "timer.action.end_focus_hint" : {
       "comment" : "Accessibility hint for the focus end button. Native review pending.",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Asks for confirmation before ending focus" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结束专注前会先确认" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束專注前會先確認" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を終了する前に確認します" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ends the focus interval now" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "立即结束专注" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "立即結束專注" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中をすぐに終了します" } }
       }
     },
     "timer.action.next_mode" : {

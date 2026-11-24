@@ -2,6 +2,16 @@ import AppKit
 import PomodoroCore
 import SwiftUI
 
+/// Fixed control-row geometry. The primary keeps one width in every state so
+/// showing or hiding the trailing end control never reflows it.
+private enum ControlMetrics {
+    static let rowHeight: CGFloat = 49
+    static let primaryWidth: CGFloat = 190
+    static let endHitWidth: CGFloat = 48
+    static let endIconSize: CGFloat = 20
+    static let hoverDiscSize: CGFloat = 36
+}
+
 struct PopoverRootView: View {
     @ObservedObject var model: TimerModel
     @ObservedObject var updates: UpdateController
@@ -42,12 +52,31 @@ struct PopoverRootView: View {
     /// follows the next interval offered by the completion screen.
     private var activeMode: IdleMode {
         if model.isIdle {
-            return idleMode
+            return displayedIdleMode
         }
         if model.isCompleted {
             return IdleMode(phase: model.completionOffer.phase)
         }
         return IdleMode(phase: model.phase)
+    }
+
+    /// An end-control transition can land directly on a Ready screen. Use its
+    /// next phase for the first render, before `onChange` updates the selector.
+    private var displayedIdleMode: IdleMode {
+        if model.isIdle, let phase = model.idleReturnPhase {
+            return IdleMode(phase: phase)
+        }
+        return idleMode
+    }
+
+    private var displayedIdleModeBinding: Binding<IdleMode> {
+        Binding(
+            get: { displayedIdleMode },
+            set: { mode in
+                model.clearIdleReturnPhase()
+                idleMode = mode
+            }
+        )
     }
 
     private var ambient: AmbientPose {
@@ -130,7 +159,11 @@ struct PopoverRootView: View {
         if model.isCompleted {
             CompletionPopoverView(model: model, ambient: ambient)
         } else {
-            TimerPopoverView(model: model, ambient: ambient, idleMode: $idleMode)
+            TimerPopoverView(
+                model: model,
+                ambient: ambient,
+                idleMode: displayedIdleModeBinding
+            )
         }
     }
 }
@@ -141,7 +174,7 @@ struct TimerPopoverView: View {
     @Binding var idleMode: IdleMode
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var confirmingEnd = false
+    @FocusState private var isEndControlFocused: Bool
     @State private var readoutFlow = 0.0
 
     private var palette: Palette { Palette.forScheme(scheme) }
@@ -208,7 +241,11 @@ struct TimerPopoverView: View {
             .padding(.top, 8)
 
             controls
-            .padding(.top, 20)
+                .padding(.top, 20)
+                .onChange(of: model.runState) { _, runState in
+                    guard runState != .running else { return }
+                    isEndControlFocused = false
+                }
 
             if let error = model.errorMessage {
                 ErrorNote(message: error, onDismiss: model.dismissError)
@@ -348,19 +385,18 @@ struct TimerPopoverView: View {
         .animation(reduceMotion ? nil : .easeOut(duration: 0.22), value: idleMode)
     }
 
-    @ViewBuilder
     private var controls: some View {
-        if confirmingEnd && !model.isBreak {
-            endConfirmation
-        } else {
-            HStack(spacing: 9) {
-                primaryButton
+        ZStack {
+            primaryButton
+                .frame(width: ControlMetrics.primaryWidth, height: ControlMetrics.rowHeight)
 
-                if !model.isIdle {
-                    endButton
-                }
+            if model.isRunning {
+                endButton
+                    .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
+        .frame(maxWidth: .infinity)
+        .frame(height: ControlMetrics.rowHeight)
     }
 
     private var primaryButton: some View {
@@ -380,53 +416,47 @@ struct TimerPopoverView: View {
                 icon: primaryButtonIcon
             )
         }
-        .buttonStyle(PrimaryCTAButtonStyle(colors: modeColors, height: 49))
+        .buttonStyle(PrimaryCTAButtonStyle(colors: modeColors, height: ControlMetrics.rowHeight))
+        .frame(width: ControlMetrics.primaryWidth, height: ControlMetrics.rowHeight)
         .accessibilityHint(primaryButtonHint)
     }
 
     private var endButton: some View {
         Button {
-            if model.isBreak {
-                model.endInterval()
-            } else {
-                confirmingEnd = true
-            }
+            endFromControl()
         } label: {
-            Image(systemName: "stop.fill")
-                .font(.system(size: 13, weight: .semibold))
+            Image(systemName: "forward.end.fill")
         }
-        .buttonStyle(SquareButtonStyle(size: 44, foreground: palette.tomato))
-        .accessibilityLabel(
-            model.isBreak
-                ? L10n.string("timer.action.end_break")
-                : L10n.string("timer.action.end_focus")
+        .focused($isEndControlFocused)
+        .buttonStyle(
+            EndControlButtonStyle(
+                palette: palette,
+                isFocused: isEndControlFocused
+            )
         )
-        .accessibilityHint(
-            model.isBreak
-                ? L10n.string("timer.action.end_break_hint")
-                : L10n.string("timer.action.end_focus_hint")
-        )
+        .focusEffectDisabled()
+        .help(endControlLabel)
+        .accessibilityLabel(endControlLabel)
+        .accessibilityHint(endControlHint)
+        .onKeyPress(.return) {
+            guard model.isRunning else { return .ignored }
+            endFromControl()
+            return .handled
+        }
     }
 
-    private var endConfirmation: some View {
-        HStack(spacing: 8) {
-            Spacer(minLength: 4)
-            Text(L10n.string("timer.end.confirm"))
-                .font(Typo.sans(11))
-                .foregroundStyle(palette.ink.opacity(0.82))
-                .padding(.trailing, 10)
-            Button(L10n.string("timer.end.keep_going")) {
-                confirmingEnd = false
-            }
-            .buttonStyle(QuietTextButtonStyle())
+    private var endControlLabel: String {
+        L10n.string(model.isBreak ? "timer.action.end_break" : "timer.action.end_focus")
+    }
 
-            Button(L10n.string("timer.end.end")) {
-                confirmingEnd = false
-                model.endInterval()
-            }
-            .buttonStyle(DestructiveTextButtonStyle(color: palette.deepTomato))
-        }
-        .frame(height: 49)
+    private var endControlHint: String {
+        L10n.string(model.isBreak ? "timer.action.end_break_hint" : "timer.action.end_focus_hint")
+    }
+
+    private func endFromControl() {
+        guard model.isRunning else { return }
+        isEndControlFocused = false
+        model.endInterval()
     }
 
     private var primaryButtonTitle: String {
@@ -569,18 +599,45 @@ private struct PrimaryButtonLabel: View {
     }
 }
 
-private struct DestructiveTextButtonStyle: ButtonStyle {
-    let color: Color
+/// Quiet trailing end control. It has no resting plate, so the running row
+/// reads as one primary action plus a muted glyph; hover or keyboard focus
+/// reveals a plaque disc behind the glyph without changing the hit area.
+private struct EndControlButtonStyle: ButtonStyle {
+    let palette: Palette
+    var isFocused: Bool
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @State private var isHovering = false
 
     func makeBody(configuration: Configuration) -> some View {
+        let highlighted = isHovering || isFocused
         configuration.label
-            .font(Typo.sans(11.5, weight: "DemiBold"))
-            .foregroundStyle(.white)
-            .padding(.horizontal, 15)
-            .frame(height: 30)
+            .font(.system(size: ControlMetrics.endIconSize, weight: .medium))
+            .foregroundStyle(highlighted ? palette.ink : palette.mutedInk)
+            .frame(width: ControlMetrics.endHitWidth, height: ControlMetrics.rowHeight)
             .background {
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                    .fill(color.opacity(configuration.isPressed ? 0.78 : 1))
+                if highlighted {
+                    Circle()
+                        .fill(
+                            reduceTransparency
+                                ? palette.plaque
+                                : palette.plaque.opacity(0.72)
+                        )
+                        .overlay {
+                            Circle()
+                                .strokeBorder(palette.brass.opacity(0.34), lineWidth: 1)
+                        }
+                        .frame(
+                            width: ControlMetrics.hoverDiscSize,
+                            height: ControlMetrics.hoverDiscSize
+                        )
+                }
             }
+            .contentShape(Rectangle())
+            .onHover { isHovering = $0 }
+            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.94 : 1)
+            .animation(reduceMotion ? nil : .easeOut(duration: 0.12), value: highlighted)
+            .animation(reduceMotion ? nil : .easeOut(duration: 0.1), value: configuration.isPressed)
     }
 }

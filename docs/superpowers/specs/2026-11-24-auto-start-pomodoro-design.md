@@ -20,12 +20,19 @@
 > `settings.focus.auto_pomodoro.*` and the persisted field `autoStartFocus`
 > keep their historical names.
 
+> **Amended 2026-11-24:** The setting also controls the next Focus after a
+> Break ended with the end control. That transition uses a fixed one-second
+> full-countdown handoff rather than the chime duration. See
+> [`2026-11-24-pause-end-control-design.md`](2026-11-24-pause-end-control-design.md).
+
 ## 1. Summary
 
 Auto-start focus is an off-by-default setting that starts the next focus
-when a break reaches zero. It mirrors Auto-start break: the focus begins in the
-running state immediately, but its end date is pushed out by the break
-completion chime, so the countdown stays at `25:00` until the chime finishes.
+when a break reaches zero or is ended with the end control. For natural
+completion, the focus begins in the running state immediately, but its end date
+is pushed out by the break completion chime, so the countdown stays at `25:00`
+until the chime finishes. An early-ended break uses a fixed one-second
+full-countdown handoff.
 
 When the setting is off, the existing focus-ready screen waits for Start. The
 two automatic settings are independent; enabling both creates a full
@@ -57,8 +64,8 @@ focus-to-break-to-focus cycle.
    audio-output margin, so the displayed countdown stays at `25:00` while the
    chime plays and begins moving when the chime ends. The wait is fixed, not a
    setting.
-4. The focus uses the stored focus duration and leaves the completed-focus
-   count and long-break cadence unchanged.
+4. The focus uses the stored focus duration and leaves the Focus-cycle position
+   and long-break cadence unchanged.
 5. The focus-end notification is scheduled for the delayed end date; pause,
    resume, end early, sleep/wake, and restoration use the existing focus paths.
 6. The menu bar shows the running focus treatment and remaining minutes
@@ -68,6 +75,19 @@ focus-to-break-to-focus cycle.
 8. If the chime is off, the delay is zero and the countdown starts immediately.
 9. Pause and End remain normal focus controls during the hold. Disabling the
    setting during the hold does not stop the already-started focus.
+
+### 2.4 Break ended with the end control
+
+1. The break completion chime plays when enabled. The break does not change the
+   four-focus rhythm.
+2. The interface moves directly to the next Focus; no Completion page appears.
+3. With Auto-start focus on, the running focus screen appears immediately and
+   its countdown stays full for one second before starting. This one-second
+   handoff applies even when the completion chime is off.
+4. With Auto-start focus off, the Focus waits on its ready screen.
+5. The original break notification is cancelled. No extra foreground
+   notification is emitted; an auto-started focus schedules its own end
+   notification.
 
 ### 2.3 Break completion with the setting off
 
@@ -124,7 +144,6 @@ allowed or denied.
 - Starting the recommended break automatically after focus; that is Auto-start
   break.
 - Starting a focus retroactively when an expired break is restored at launch.
-- Auto-starting a focus after an early-ended break.
 - Making the chime wait configurable or changing the chime length.
 - Notification action buttons that start a focus.
 - New timer-state fields, a new run state, or a full automatic cycle without the
@@ -143,11 +162,15 @@ allowed or denied.
 - The focus's end date includes the break chime delay, and the countdown stays
   at the full focus duration until the chime finishes.
 - With the setting on and the chime off, the countdown starts immediately.
+- With the setting on, a Break ended with the end control goes directly to the
+  running Focus; its full countdown begins after one second, even with the
+  chime off.
 - Pause and End work normally during the chime hold; disabling the setting
   during the hold does not stop the already-started focus.
 - The completed-focus count and long-break cadence are unchanged.
 - With the setting off, the focus-ready screen remains unchanged.
-- An early-ended break does not start a focus.
+- With the setting off, a Break ended with the end control stops on the
+  focus-ready screen.
 - An expired break restored at launch shows the focus-ready screen instead of
   starting a focus retroactively.
 - The focus completion still follows Auto-start break independently.

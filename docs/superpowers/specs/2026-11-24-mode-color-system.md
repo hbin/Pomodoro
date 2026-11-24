@@ -9,7 +9,7 @@
 | Platform | macOS 15+ |
 | Decision owner | Product owner |
 | Amends | `2026-11-21-pomodoro-product-design.md` §9.2 and §9.4 |
-| Related | `docs/design/ambient-motion.md`, `2026-11-24-session-dial-design.md` |
+| Related | `docs/design/ambient-motion.md`, `2026-11-24-session-dial-design.md`, `2026-11-24-pause-end-control-design.md` |
 | Execution | [`2026-11-24-mode-color-system-todo.md`](2026-11-24-mode-color-system-todo.md) |
 
 > **Implementation status.** This direction is implemented in the working
@@ -41,6 +41,14 @@
 > the 12, 3, 6 and 9 o'clock marks are larger. They do not vanish with the arc:
 > at 0% the channel is empty, but the tick ring and the instrument frame remain.
 > The flush-face/vanishing-tick variant is kept as a study, not chosen.
+>
+> **Revision 2026-11-24 (end control).** The running end control is a quiet
+> `forward.end.fill` glyph shown only while the interval runs. It uses
+> `Palette.mutedInk` with a hover/focus plaque disc, and takes no tomato or mode
+> fill in any state. The end action is immediate for Focus and Break, with no
+> confirmation step. Earlier statements in this spec that call the stop control
+> out of scope, unchanged, or scheduled separately are historical; see
+> `2026-11-24-pause-end-control-design.md` for the current design.
 
 ## 1. Decision summary
 
@@ -91,11 +99,14 @@ The popover currently has two accent families and one constant action color.
 | Mode dots and label | Deep tomato | Deep sage | **Deep sage** |
 | Ambient light | Upper left, tomato | Overhead, sage | Upper right, brass |
 | Primary button | Leaf | Leaf | Leaf |
-| Stop glyph | Tomato | Tomato | Tomato |
+| End control glyph | Muted ink | Muted ink | Muted ink |
 | Dial caption while running | `REMAINING` | `REMAINING` | `REMAINING` |
 
-The stop control is listed for completeness only; it is out of scope for this
-change and is scheduled separately.
+The end control row records the current muted-ink treatment: a quiet
+`forward.end.fill` shown only while running, with no plate at rest and no tomato
+or mode fill. Its geometry and styling are specified in
+`2026-11-24-pause-end-control-design.md`; the earlier red stop square is no
+longer the design.
 
 Short and long breaks differ mainly by duration, the ambient-light position
 and a faint brass warmth. While running, the title is the same `Step away`,
@@ -194,9 +205,12 @@ third hue); both are weaker than the light/deep hierarchy.
   and the completion action all use the same fill for their mode; only the
   label and glyph change. Height 49, corner radius 12, existing shadow and
   press behavior. No ink key, no rail, no second button color.
-- **Stop control:** out of scope for this change. Keep the existing stop glyph
-  and the destructive `End` confirmation as they are; the stop treatment is
-  scheduled separately. This color change does not depend on it.
+- **End control:** a quiet `forward.end.fill` glyph shown only while the
+  interval runs, in `Palette.mutedInk` with no resting plate and no tomato or
+  mode fill. Clicking it ends Focus or Break immediately, without confirmation,
+  and advances to the next interval. See
+  `2026-11-24-pause-end-control-design.md`; this color change does not depend on
+  it.
 - **Dial caption while running or paused:** the mode name instead of
   `REMAINING` / `PAUSED`: `FOCUS`, `SHORT BREAK`, `LONG BREAK`. It reuses the
   existing `timer.mode.*` strings; apply uppercase presentation in `DialView`.
@@ -268,10 +282,11 @@ and the pause glyph carry the action. The right column is the earlier ink-key
 proposal; it is kept only to document the trade-off and is not used.
 
 A red Focus Pause is the main risk. It is mitigated by the explicit `Pause`
-label and the pause glyph. The stop control is unchanged in this change and is
-handled separately; if the red Pause/stop pairing proves confusing in review,
-that belongs to the stop-control task. The captures still show `REMAINING`;
-the implementation uses the mode name. No second button color is introduced.
+label and the pause glyph. The running end control is a quiet muted-ink
+`forward.end.fill` with no tomato or mode fill, so it does not compete with the
+Pause fill; see `2026-11-24-pause-end-control-design.md`. The captures still
+show `REMAINING`; the implementation uses the mode name. No second button color
+is introduced.
 
 ### 4.6 Motion
 
@@ -289,8 +304,9 @@ the implementation uses the mode name. No second button color is introduced.
 The top row is the chosen A rule. The bottom row is the earlier ink-key
 proposal: it changed the fill at Start, so it would have needed a 200–250 ms
 crossfade. Decision A removes that transition item; there is no Start-to-active
-fill animation to tune. The stop control in the image is unchanged and outside
-this change.
+fill animation to tune. The end control visible in the image is the earlier
+red stop square; the current control is the muted-ink `forward.end.fill`
+described in `2026-11-24-pause-end-control-design.md`.
 
 ### 4.7 Dial bezel
 
@@ -395,8 +411,9 @@ Every primary — Start, Pause and completion — takes the mode fill.
   signal; no second button style or rail token.
 - **Weaknesses:** a red Focus Pause reads closer to stop/record than a neutral
   key. The explicit `Pause` label and the pause glyph carry the action. The
-  stop control is out of scope and unchanged; its treatment is scheduled
-  separately.
+  end control that sits beside it is the quiet muted-ink `forward.end.fill`
+  described in `2026-11-24-pause-end-control-design.md`, not the earlier red
+  stop square.
 - **Verdict:** chosen. The left column of the active comparison shows it.
 
 ### B. Filled Start, ink key while active — earlier proposal
@@ -530,8 +547,10 @@ No timer, persistence, notification, sound or update behavior changes.
      green variant.
    - Every primary state (idle, completion, running, paused) uses the
      selected/offered/current mode fill.
-   - Do not change the stop glyph or the `End` confirmation; the stop control
-     is out of scope for this change.
+   - This change left the end behavior alone. The current end control is the
+     quiet muted-ink `forward.end.fill` with no resting plate; it ends Focus or
+     Break immediately without confirmation, as specified in
+     `2026-11-24-pause-end-control-design.md`.
    - Running/paused `dialCaption`: `IdleMode(phase:).selectorLabel`; idle and
      completion keep `READY`.
    - Long-break dial accessibility label uses the new keys.
@@ -579,8 +598,10 @@ No timer, persistence, notification, sound or update behavior changes.
 - The Black Short leaf button does not read as disabled; its ink label and play
   glyph are legible in the resting, pressed, and increased-contrast states.
 - Pause and the paused Start keep the same mode fill as idle Start and do not introduce a
-  second button color; the label and pause glyph are legible. The stop control
-  and the End confirmation are unchanged.
+  second button color; the label and pause glyph are legible. That change left
+  the end behavior alone; the current end control is the muted-ink
+  `forward.end.fill` in `2026-11-24-pause-end-control-design.md`, and it ends
+  immediately without confirmation.
 - The running/paused dial caption names the mode in all four languages.
 - The channel arc drains counterclockwise; idle and completion leave it empty;
   pausing freezes it; no second progress ring remains.
@@ -627,8 +648,12 @@ if a different depth or treatment is preferred later.
 
 ## 11. Out of scope
 
-- The stop control: glyph color, placement, and the `End` confirmation. It is
-  separately scheduled and is not part of this change.
+- The end control: its glyph, placement, and end behavior were left to a
+  separate change. That change is now specified in
+  `2026-11-24-pause-end-control-design.md`: a quiet muted-ink
+  `forward.end.fill` shown only while running, with no resting plate, no tomato
+  or mode fill, immediate ending without confirmation, and advancement to the
+  next interval.
 - Menu-bar icon color or a third menu-bar glyph.
 - A Dock icon, normal window or notification redesign.
 - New tasks, notes, history, analytics or session context.

@@ -145,7 +145,7 @@ public struct StateStore {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         encoder.dateEncodingStrategy = .iso8601
-        let data = try encoder.encode(state)
+        let data = try encoder.encode(state.readyStateNormalizedForPersistence())
         try data.write(to: stateURL, options: [.atomic])
     }
 
@@ -161,5 +161,22 @@ public struct StateStore {
             counter += 1
         }
         return candidate
+    }
+}
+
+private extension PersistedState {
+    /// A next-interval Ready screen is session presentation, not restorable
+    /// timer state. Persist idle as Focus Ready while retaining the focus-cycle
+    /// position used to choose the following short or long break.
+    func readyStateNormalizedForPersistence() -> PersistedState {
+        guard timer.runState == .idle else { return self }
+
+        var normalized = self
+        normalized.timer.phase = .focus
+        normalized.timer.selectedFocusMinutes = durations.focusMinutes
+        normalized.timer.totalSeconds = TimeInterval(durations.focusMinutes * 60)
+        normalized.timer.remainingSeconds = normalized.timer.totalSeconds
+        normalized.timer.endDate = nil
+        return normalized
     }
 }

@@ -90,31 +90,6 @@ struct InkButtonStyle: ButtonStyle {
     }
 }
 
-struct SquareButtonStyle: ButtonStyle {
-    @Environment(\.colorScheme) private var scheme
-    var size: CGFloat = 50
-    var foreground: Color?
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    func makeBody(configuration: Configuration) -> some View {
-        let palette = Palette.forScheme(scheme)
-        configuration.label
-            .font(.system(size: 14, weight: .medium))
-            .foregroundStyle((foreground ?? palette.ink.opacity(0.74)).opacity(configuration.isPressed ? 0.55 : 1))
-            .frame(width: size, height: size)
-            .background {
-                RoundedRectangle(cornerRadius: 13, style: .continuous)
-                    .fill(palette.plaque.opacity(configuration.isPressed ? 0.9 : 0.46))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 13, style: .continuous)
-                            .strokeBorder(palette.brass.opacity(0.45), lineWidth: 1)
-                    }
-            }
-            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.97 : 1)
-            .animation(reduceMotion ? nil : .easeOut(duration: 0.1), value: configuration.isPressed)
-    }
-}
-
 struct QuietTextButtonStyle: ButtonStyle {
     @Environment(\.colorScheme) private var scheme
     var color: Color?

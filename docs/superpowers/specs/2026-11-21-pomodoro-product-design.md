@@ -15,8 +15,9 @@ Later changes amend this spec: see
 `2026-11-24-guided-next-step-design.md`,
 `2026-11-24-auto-start-break-design.md`,
 `2026-11-24-auto-start-pomodoro-design.md`,
-`2026-11-24-configurable-durations-design.md`, and
-`2026-11-24-session-dial-design.md`. Statements below about local-only
+`2026-11-24-configurable-durations-design.md`,
+`2026-11-24-session-dial-design.md`, and
+`2026-11-24-pause-end-control-design.md`. Statements below about local-only
 delivery and no network requests describe the original v1 scope. Statements
 that fix the focus, short-break, or long-break length at 25, 5, or 15 minutes
 are superseded by configurable interval durations. §9.4, §9.5, and the Builder
@@ -233,7 +234,10 @@ It contains:
 
 - The analog dial with a precise central digital readout.
 - The same primary button position, switched to `Pause`.
-- A quiet end-interval action with an inline confirmation.
+- A quiet end-interval action, shown only while the interval is running, that
+  ends focus or break immediately without confirmation, then advances to the
+  next interval in the Pomodoro cycle. Its fixed geometry and styling are
+  specified in the pause/end control design.
 - A quiet `Ends at…` line based on the current expected finish time.
 
 The primary has exactly two visible labels across Focus, Short break, Long
@@ -269,9 +273,13 @@ Behavior:
 - Scheduling the tick must not drift the timer or double-play after wake.
 - Sleeping or locking the Mac does not corrupt elapsed time.
 - On wake or relaunch, the app reconciles stored state with the current time.
-- Ending early requires one confirmation because it discards the current
-  interval.
-- Ending early does not count toward the long-break rhythm.
+- Ending early happens immediately without confirmation and advances to the
+  next interval in the Pomodoro cycle.
+- An early-ended focus counts toward the four-focus long-break rhythm but is
+  not a natural completion; an early-ended break does not change that rhythm.
+- If the next interval's Auto-start setting is on, its running screen appears
+  immediately while the countdown holds at full for one second; otherwise the
+  next interval waits on its ready screen.
 
 ### 7.6 Natural completion
 
@@ -292,7 +300,7 @@ The focus-completion ready screen contains:
 - `Focus complete. Ready for a break?`.
 - A primary `Start` action that begins the offered break:
   - the 5-minute break normally;
-  - the 15-minute break after every fourth completed focus interval.
+  - the 15-minute break after the fourth focus interval in a cycle.
 - A quiet `Done for now` action that returns to the idle state.
 
 The break is part of the rhythm, so the completion state does not offer a
@@ -313,9 +321,10 @@ No task completion is recorded or requested.
 
 - Short break: 5 minutes.
 - Long break: 15 minutes.
-- A long break is offered after every four naturally completed focus
-  intervals.
-- Ending a focus interval early does not advance the rhythm.
+- A long break follows every fourth focus interval in the cycle, whether the
+  focus interval completed naturally or was ended early.
+- Ending a focus interval early advances the rhythm without counting as a
+  natural completion.
 - Skipping an offered long break resets the rhythm for the next group of four.
 - The break state uses the same popover with a calmer sage/brass
   treatment.
@@ -448,7 +457,7 @@ parts that reduce clarity.
 - Switching the interface language changes copy only. Icons, buttons, the dial,
   dots, toggles, pickers, separators and other non-text elements keep their
   frames, positions, sizes and alignment.
-- On the timer, the title slot, dial row, mode/status row, primary/stop
+- On the timer, the title slot, dial row, mode/status row, primary/end
   controls and footer keep fixed geometry. The title slot reserves its full
   line height so a translated or scaled title cannot move the dial. Prefer
   shorter Japanese copy over shrinking the type.
@@ -620,7 +629,8 @@ The app stores only what the timer needs:
 - Current phase: focus, short break, or long break.
 - Absolute end timestamp while running.
 - Remaining duration while paused.
-- Completed-focus count for the long-break rhythm.
+- Focus-cycle position for the long-break rhythm, including early-ended Focus
+  intervals; natural completion remains a separate state.
 - Completion chime, tick sound, auto-start break, auto-start focus, and
   menu-bar display preferences.
 - First-run tip state.
@@ -702,8 +712,9 @@ No task, project, note, or session-history data is stored.
 - When enabled, tick sound plays once per second during active focus, stops on
   pause or end, and does not play during breaks.
 - The tick-sound preference persists across launches.
-- Ending early requires one confirmation and does not advance the long-break
-  rhythm.
+- Ending early is immediate and advances to the next interval. An early-ended
+  focus counts toward the four-focus long-break rhythm but is not a natural
+  completion; an early-ended break does not change that rhythm.
 
 ### Completion and breaks
 
@@ -727,12 +738,17 @@ No task, project, note, or session-history data is stored.
   holds at full until the chime finishes. With the chime off, it starts
   immediately.
 - Auto-start focus does not start a break.
-- An early-ended focus does not start a break, and an expired focus restored at
-  launch shows the break-ready screen instead of starting retroactively.
-- An early-ended break does not start a focus and returns to that break's
-  ready screen; an expired break restored at launch shows the focus-ready
-  screen instead of starting retroactively.
-- A long break is offered after every fourth completed focus interval.
+- Ending focus early moves to the recommended break ready to start when
+  Auto-start break is off, or to the running break when it is on. The
+  auto-started break holds its countdown at full for one second first.
+- Ending a break early moves to the next focus ready to start when Auto-start
+  focus is off, or to the running focus when it is on. The auto-started focus
+  holds its countdown at full for one second first.
+- An expired focus restored at launch shows the break-ready screen instead of
+  starting retroactively; an expired break restored at launch shows the
+  focus-ready screen.
+- The long-break recommendation follows every fourth focus interval in the
+  cycle, including one ended early.
 - No countdown starts automatically unless the corresponding Auto-start setting
   is enabled.
 - While Auto-start focus is off, break completion shows the next focus ready
@@ -760,7 +776,7 @@ No task, project, note, or session-history data is stored.
 - Menu-bar presence only; the popover is the single timer surface.
 - Standalone timer with no tasks, projects, or history.
 - Classic 25/5 rhythm with 15/25/45 focus choices.
-- Long break after every four completed focus intervals.
+- Long break after every four Focus intervals, including one ended early.
 - Guided transitions that present the next interval without starting it,
   except the Auto-start break and Auto-start focus settings.
 - Auto-start break off by default; it starts only the recommended break after
