@@ -175,7 +175,12 @@ struct SettingsView: View {
                             isExpanded: showsUpdatePanel,
                             language: model.activeLanguage
                         ) {
-                            showsUpdatePanel.toggle()
+                            if showsUpdatePanel {
+                                showsUpdatePanel = false
+                            } else {
+                                editingDuration = nil
+                                showsUpdatePanel = true
+                            }
                         }
                     }
                     Spacer()
@@ -193,6 +198,15 @@ struct SettingsView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 
             if showsUpdatePanel {
+                Color.clear
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        showsUpdatePanel = false
+                    }
+                    .accessibilityHidden(true)
+                    .zIndex(1)
+
                 UpdatePanel(
                     updates: updates,
                     language: model.activeLanguage,
@@ -210,7 +224,7 @@ struct SettingsView: View {
                 )
                 .frame(maxWidth: 304)
                 .padding(.bottom, 42)
-                .zIndex(1)
+                .zIndex(2)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

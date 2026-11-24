@@ -334,6 +334,16 @@ automated tests.
 - [ ] Notify, Download, and Never modes behave as documented.
 - [ ] Check Now and Check for Updates work and report availability correctly.
 - [ ] The update-available dot only appears in the documented states.
+- [ ] With the update panel open, clicking anywhere in the Settings content
+      area outside the panel dismisses only the panel; that click does not
+      activate the control underneath, and a second click works normally.
+- [ ] Opening the update panel while a duration is being edited ends that
+      edit, and dismissing the panel leaves no Settings field receiving later
+      keystrokes.
+- [ ] The dot and Later close the panel, Check Now and Install run their
+      existing actions, blank space inside the panel keeps it open, and the
+      update-mode and Beta controls change only their own state without
+      dismissing the panel.
 - [ ] Update UI is readable in all supported languages and both themes.
 - [ ] The Beta updates switch is hidden in debug builds and present in release
       builds.

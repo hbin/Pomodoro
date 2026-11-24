@@ -14,8 +14,10 @@ footer.
 
 The dot opens a compact panel above the footer. The panel contains update
 status, an install or check action, and the automatic-update preference. The
-panel is dismissed by clicking the dot again, choosing **Later**, or closing
-Settings.
+panel is dismissed by clicking the dot again, choosing **Later**, clicking
+anywhere else in the Settings content area, or closing Settings. Clicking
+outside the panel only dismisses it and does not activate the Settings control
+underneath; a second click is required.
 
 Settings collapses from its timer height to a compact **520-point** height so
 the removed update section does not leave an empty block above the footer. The
@@ -100,6 +102,8 @@ segmented control.
   segmented control.
 - The version footer shows `vX.Y.Z` followed by the neutral or tomato dot.
 - Clicking the dot opens the compact panel; clicking it again closes it.
+- Clicking the Settings content area outside the open panel dismisses only the
+  panel without activating the control underneath.
 - A found update is visible as a tomato dot without enlarging the footer.
 - **Install Update** starts the Sparkle update flow and **Later** preserves the
   dot state.
