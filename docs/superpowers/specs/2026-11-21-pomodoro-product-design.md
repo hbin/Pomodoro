@@ -877,6 +877,43 @@ Possible increments:
 2. Lightweight project list with tasks assigned to projects.
 3. Optional review of completed tasks and recent intervals.
 
+### Global start/pause hotkey
+
+**Status:** Future consideration; not implemented and not scheduled for a release.
+
+**Intent:** Let a person start or pause the current interval from anywhere without
+opening the popover or moving the pointer to the menu bar.
+
+Agreed direction:
+
+- The hotkey performs the same state-dependent action as the primary button:
+  start when idle, pause while running, resume while paused, and start the
+  offered interval on the completion screen. The idle-mode choice and its
+  wording are settled in the feature's own specification.
+- It does not open the popover. The menu bar's dial, minutes, and accessibility
+  announcements remain the feedback surface; no HUD, notification, or new
+  window is added.
+- It is opt-in and configurable. A registration conflict must be visible in
+  Settings rather than silently disabling the shortcut.
+- Use a system-wide hotkey that does not require Accessibility or Input
+  Monitoring permission, and do not add a dependency for it.
+- A menu item's key equivalent is app-local and must not be presented as the
+  global shortcut. Show the real shortcut in Settings; the status menu may
+  carry an action item as a secondary discovery path.
+- The hotkey action must respect the current context: do not bypass a
+  confirmation layer or act behind Settings.
+- Adding the Settings row grows the card; recheck the measured height in all
+  four languages and at the shortest supported screen size.
+
+Guardrails if this work is promoted:
+
+- Clicking the status item remains the primary entry and keeps the existing
+  icon-anchored popover position.
+- The hotkey must never move or resize an open popover.
+- If a later hotkey opens the popover, its non-spatial position is a separate
+  decision; it must not change the click-anchored behavior.
+- The feature stays local: no accounts, network access, or telemetry.
+
 ## 17. Open item
 
 The final product name is still provisional. `Pomodoro` is the working name for
