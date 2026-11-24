@@ -29,6 +29,12 @@
 > durations” non-goal below describe the original direct-break release; the
 > mode-selector and direct-break behavior are unchanged. See
 > [`2026-11-24-configurable-durations-design.md`](2026-11-24-configurable-durations-design.md).
+>
+> **Amended 2026-11-24:** The popover dial is now a session gauge without a
+> hand; idle durations are shown by the readout and the ring stays empty until
+> an interval starts. This supersedes the pointer details in the original
+> direct-break design. See
+> [`2026-11-24-session-dial-design.md`](2026-11-24-session-dial-design.md).
 
 ## Contents
 
@@ -133,9 +139,8 @@ The feature fails if it:
 The idle surface follows the approved design study. From top to bottom it shows:
 
 - the title: `Ready to focus`, `Take a short break`, or `Take a long break`;
-- the dial at `25:00`, `05:00`, or `15:00`; the pointer sits at that duration's
-  minute position on the 60-minute dial (25 at five o'clock, 5 at one o'clock,
-  15 at three o'clock);
+- the dial at `25:00`, `05:00`, or `15:00`; the readout shows that duration
+  with `READY`. The dial has no hand, and its session ring is empty while idle;
 - the three mode dots with previous and next arrows; the current mode label
   below the dots. The arrows do not wrap: Focus has no previous arrow and Long
   break has no next arrow, so the end of the range is the end of the control;
@@ -146,16 +151,16 @@ The three dots are the mode selector, ordered Focus (25), Short break (5),
 Long break (15). The current mode name is shown below the dots in the mode
 accent; the active dot is wider, and the arrows step through the three modes
 without wrapping. The ambient light follows the selected mode: left, overhead,
-right. The idle pointer keeps the tomato color while the selector changes; only
-the running phase accent changes the pointer.
+right. The idle dial stays unaccented while the selector changes; only the
+running interval's ring uses the phase accent.
 
 Selecting a mode updates the title, dial duration, accent, primary copy, and
 ambient light. The readout slides instead of rolling, following the order the
 modes sit in rather than the arrow: Focus is left of Short break and Short
 break is left of Long break, so going to a later mode slides the strip left and
 the new duration arrives from the right. The outgoing value is cut off at the
-edge of the plaque and the two never share it; the hand sweeps to the new
-position while they trade places. Pressing Start starts the selected mode:
+edge of the plaque and the two never share it. Pressing Start starts the
+selected mode:
 
 - Focus starts a 25-minute focus.
 - Short break starts the existing five-minute direct break.
@@ -164,9 +169,10 @@ position while they trade places. Pressing Start starts the selected mode:
 The primary action remains the only filled action; the dots, mode label, and
 arrows are secondary. The primary Start uses a leaf-green fill with a centered
 label and a trailing play glyph; light uses ink text and dark uses white. The
-mode accent stays in the dial, pointer, dots, mode label, and ambient light. The
-former 15/25/45 focus-length chips and the pair of separate break buttons are
-removed. The dots, arrows, and primary are the direct-break entry point.
+mode accent stays in the dial's running ring, dots, mode label, and ambient
+light. The former 15/25/45 focus-length chips and the pair of separate break
+buttons are removed. The dots, arrows, and primary are the direct-break entry
+point.
 
 ### 5.1 Visibility
 
@@ -419,12 +425,12 @@ Black. The repeatable study measurements are in the
 - The primary starts the selected mode: 25:00 focus, 5:00 short break, or
   15:00 long break.
 - The title, dial duration, accent, and primary copy match the selected mode.
-- The idle pointer points at the selected duration: 25 minutes at five
-  o'clock, 5 minutes at one o'clock, 15 minutes at three o'clock.
+- The idle dial readout shows the selected duration; the session ring is empty.
+- Starting a focus or break sweeps the ring from empty to full and drains it;
+  there is no 60-minute hand or clamp.
 - Starting a focus or break keeps the dial and primary in their idle vertical
   positions; the status line appears in the mode row below the dial.
-- Switching idle modes does not recolor the pointer; the idle pointer stays
-  tomato.
+- Switching idle modes leaves the ring empty and does not introduce a pointer.
 - Settings shows the plain card background without the ambient light.
 - Selecting a break does not change `completedFocusCount` or the long-break
   cadence.

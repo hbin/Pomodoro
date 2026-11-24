@@ -9,6 +9,10 @@
 | Platform | macOS 15+ |
 | Parent design | `2026-11-21-pomodoro-product-design.md` |
 
+> **Amended 2026-11-24:** The popover dial is now a session gauge without a
+> hand; the former 60-minute clamp is removed. See
+> [`2026-11-24-session-dial-design.md`](2026-11-24-session-dial-design.md).
+
 ## 1. Summary
 
 The three intervals were fixed at 25, 5, and 15 minutes. They are now three
@@ -170,18 +174,20 @@ public struct IntervalDurations: Codable, Sendable, Equatable {
 ### 5.1 Idle modes
 
 - Focus, Short break, and Long break read their lengths from the preference.
-- The idle title, dial readout, hand position, primary label, accessibility
-  value, and mode-dot label use the configured value.
+- The idle title, dial readout, empty session ring, primary label,
+  accessibility value, and mode-dot label use the configured value.
 - The three mode dots remain ordered Focus → Short break → Long break. The
   arrows and labels do not change; only the durations update.
 - The primary action starts the selected mode with the configured length.
 
 ### 5.2 Dial and long durations
 
-The popover dial remains a 60-minute clock. The hand and arc clamp at the
-full-hour position for a selected length above 60 minutes; the central readout
-continues to show the true `MM:SS` value. The Start label and accessibility
-copy always use the full configured length.
+The popover dial is a session gauge rather than a 60-minute clock. The ring
+starts full and drains counterclockwise over the configured interval; the
+central readout shows the true `MM:SS` value. There is no clamp at 60 minutes:
+a 5-minute, 90-minute, or 180-minute interval each uses the full circle at its
+own scale. The Start label and accessibility copy always use the full
+configured length.
 
 ## 6. Completion and auto-start
 
@@ -270,8 +276,8 @@ Traditional Chinese, and Japanese.
 - [x] Editing a duration while an interval runs or is paused leaves the active
       interval untouched; the next interval uses the new value.
 - [x] A restored active or paused interval keeps its stored duration.
-- [x] Durations above 60 minutes show their true readout; the 60-minute hand
-      stays at the full-hour position.
+- [x] Durations above 60 minutes show their true readout; the session ring
+      starts full and drains at the configured length without clamping.
 - [x] `swift test` passes.
 - [x] `./scripts/build-app.sh debug` passes.
 - [x] The built app is inspected in the affected states.

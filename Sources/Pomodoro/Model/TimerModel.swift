@@ -278,10 +278,6 @@ final class TimerModel: ObservableObject {
         engine.progress(at: now)
     }
 
-    var dialHandProgress: Double {
-        engine.minuteDialProgress(at: now)
-    }
-
     var endsAtText: String? {
         guard let endDate = snapshot.endDate else { return nil }
         return endDate.formatted(date: .omitted, time: .shortened)

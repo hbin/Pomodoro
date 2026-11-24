@@ -158,8 +158,7 @@ automated tests.
       in, not the arrow's: the previous arrow moves everything right, so the
       earlier duration arrives from the left, and the next arrow mirrors it. The
       outgoing value is cut off at the plaque edge rather than floating over its
-      face, and the hand sweeps to the new position at the same time. Reduce
-      Motion swaps it without motion.
+      face. Reduce Motion swaps it without motion.
 - [ ] Rapid mode changes leave no stuck or duplicated readout: each swap
       replaces the previous one, and the duration always settles centered.
 - [ ] All three mode dots use the mode accent at full opacity; only the active
@@ -170,14 +169,23 @@ automated tests.
       colored glow.
 - [ ] The idle ambient light follows the selected mode dot: Focus upper left,
       Short break overhead, Long break upper right.
-- [ ] The idle pointer points at the selected duration on the 60-minute dial;
-      durations above 60 minutes clamp the hand at the full-hour position while
-      the readout shows the true value.
-- [ ] Switching idle modes does not recolor the pointer.
+- [ ] The idle dial has no hand; its session ring is empty and the readout
+      shows the selected configured duration.
+- [ ] Starting a focus or break sweeps the ring from empty to full clockwise
+      over 0.3s, then drains it counterclockwise; no value clamps at 60
+      minutes, so 5-, 90-, and 180-minute intervals each use the full circle.
+- [ ] Switching idle modes leaves the ring empty and moves only the readout,
+      mode accents, and ambient light.
 - [ ] Starting a focus or break keeps the dial and primary in place; the status
       line appears in the mode row below the dial.
-- [ ] The dial's progress arc sits in the chapter ring outside the minute
-      ticks, a square-ended hairline against the brass rim with no glow.
+- [ ] The session ring sits in the chapter ring outside the decorative chapter
+      marks, a square-ended hairline against the brass rim with no glow; it is
+      full at the start and empty at completion.
+- [ ] Pausing freezes the ring at the remaining fraction; resuming drains it
+      from the same point.
+- [ ] The completion screen has no hand and an empty ring; its readout shows
+      the offered duration.
+- [ ] The menu-bar icon keeps its hand, cup, pause glyph, and remaining-time arc.
 - [ ] A paused interval shows the paused status line and the paused footer tip.
 - [ ] Idle mode labels and footer tips reach 4.5:1 against the popover in both
       themes; light mode uses the deeper mode accents.

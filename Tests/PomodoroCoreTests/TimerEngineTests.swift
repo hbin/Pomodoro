@@ -35,27 +35,6 @@ final class TimerEngineTests: XCTestCase {
         XCTAssertEqual(engine.progress(), 0, accuracy: 0.0001)
     }
 
-    func testMinuteDialTracksRemainingTime() {
-        let clock = TestClock()
-        var idleEngine = makeEngine(clock)
-        idleEngine.applyDurations(IntervalDurations(focusMinutes: 15))
-        XCTAssertEqual(idleEngine.minuteDialProgress(), 0.25, accuracy: 0.0001)
-
-        var engine = makeEngine(
-            clock,
-            durations: IntervalDurations(focusMinutes: 45)
-        )
-        engine.startFocus()
-        XCTAssertEqual(engine.minuteDialProgress(), 0.75, accuracy: 0.0001)
-
-        clock.advance(6)
-        XCTAssertEqual(engine.minuteDialProgress(), 2694.0 / 3600.0, accuracy: 0.0001)
-
-        engine.pause()
-        clock.advance(60)
-        XCTAssertEqual(engine.minuteDialProgress(), 2694.0 / 3600.0, accuracy: 0.0001)
-    }
-
     func testNaturalCompletionAdvancesRhythm() {
         let clock = TestClock()
         var engine = makeEngine(clock)

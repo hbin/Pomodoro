@@ -3,18 +3,20 @@ import SwiftUI
 struct DialView: View {
     let timeText: String
     let caption: String
+    /// Elapsed fraction of the active interval. The ring shows its complement
+    /// while `showsCountdown` is true.
     let progress: Double
     let accent: Color
     let size: CGFloat
+    /// Whether an interval is active. The ring is empty otherwise; the readout
+    /// uses the countdown transition only while true.
     var showsCountdown = false
-    var handProgress = 0.0
     /// Which way the readout travels when the value changes: `-1` to the left,
     /// `1` to the right, `0` for no horizontal motion.
     var readoutFlow = 0.0
     let accessibilityLabel: String
     let accessibilityValue: String
     let ambient: AmbientPose
-    let handColor: Color
 
     @Environment(\.colorScheme) private var scheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -36,8 +38,7 @@ struct DialView: View {
         let tickRadius = size / 2 - faceInset - 9
         let plaqueDiameter = size * (size < 210 ? 0.55 : 0.51)
         let elapsedProgress = min(max(progress, 0), 1)
-        let clampedHandProgress = min(max(handProgress, 0), 1)
-        let arcProgress = showsCountdown ? clampedHandProgress : elapsedProgress
+        let remainingProgress = showsCountdown ? 1 - elapsedProgress : 0
 
         ZStack {
             Circle()
@@ -109,62 +110,28 @@ struct DialView: View {
             .frame(width: size, height: size)
             .accessibilityHidden(true)
 
-            // The arc is a chapter ring: outside the minute ticks, inside the
-            // brass rim, square-ended, and flat rather than glowing.
+            // The session ring is an inlay in the chapter ring: outside the
+            // decorative marks, inside the brass rim, square-ended, and flat.
+            // It is empty at idle, sweeps to full at the start, then drains
+            // counterclockwise.
             Circle()
-                .trim(from: 0, to: arcProgress)
+                .trim(from: 0, to: remainingProgress)
                 .stroke(
                     accent,
                     style: StrokeStyle(lineWidth: max(2.0, size * 0.0112), lineCap: .butt)
                 )
                 .rotationEffect(.degrees(-90))
                 .padding(size / 2 - (tickRadius + 6.5))
-                .animation(reduceMotion ? nil : .linear(duration: 0.22), value: arcProgress)
+                .animation(reduceMotion ? nil : .linear(duration: 0.3), value: remainingProgress)
                 .animation(reduceMotion ? nil : AmbientMotion.curve, value: accent)
                 .accessibilityHidden(true)
 
-            handView(
-                tickRadius: tickRadius,
-                plaqueDiameter: plaqueDiameter,
-                handProgress: clampedHandProgress
-            )
-
             plaque(diameter: plaqueDiameter)
-
         }
         .frame(width: size, height: size)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(accessibilityLabel))
         .accessibilityValue(Text(accessibilityValue))
-    }
-
-    private func handView(
-        tickRadius: CGFloat,
-        plaqueDiameter: CGFloat,
-        handProgress: Double
-    ) -> some View {
-        Canvas { context, canvasSize in
-            let center = CGPoint(x: canvasSize.width / 2, y: canvasSize.height / 2)
-            let degrees = handProgress * 360 - 90
-            let angle = Angle.degrees(degrees)
-            let startRadius = plaqueDiameter / 2 + size * 0.025
-            let endRadius = tickRadius - size * 0.012
-            var path = Path()
-            path.move(to: point(center: center, radius: startRadius, angle: angle))
-            path.addLine(to: point(center: center, radius: endRadius, angle: angle))
-            context.addFilter(.shadow(color: .black.opacity(0.16), radius: 1.5, x: 0.5, y: 1))
-            context.stroke(
-                path,
-                with: .color(handColor),
-                style: StrokeStyle(lineWidth: max(2.6, size * 0.014), lineCap: .round)
-            )
-        }
-        .frame(width: size, height: size)
-        .animation(
-            reduceMotion ? nil : (showsCountdown ? .linear(duration: 0.22) : .easeInOut(duration: 0.7)),
-            value: handProgress
-        )
-        .accessibilityHidden(true)
     }
 
     private func plaque(diameter: CGFloat) -> some View {

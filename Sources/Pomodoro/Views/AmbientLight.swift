@@ -32,13 +32,6 @@ enum IdleMode: Int, CaseIterable, Identifiable {
         }
     }
 
-    /// The hand points at the selected duration on the 60-minute dial. Lengths
-    /// beyond 60 minutes sit at the full-hour mark; the central readout still
-    /// shows the true duration.
-    func handProgress(in durations: IntervalDurations) -> Double {
-        min(Double(minutes(in: durations)) / 60.0, 1)
-    }
-
     var title: String {
         switch self {
         case .focus: L10n.string("timer.title.idle")

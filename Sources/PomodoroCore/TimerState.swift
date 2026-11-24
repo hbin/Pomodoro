@@ -186,10 +186,6 @@ public struct TimerEngine {
         return min(max(0, fraction), 1)
     }
 
-    public func minuteDialProgress(at date: Date? = nil) -> Double {
-        min(max(remaining(at: date) / 3600, 0), 1)
-    }
-
     public var recommendedBreak: (minutes: Int, phase: Phase) {
         let isLong = state.completedFocusCount > 0 && state.completedFocusCount % 4 == 0
         return isLong

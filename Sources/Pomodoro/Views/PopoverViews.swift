@@ -224,9 +224,6 @@ struct TimerPopoverView: View {
                 accent: accent,
                 size: 215,
                 showsCountdown: !model.isIdle,
-                handProgress: model.isIdle
-                    ? idleMode.handProgress(in: model.durations)
-                    : model.dialHandProgress,
                 readoutFlow: model.isIdle ? readoutFlow : 0,
                 accessibilityLabel: (model.isIdle ? idleMode.isBreak : model.isBreak)
                     ? L10n.string("timer.a11y.break_dial")
@@ -239,8 +236,7 @@ struct TimerPopoverView: View {
                     : model.isPaused
                         ? L10n.format("timer.a11y.paused_value", model.timeText)
                         : L10n.format("timer.a11y.running_value", model.timeText),
-                ambient: ambient,
-                handColor: model.isIdle ? palette.tomato : accent
+                ambient: ambient
             )
             .id(model.phase)
             Spacer(minLength: 0)
@@ -488,13 +484,11 @@ struct CompletionPopoverView: View {
                 progress: 0,
                 accent: accent,
                 size: 215,
-                handProgress: min(Double(offer.minutes) / 60.0, 1),
                 accessibilityLabel: offer.phase.isBreak
                     ? L10n.string("timer.a11y.break_dial")
                     : L10n.string("timer.a11y.focus_dial"),
                 accessibilityValue: L10n.format("timer.a11y.ready_value", offer.minutes),
-                ambient: ambient,
-                handColor: accent
+                ambient: ambient
             )
             .padding(.top, 20)
 

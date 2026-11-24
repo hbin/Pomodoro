@@ -14,11 +14,13 @@ Later changes amend this spec: see
 `2026-11-23-in-app-language-picker.md`,
 `2026-11-24-guided-next-step-design.md`,
 `2026-11-24-auto-start-break-design.md`,
-`2026-11-24-auto-start-pomodoro-design.md`, and
-`2026-11-24-configurable-durations-design.md`. Statements below about local-only
+`2026-11-24-auto-start-pomodoro-design.md`,
+`2026-11-24-configurable-durations-design.md`, and
+`2026-11-24-session-dial-design.md`. Statements below about local-only
 delivery and no network requests describe the original v1 scope. Statements
 that fix the focus, short-break, or long-break length at 25, 5, or 15 minutes
-are superseded by configurable interval durations.
+are superseded by configurable interval durations. §9.4, §9.5, and the Builder
+calls are updated to the session dial described in the session-dial design.
 
 ## 1. Summary
 
@@ -414,8 +416,8 @@ The popover should feel like a small, well-made desk instrument:
 - Warm bone or cream face.
 - Thin brass outer rim.
 - Slightly inset paper surface with restrained texture.
-- Muted tomato-red hand and live-interval controls, with a leaf-green action
-  that starts an interval.
+- Muted tomato-red and sage dial accents and live-interval controls, with a
+  leaf-green action that starts an interval.
 - Dark warm ink for typography and controls.
 - Rounded rectangular body rather than a literal tomato or mascot.
 
@@ -445,9 +447,9 @@ Dark mode:
 - Contrast is maintained without turning the popover into a glowing object.
 
 The primary action keeps one fill in every mode, including breaks, pause, and
-resume. Mode is carried by the dial, the pointer, the mode dots, and the mode
-label, so the button stays a constant target while the face changes. Sage and
-tomato are too low-contrast to fill a button with legible text.
+resume. Mode is carried by the dial accent, the mode dots, and the mode label,
+so the button stays a constant target while the face changes. Sage and tomato
+are too low-contrast to fill a button with legible text.
 
 ### 9.3 Typography
 
@@ -461,42 +463,43 @@ No task-title typography is required.
 
 ### 9.4 Dial
 
-The dial is a 60-minute clock:
+The dial is a session gauge on a clock-like face:
 
-- The hand marks the remaining minutes on a 60-minute face. One full
-  revolution is an hour, not the selected interval.
-- The hand stands at the selected duration while idle and counts back
-  toward 12 o'clock as the interval runs. Starting an interval therefore
-  leaves the hand where it was.
-- A thin arc in the chapter ring, between the minute ticks and the brass
-  rim, shows the same value as the hand. It starts at 12 o'clock and ends
-  at the hand's angle, so the two always agree without touching.
-- The arc has square ends and no glow; it reads as an inlay in the bezel
+- There is no hand or visible pivot. One full revolution is the selected
+  interval, not an hour.
+- A thin ring in the chapter ring, between the decorative marks and the brass
+  rim, shows the remaining fraction of the interval. It is empty at idle;
+  starting an interval sweeps it clockwise to full in 0.3 seconds, then it
+  drains counterclockwise to empty.
+- The ring has square ends and no glow; it reads as an inlay in the bezel
   rather than a drawn highlight.
-- Tick marks are decorative and unlabelled; the central readout is
-  authoritative.
+- At idle the plaque shows the selected duration with `READY`.
+- While paused the ring freezes at the current fraction. At completion it is
+  empty; the completion screen shows the offered duration in the readout.
+- The 60 chapter marks are decorative divisions, not minutes. The central
+  readout is authoritative.
 - The central plaque shows `MM:SS` and `REMAINING`.
-- The plaque is a raised disc with a hairline brass edge, so the hand reads as
-  mounted on it rather than floating on the face.
-- The hand and arc use the tomato accent.
-- The plaque covers the dial center, so this dial has no visible pivot; the
-  brass pivot appears only in the app and menu-bar icons.
+- The plaque is a raised disc with a hairline brass edge.
+- The ring uses the phase accent: tomato for focus, sage for breaks.
+- The brass pivot appears only in the app and menu-bar icons.
 - The dial remains legible at the popover's supported size.
 
 Break intervals use the same geometry with the sage accent.
 
 The menu-bar icon is a session gauge rather than a clock: its arc starts full
 and empties counterclockwise as the interval runs, with the hand riding the
-emptying edge. Both surfaces reach zero when the interval ends; they differ
-only in how full they are at the start.
+emptying edge. The popover ring uses the same session fraction without a hand;
+both surfaces are full at the start and empty at the end.
 
 ### 9.5 Motion
 
-- The hand advances smoothly enough to feel mechanical without continuous
+- The ring drains smoothly enough to feel mechanical without continuous
   high-frame-rate rendering.
+- Starting an interval sweeps the ring from empty to full clockwise over 0.3
+  seconds, then it begins draining counterclockwise.
 - State changes use a short settle rather than a bounce.
 - Changing the idle duration slides the readout toward the side the incoming
-  mode sits on, clipped by the plaque, while the hand sweeps with it.
+  mode sits on, clipped by the plaque; the empty ring does not move.
 - Completion uses one calm transition of the face and readout.
 - No looping pulses, confetti, shaking, or attention-seeking effects.
 - Reduce Motion replaces interpolation and transitions with direct state
@@ -718,8 +721,8 @@ No task, project, note, or session-history data is stored.
 ### Builder calls
 
 - Versioned JSON state rather than a database.
-- 60-minute clock dial in the popover, with the menu-bar icon as the session
-  gauge, rather than one shared full-circle session dial.
+- A full-circle session gauge in both surfaces: the popover uses the ring and
+  digital readout, and the menu-bar icon keeps its compact hand.
 - Notification suppressed in the foreground because the popover is already
   visible.
 - Completion chime and tick sound are separate preferences.
