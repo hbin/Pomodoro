@@ -126,22 +126,21 @@ struct TimerPopoverView: View {
     @State private var readoutFlow = 0.0
 
     private var palette: Palette { Palette.forScheme(scheme) }
-    private var accent: Color {
-        if model.isIdle {
-            return idleMode.isBreak ? palette.modeBreak : palette.modeFocus
-        }
-        return palette.accent(for: model.phase)
+    private var modeColors: ModeColors {
+        palette.modeColors(for: model.isIdle ? idleMode.phase : model.phase)
     }
+    private var accent: Color { modeColors.accent }
 
     private var title: String {
         if model.isIdle { return idleMode.title }
         if model.isPaused { return L10n.string("timer.title.paused") }
-        if model.isBreak { return L10n.string("timer.title.break") }
+        if model.isBreak { return IdleMode(phase: model.phase).selectorLabel }
         return L10n.string("timer.title.running")
     }
 
     private var dialCaption: String {
-        model.isIdle ? L10n.string("timer.caption.ready") : model.readoutCaption
+        if model.isIdle { return L10n.string("timer.caption.ready") }
+        return IdleMode(phase: model.phase).selectorLabel
     }
 
     private var idleTime: String {
@@ -360,7 +359,7 @@ struct TimerPopoverView: View {
                 icon: primaryButtonIcon
             )
         }
-        .buttonStyle(PrimaryCTAButtonStyle(height: 49))
+        .buttonStyle(PrimaryCTAButtonStyle(colors: modeColors, height: 49))
         .accessibilityHint(primaryButtonHint)
     }
 
@@ -447,7 +446,8 @@ struct CompletionPopoverView: View {
     private var palette: Palette { Palette.forScheme(scheme) }
     private var offer: CompletionOffer { model.completionOffer }
     private var offerMode: IdleMode { IdleMode(phase: offer.phase) }
-    private var accent: Color { palette.accent(for: offer.phase) }
+    private var modeColors: ModeColors { palette.modeColors(for: offer.phase) }
+    private var accent: Color { modeColors.accent }
 
     private var bodyText: String {
         model.phase.isBreak
@@ -510,7 +510,7 @@ struct CompletionPopoverView: View {
             } label: {
                 PrimaryButtonLabel(title: actionTitle, icon: "play.fill")
             }
-            .buttonStyle(PrimaryCTAButtonStyle(height: 49))
+            .buttonStyle(PrimaryCTAButtonStyle(colors: modeColors, height: 49))
             .accessibilityHint(actionHint)
             .padding(.top, 20)
 
@@ -525,6 +525,17 @@ struct CompletionPopoverView: View {
                     .padding(.top, 5)
             }
         }
+    }
+}
+
+private func dialAccessibilityLabel(for mode: IdleMode) -> String {
+    switch mode {
+    case .focus:
+        L10n.string("timer.a11y.focus_dial")
+    case .shortBreak:
+        L10n.string("timer.a11y.short_break_dial")
+    case .longBreak:
+        L10n.string("timer.a11y.long_break_dial")
     }
 }
 

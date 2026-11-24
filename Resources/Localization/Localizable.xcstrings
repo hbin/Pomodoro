@@ -848,6 +848,24 @@
         "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩タイマー" } }
       }
     },
+    "timer.a11y.long_break_dial" : {
+      "comment" : "Accessibility label for the long-break dial. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Long break timer" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "长休息计时器" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "長休息計時器" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩タイマー" } }
+      }
+    },
+    "timer.a11y.short_break_dial" : {
+      "comment" : "Accessibility label for the short-break dial. Native review pending.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Short break timer" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "短休息计时器" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "短休息計時器" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩タイマー" } }
+      }
+    },
     "timer.a11y.focus_chip" : {
       "comment" : "Accessibility label for the idle Focus mode; %lld is the configured focus length in minutes. Native review pending.",
       "localizations" : {

@@ -37,21 +37,20 @@ struct AppIconMark: View {
 }
 
 struct PrimaryCTAButtonStyle: ButtonStyle {
-    @Environment(\.colorScheme) private var scheme
+    let colors: ModeColors
     var height: CGFloat = 48
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     func makeBody(configuration: Configuration) -> some View {
-        let palette = Palette.forScheme(scheme)
-        return configuration.label
+        configuration.label
             .font(Typo.sans(13.5, weight: "DemiBold"))
-            .foregroundStyle(palette.onLeaf)
+            .foregroundStyle(colors.onButton)
             .frame(maxWidth: .infinity, minHeight: height)
             .background {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(
                         LinearGradient(
-                            colors: [palette.leaf.opacity(0.97), palette.leaf],
+                            colors: [colors.buttonTop, colors.buttonBottom],
                             startPoint: .top,
                             endPoint: .bottom
                         )
@@ -65,6 +64,7 @@ struct PrimaryCTAButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed && !reduceMotion ? 0.986 : 1)
             .brightness(configuration.isPressed ? 0.04 : 0)
             .animation(reduceMotion ? nil : .easeOut(duration: 0.12), value: configuration.isPressed)
+            .animation(reduceMotion ? nil : .easeInOut(duration: 0.22), value: colors)
     }
 }
 

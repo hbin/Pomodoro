@@ -19,8 +19,8 @@ struct DialView: View {
     let ambient: AmbientPose
 
     @Environment(\.colorScheme) private var scheme
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// The duration that is leaving, drawn beside the incoming one until it
     /// has cleared the plaque.
@@ -33,12 +33,20 @@ struct DialView: View {
     private var travelScale: CGFloat { scheme == .dark ? 1.3 : 1.0 }
 
     var body: some View {
-        let rimWidth: CGFloat = max(6, size * 0.031)
-        let faceInset: CGFloat = rimWidth + 4
-        let tickRadius = size / 2 - faceInset - 9
-        let plaqueDiameter = size * (size < 210 ? 0.55 : 0.51)
+        let channelWidth = max(8, size * 0.044)
+        let channelOuter = size / 2 - 1
+        let channelInner = channelOuter - channelWidth
+        let channelCenter = channelOuter - channelWidth / 2
+        let channelPadding = size / 2 - channelCenter
+        let faceInset = size / 2 - channelInner
+        let tickOuter = channelInner - 1.4
+        let majorTick = max(4.2, size * 0.041)
+        let minorTick = max(2.2, size * 0.022)
+        let plaqueDiameter = size * (size < 200 ? 0.55 : 0.51)
         let elapsedProgress = min(max(progress, 0), 1)
         let remainingProgress = showsCountdown ? 1 - elapsedProgress : 0
+        let isIncreasedContrast = contrast == .increased
+        let channelFill = scheme == .dark ? palette.bone : palette.paper
 
         ZStack {
             Circle()
@@ -62,69 +70,83 @@ struct DialView: View {
                 endRadius: size * 0.62
             )
                 .padding(faceInset)
-                .overlay {
-                    Circle()
-                        .strokeBorder(palette.ink.opacity(contrast == .increased ? 0.14 : 0.07), lineWidth: 0.8)
-                        .padding(faceInset)
-                }
                 .animation(reduceMotion ? nil : AmbientMotion.curve, value: ambient)
+
+            // The brass fill track is gone: the rim is a recessed cream channel
+            // between two thin brass edges. The panel sits in that channel; the
+            // empty channel is the idle and completed state.
+            Circle()
+                .stroke(channelFill, style: StrokeStyle(lineWidth: channelWidth))
+                .padding(channelPadding)
 
             Circle()
                 .strokeBorder(
-                    LinearGradient(
-                        colors: [
-                            palette.lightBrass,
-                            palette.brass,
-                            palette.brass.opacity(0.72),
-                            palette.lightBrass
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
+                    .black.opacity(
+                        scheme == .dark
+                            ? (isIncreasedContrast ? 0.34 : 0.24)
+                            : (isIncreasedContrast ? 0.14 : 0.08)
                     ),
-                    lineWidth: rimWidth
+                    lineWidth: isIncreasedContrast ? 1.6 : 1.2
                 )
-                .padding(rimWidth / 2 + 1)
-
-            Circle()
-                .strokeBorder(palette.lightBrass.opacity(0.28), lineWidth: 0.8)
-                .padding(faceInset - 1.2)
+                .padding(size / 2 - channelOuter + 0.6)
 
             Canvas { context, canvasSize in
                 let center = CGPoint(x: canvasSize.width / 2, y: canvasSize.height / 2)
                 for index in 0..<60 {
-                    let isMajor = index % 5 == 0
+                    let isMajor = index % 15 == 0
                     let angle = Angle.degrees(Double(index) * 6 - 90)
-                    let inner = tickRadius - (isMajor ? size * 0.041 : size * 0.022)
-                    let outer = tickRadius
+                    let inner = tickOuter - (isMajor ? majorTick : minorTick)
                     var path = Path()
                     path.move(to: point(center: center, radius: inner, angle: angle))
-                    path.addLine(to: point(center: center, radius: outer, angle: angle))
-                    let color = palette.ink.opacity(isMajor ? 0.62 : 0.30)
+                    path.addLine(to: point(center: center, radius: tickOuter, angle: angle))
+                    let color = palette.ink.opacity(
+                        isMajor
+                            ? (isIncreasedContrast ? 0.78 : 0.62)
+                            : (isIncreasedContrast ? 0.46 : 0.30)
+                    )
                     context.stroke(
                         path,
                         with: .color(color),
-                        style: StrokeStyle(lineWidth: isMajor ? 1.25 : 0.75, lineCap: .round)
+                        style: StrokeStyle(
+                            lineWidth: isMajor
+                                ? (isIncreasedContrast ? 1.45 : 1.25)
+                                : (isIncreasedContrast ? 0.95 : 0.75),
+                            lineCap: .round
+                        )
                     )
                 }
             }
             .frame(width: size, height: size)
             .accessibilityHidden(true)
 
-            // The session ring is an inlay in the chapter ring: outside the
-            // decorative marks, inside the brass rim, square-ended, and flat.
-            // It is empty at idle, sweeps to full at the start, then drains
-            // counterclockwise.
             Circle()
                 .trim(from: 0, to: remainingProgress)
                 .stroke(
                     accent,
-                    style: StrokeStyle(lineWidth: max(2.0, size * 0.0112), lineCap: .butt)
+                    style: StrokeStyle(
+                        lineWidth: max(4.0, size * 0.028),
+                        lineCap: .butt
+                    )
                 )
                 .rotationEffect(.degrees(-90))
-                .padding(size / 2 - (tickRadius + 6.5))
+                .padding(channelPadding)
                 .animation(reduceMotion ? nil : .linear(duration: 0.3), value: remainingProgress)
                 .animation(reduceMotion ? nil : AmbientMotion.curve, value: accent)
                 .accessibilityHidden(true)
+
+            Circle()
+                .strokeBorder(
+                    palette.brass.opacity(isIncreasedContrast ? 1 : 0.95),
+                    lineWidth: isIncreasedContrast ? 1.2 : 1.0
+                )
+                .padding(0.2)
+
+            Circle()
+                .strokeBorder(
+                    palette.brass.opacity(isIncreasedContrast ? 1 : 0.95),
+                    lineWidth: isIncreasedContrast ? 1.1 : 0.9
+                )
+                .padding(faceInset)
 
             plaque(diameter: plaqueDiameter)
         }
@@ -181,6 +203,7 @@ struct DialView: View {
                 Text(caption)
                     .font(Typo.label(max(7.4, diameter * 0.047)))
                     .tracking(Typo.tracking(diameter * 0.011))
+                    .textCase(.uppercase)
                     .foregroundStyle(palette.mutedInk.opacity(0.95))
             }
             .offset(y: -diameter * 0.012)
