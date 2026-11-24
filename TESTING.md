@@ -154,11 +154,12 @@ automated tests.
 - [ ] The arrows do not wrap: Focus shows only the next arrow, Long break only
       the previous one, Short break both. A hidden arrow keeps its slot, so the
       dial does not move, and it cannot be clicked or reached by VoiceOver.
-- [ ] Changing the idle mode slides the dial readout out toward the arrow that
-      was pressed, cut off at the plaque edge rather than floating over its
-      face, and the next duration follows it in from the other side; the hand
-      sweeps to the new position at the same time. Reduce Motion swaps it
-      without motion.
+- [ ] Changing the idle mode slides the dial readout in the order the modes sit
+      in, not the arrow's: the previous arrow moves everything right, so the
+      earlier duration arrives from the left, and the next arrow mirrors it. The
+      outgoing value is cut off at the plaque edge rather than floating over its
+      face, and the hand sweeps to the new position at the same time. Reduce
+      Motion swaps it without motion.
 - [ ] Rapid mode changes leave no stuck or duplicated readout: each swap
       replaces the previous one, and the duration always settles centered.
 - [ ] All three mode dots use the mode accent at full opacity; only the active

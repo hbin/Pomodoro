@@ -256,7 +256,9 @@ struct TimerPopoverView: View {
                 ForEach(IdleMode.allCases) { mode in
                     Button {
                         guard mode != idleMode else { return }
-                        readoutFlow = mode.rawValue > idleMode.rawValue ? 1 : -1
+                        // The modes are ordered left to right on screen, so a
+                        // jump to a later one slides the strip left.
+                        readoutFlow = mode.rawValue > idleMode.rawValue ? -1 : 1
                         idleMode = mode
                     } label: {
                         Capsule()
@@ -286,7 +288,9 @@ struct TimerPopoverView: View {
         let isAvailable = target != nil
         return Button {
             if let target {
-                readoutFlow = Double(offset)
+                // The mode being taken sits on the arrow's side of the dial,
+                // so the strip travels the other way to bring it in.
+                readoutFlow = Double(-offset)
                 idleMode = target
             }
         } label: {

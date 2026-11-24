@@ -495,8 +495,8 @@ only in how full they are at the start.
 - The hand advances smoothly enough to feel mechanical without continuous
   high-frame-rate rendering.
 - State changes use a short settle rather than a bounce.
-- Changing the idle duration pushes the readout out the way the arrow points
-  while the next value arrives behind it, clipped by the plaque.
+- Changing the idle duration slides the readout toward the side the incoming
+  mode sits on, clipped by the plaque, while the hand sweeps with it.
 - Completion uses one calm transition of the face and readout.
 - No looping pulses, confetti, shaking, or attention-seeking effects.
 - Reduce Motion replaces interpolation and transitions with direct state

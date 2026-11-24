@@ -150,11 +150,12 @@ right. The idle pointer keeps the tomato color while the selector changes; only
 the running phase accent changes the pointer.
 
 Selecting a mode updates the title, dial duration, accent, primary copy, and
-ambient light. The readout slides instead of rolling: the outgoing duration
-leaves the way the arrow points, cut off at the edge of the plaque, and the
-incoming one follows it in from the other side. The two never share the plaque,
-and the hand sweeps to the new position while they trade places. Pressing Start
-starts the selected mode:
+ambient light. The readout slides instead of rolling, following the order the
+modes sit in rather than the arrow: Focus is left of Short break and Short
+break is left of Long break, so going to a later mode slides the strip left and
+the new duration arrives from the right. The outgoing value is cut off at the
+edge of the plaque and the two never share it; the hand sweeps to the new
+position while they trade places. Pressing Start starts the selected mode:
 
 - Focus starts a 25-minute focus.
 - Short break starts the existing five-minute direct break.
@@ -308,7 +309,8 @@ a localized label and duration.
   not move the dial: it fades out, shrinks slightly, and drifts toward its own
   edge. The title and the mode label swap at once, because cross-fading two
   different strings reads as a smudge; only the readout moves, and it moves
-  sideways behind its own clipped box.
+  sideways behind its own clipped box, away from the arrow and toward the side
+  the incoming mode sits on.
   The primary Start is the only filled action; it uses the leaf-green fill with
   a centered label and a trailing play glyph. A clean 0.8-point highlight and a
   subtle black shadow replace any colored glow.
