@@ -199,7 +199,9 @@ automated tests.
       in, not the arrow's: the previous arrow moves everything right, so the
       earlier duration arrives from the left, and the next arrow mirrors it. The
       outgoing value is cut off at the plaque edge rather than floating over its
-      face. Reduce Motion swaps it without motion.
+      face. The swap runs whenever the mode changes, even when the old and new
+      durations read the same, so all-equal and two-equal duration sets work
+      through both the arrows and dots. Reduce Motion swaps it without motion.
 - [ ] Rapid mode changes leave no stuck or duplicated readout: each swap
       replaces the previous one, and the duration always settles centered.
 - [ ] All three mode dots use the mode accent at full opacity; only the active

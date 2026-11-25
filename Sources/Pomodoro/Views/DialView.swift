@@ -14,6 +14,9 @@ struct DialView: View {
     /// Which way the readout travels when the value changes: `-1` to the left,
     /// `1` to the right, `0` for no horizontal motion.
     var readoutFlow = 0.0
+    /// Changes when the user selects another idle mode, so a mode change still
+    /// runs the readout transition when both modes share the same duration.
+    var readoutIdentity = 0
     let accessibilityLabel: String
     let accessibilityValue: String
     let ambient: AmbientPose
@@ -35,6 +38,11 @@ struct DialView: View {
 
     private static let sweepDuration: TimeInterval = 0.3
 
+    private struct ReadoutTransition: Equatable {
+        let text: String
+        let identity: Int
+    }
+
     init(
         timeText: String,
         caption: String,
@@ -43,6 +51,7 @@ struct DialView: View {
         size: CGFloat,
         showsCountdown: Bool = false,
         readoutFlow: Double = 0,
+        readoutIdentity: Int = 0,
         accessibilityLabel: String,
         accessibilityValue: String,
         ambient: AmbientPose,
@@ -55,6 +64,7 @@ struct DialView: View {
         self.size = size
         self.showsCountdown = showsCountdown
         self.readoutFlow = readoutFlow
+        self.readoutIdentity = readoutIdentity
         self.accessibilityLabel = accessibilityLabel
         self.accessibilityValue = accessibilityValue
         self.ambient = ambient
@@ -296,8 +306,10 @@ struct DialView: View {
             // the face.
             .frame(width: diameter * 0.94)
             .clipped()
-            .onChange(of: timeText) { old, _ in
-                swapReadout(from: old, window: diameter)
+            .onChange(
+                of: ReadoutTransition(text: timeText, identity: readoutIdentity)
+            ) { old, _ in
+                swapReadout(from: old.text, window: diameter)
             }
         }
     }
@@ -310,7 +322,7 @@ struct DialView: View {
     private func swapReadout(from old: String, window: CGFloat) {
         // A readout with no direction to travel, as on the completion screen,
         // swaps at once rather than sliding two values through one spot.
-        guard !reduceMotion, readoutFlow != 0, old != timeText, !showsCountdown else { return }
+        guard !reduceMotion, readoutFlow != 0, !showsCountdown else { return }
         swapGeneration += 1
         let generation = swapGeneration
         // A little more than the readout's own width, so a value clears the

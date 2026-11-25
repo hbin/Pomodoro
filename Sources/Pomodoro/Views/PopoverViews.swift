@@ -295,6 +295,7 @@ struct TimerPopoverView: View {
                 size: PopoverRootView.timerDialSize,
                 showsCountdown: !model.isIdle,
                 readoutFlow: model.isIdle ? readoutFlow : 0,
+                readoutIdentity: idleMode.rawValue,
                 accessibilityLabel: dialAccessibilityLabel(
                     for: model.isIdle ? idleMode : IdleMode(phase: model.phase)
                 ),
