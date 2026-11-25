@@ -11,12 +11,32 @@ automated tests.
 
 ## Release record
 
-- Version:
-- Build:
-- Channel: stable or beta
-- Tester:
-- Date:
-- macOS version:
+- Version: 0.4.2
+- Build: 16
+- Channel: stable
+- Tester: Lebron James (Tech Lead); independent reviewers Jaylen Brown, VJ, and Tyrese Maxey
+- Date: 2026-11-25
+- macOS version: 27.2.1 (26B131)
+- Scope: Vietnamese and Korean localization, six-language catalogs and
+  typography, in-app language picker, and macOS per-app language. Timer,
+  persistence, updates, sound, and UI geometry are unchanged.
+- Localization review: team internal cross-review, no external native-speaker
+  certification.
+- Automated gate: `swift test` passed 58/58; the localization validator passed
+  886 values across 6 locales; the debug build, catalog installation, signing,
+  and entitlement checks passed.
+- UI gate: existing English, Simplified Chinese, Traditional Chinese, and
+  Japanese values are byte-for-byte unchanged; Vietnamese and Korean Settings,
+  Timer, language menu, and the Vietnamese update panel were inspected in Light
+  and Black. Settings remains 340 points wide with the footer visible and no
+  scrollbar.
+- Exceptions: the complete historical manual matrix was not repeated for
+  unchanged timer, persistence, Sparkle, sound, and accessibility paths; the
+  prior 0.4.1 stable acceptance and unchanged core tests cover regression.
+  Reduced transparency and every notification or VoiceOver state were not
+  separately re-captured this cycle.
+- Screenshots: `docs/screenshots` was not refreshed because the captured idle
+  timer UI is unchanged and the new copy is not shown.
 
 ## Before tagging
 
