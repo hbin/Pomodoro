@@ -25,7 +25,7 @@ Stop and ask before proceeding when any of these is true:
 
 - Bug fixes only: patch, for example `0.4.0` to `0.4.1`.
 - A completed feature cycle without breaking changes: minor, for example
-  `0.4.0` to `0.5.0`.
+  `1.2.3` to `1.3.0`.
 - Breaking product or data changes: major. Ask before choosing this.
 - A final build after beta builds must have a higher `CFBundleVersion` than
   every beta. Use `scripts/bump-version.sh final`.

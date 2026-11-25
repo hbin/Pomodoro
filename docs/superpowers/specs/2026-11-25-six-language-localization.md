@@ -7,7 +7,7 @@
 - Revision: 2026-11-25 — copy corrections from the in-context implementation
   review (Vietnamese break/timer terminology and subtitle), synced with the
   final implemented Korean notification copy
-- Target version: `0.5.0`
+- Target version: `0.4.2`
 - Platform: macOS 15+
 - Locales: English, Simplified Chinese, Traditional Chinese, Japanese, Vietnamese, Korean
 - Extends: `2026-11-23-four-language-localization.md`, `2026-11-23-in-app-language-picker.md`
