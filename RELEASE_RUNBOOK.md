@@ -61,8 +61,8 @@ Done when:
 - Required secrets are known. At minimum, `SPARKLE_PRIVATE_KEY` must exist.
 - Every applicable pre-tag item in `TESTING.md` is checked or recorded as an
   exception with its reason.
-- Any pending native-speaker localization review is identified as an
-  exception. Do not claim review that did not happen.
+- The team localization cross-review state is recorded. Do not claim external
+  native-speaker certification that did not happen.
 
 ### 2. Validate the candidate
 
@@ -89,7 +89,7 @@ hdiutil verify Pomodoro.dmg
 ```
 
 For UI changes, launch the built app and inspect the affected states in both
-themes and all four languages. Refresh `docs/screenshots` only during release
+themes and all six languages. Refresh `docs/screenshots` only during release
 preparation, following `DEVELOP.md`.
 
 Done when:
@@ -251,7 +251,8 @@ Report these facts:
 - Installed version and launch result, if installation was requested.
 - Repository visibility.
 - Signing/notarization status and any missing secrets.
-- Any release exception, especially pending localization review.
+- Any release exception, including the team cross-review limitation and the
+  absence of external native-speaker certification.
 
 Do not claim a check passed unless the command output or UI inspection showed
 it passing.

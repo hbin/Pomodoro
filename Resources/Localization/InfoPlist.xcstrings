@@ -7,7 +7,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Personal build" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "个人构建" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "個人建置" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "個人ビルド" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "個人ビルド" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Bản dựng cá nhân" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "개인 빌드" } }
       }
     }
   },

@@ -174,6 +174,8 @@ enum Typo {
         case simplifiedChinese
         case traditionalChinese
         case japanese
+        case vietnamese
+        case korean
     }
 
     private static var interfaceLanguage: InterfaceLanguage {
@@ -182,13 +184,15 @@ enum Typo {
         case .simplifiedChinese: .simplifiedChinese
         case .traditionalChinese: .traditionalChinese
         case .japanese: .japanese
+        case .vietnamese: .vietnamese
+        case .korean: .korean
         }
     }
 
     private static var isCJK: Bool {
         switch interfaceLanguage {
-        case .simplifiedChinese, .traditionalChinese, .japanese: true
-        case .english: false
+        case .simplifiedChinese, .traditionalChinese, .japanese, .korean: true
+        case .english, .vietnamese: false
         }
     }
 
@@ -211,6 +215,8 @@ enum Typo {
         case .simplifiedChinese: "STSongti-SC-Regular"
         case .traditionalChinese: "STSongti-TC-Regular"
         case .japanese: "HiraMinProN-W3"
+        case .vietnamese: "Palatino-Roman"
+        case .korean: "AppleMyungjo"
         }
         if NSFont(name: name, size: size) != nil {
             return .custom(name, size: size)
@@ -249,6 +255,13 @@ enum Typo {
             case "Bold": ("AvenirNext-Bold", .bold)
             default: ("AvenirNext-Regular", .regular)
             }
+        case .vietnamese:
+            switch weight {
+            case "Medium": ("AvenirNext-Medium", .medium)
+            case "DemiBold": ("AvenirNext-DemiBold", .semibold)
+            case "Bold": ("AvenirNext-Bold", .bold)
+            default: ("AvenirNext-Regular", .regular)
+            }
         case .simplifiedChinese:
             switch weight {
             case "Medium": ("PingFangSC-Medium", .medium)
@@ -266,6 +279,13 @@ enum Typo {
             case "Medium": ("HiraginoSans-W5", .medium)
             case "DemiBold", "Bold": ("HiraginoSans-W6", weight == "Bold" ? .bold : .semibold)
             default: ("HiraginoSans-W3", .regular)
+            }
+        case .korean:
+            switch weight {
+            case "Medium": ("AppleSDGothicNeo-Medium", .medium)
+            case "DemiBold": ("AppleSDGothicNeo-SemiBold", .semibold)
+            case "Bold": ("AppleSDGothicNeo-Bold", .bold)
+            default: ("AppleSDGothicNeo-Regular", .regular)
             }
         }
     }

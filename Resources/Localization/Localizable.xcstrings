@@ -7,7 +7,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Dismiss error" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关闭错误提示" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "關閉錯誤提示" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "エラーを閉じる" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "エラーを閉じる" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Bỏ qua lỗi" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "오류 닫기" } }
       }
     },
     "accessibility.settings" : {
@@ -16,7 +18,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "设置" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "設定" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "設定" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "設定" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Cài đặt" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "설정" } }
       }
     },
     "announcements.break_complete" : {
@@ -25,7 +29,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Break complete. Ready for another focus." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息完成。可以开始下一次专注。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息完成。可以開始下一次專注。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了。次の集中を始められます。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了。次の集中を始められます。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã nghỉ xong. Sẵn sàng tập trung tiếp." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식 완료. 다시 집중할 수 있습니다." } }
       }
     },
     "announcements.break_skipped" : {
@@ -34,7 +40,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Break skipped" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已跳过休息" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "已跳過休息" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩をスキップしました" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩をスキップしました" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã bỏ qua giờ nghỉ" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식을 건너뛰었습니다" } }
       }
     },
     "announcements.break_started" : {
@@ -43,7 +51,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Break started" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息开始" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息開始" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩を開始しました" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩を開始しました" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã bắt đầu nghỉ" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식을 시작했습니다" } }
       }
     },
     "announcements.focus_complete" : {
@@ -52,7 +62,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus complete. %lld-minute break available." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注完成。可以休息 %lld 分钟。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注完成。可以休息 %lld 分鐘。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了。%lld分間の休憩ができます。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了。%lld分間の休憩ができます。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã xong tập trung. Có %lld phút để nghỉ." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중 완료. %lld분 휴식이 가능합니다." } }
       }
     },
     "announcements.focus_paused" : {
@@ -61,7 +73,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus paused" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注已暂停" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注已暫停" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を一時停止しました" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を一時停止しました" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã tạm dừng tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중을 일시 정지했습니다" } }
       }
     },
     "announcements.focus_resumed" : {
@@ -70,7 +84,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus resumed" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注已继续" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注已繼續" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を再開しました" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を再開しました" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã tiếp tục tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중을 재개했습니다" } }
       }
     },
     "announcements.focus_started" : {
@@ -79,7 +95,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus started" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注开始" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注開始" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を開始しました" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を開始しました" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã bắt đầu tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중을 시작했습니다" } }
       }
     },
     "announcements.interval_ended" : {
@@ -88,7 +106,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Interval ended" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "计时结束" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "計時結束" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマーを終了しました" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマーを終了しました" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã kết thúc phiên" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "타이머를 종료했습니다" } }
       }
     },
     "announcements.language_changed" : {
@@ -97,7 +117,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Language changed to %@." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "语言已切换为%@。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "語言已切換為%@。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "言語を%@に切り替えました。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "言語を%@に切り替えました。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã chuyển ngôn ngữ sang %@." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "언어 변경: %@" } }
       }
     },
     "common.minutes_compact" : {
@@ -106,7 +128,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "%lldm" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分钟" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分鐘" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "%lld phút" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%lld분" } }
       }
     },
     "completion.action.done" : {
@@ -115,7 +139,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Done for now" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂时完成" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "暫時完成" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "今回はここまで" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "今回はここまで" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tạm xong" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "지금은 여기까지" } }
       }
     },
     "completion.action.start_another" : {
@@ -124,7 +150,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Start another focus" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "开始下一次专注" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "開始下一次專注" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "もう一度集中する" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "もう一度集中する" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Bắt đầu tập trung tiếp" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "다시 집중 시작" } }
       }
     },
     "completion.action.take_break" : {
@@ -133,7 +161,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Take a %lld-minute break" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息 %lld 分钟" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息 %lld 分鐘" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分間の休憩を取る" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分間の休憩を取る" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Nghỉ %lld phút" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%lld분 휴식하기" } }
       }
     },
     "completion.a11y.complete" : {
@@ -142,7 +172,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Complete" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "完成" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Hoàn tất" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "완료" } }
       }
     },
     "completion.body.break_ready" : {
@@ -151,7 +183,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Break complete. Ready for another focus?" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息完成。准备好开始下一次专注了吗？" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息完成。準備好開始下一次專注了嗎？" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了。次の集中を始めますか？" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了。次の集中を始めますか？" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã nghỉ xong. Tập trung tiếp nhé?" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식 완료. 다시 집중할까요?" } }
       }
     },
     "completion.body.focus_done" : {
@@ -160,7 +194,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus complete. Ready for a break?" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注完成。准备好休息了吗？" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注完成。準備好休息了嗎？" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了。休憩しますか？" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了。休憩しますか？" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã xong tập trung. Nghỉ một chút nhé?" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중 완료. 잠시 쉴까요?" } }
       }
     },
     "completion.title.break" : {
@@ -169,7 +205,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Break complete" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息完成" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息完成" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã nghỉ xong" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식 완료" } }
       }
     },
     "completion.title.focus" : {
@@ -178,7 +216,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus complete" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注完成" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注完成" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã xong phiên tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중 완료" } }
       }
     },
     "errors.recovery.backed_up" : {
@@ -187,7 +227,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Saved timer data couldn’t be read. A backup was kept and the timer was reset." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "无法读取已保存的计时数据。已保留备份，并重置了计时器。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "無法讀取已儲存的計時資料。已保留備份，並重設了計時器。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "保存されたタイマーデータを読み取れませんでした。バックアップを残し、タイマーをリセットしました。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "保存されたタイマーデータを読み取れませんでした。バックアップを残し、タイマーをリセットしました。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Không đọc được dữ liệu đã lưu. Đã giữ bản sao lưu và đặt lại đồng hồ." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "저장된 타이머 데이터를 읽을 수 없습니다. 백업을 보관하고 타이머를 초기화했습니다." } }
       }
     },
     "errors.recovery.reset" : {
@@ -196,7 +238,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Saved timer data couldn’t be read. The timer was reset." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "无法读取已保存的计时数据。计时器已重置。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "無法讀取已儲存的計時資料。計時器已重設。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "保存されたタイマーデータを読み取れませんでした。タイマーをリセットしました。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "保存されたタイマーデータを読み取れませんでした。タイマーをリセットしました。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Không đọc được dữ liệu đã lưu. Đã đặt lại đồng hồ." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "저장된 타이머 데이터를 읽을 수 없습니다. 타이머를 초기화했습니다." } }
       }
     },
     "errors.save_failed" : {
@@ -205,7 +249,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Timer state couldn’t be saved to disk." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "计时器状态无法保存到磁盘。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "計時器狀態無法儲存到磁碟。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマーの状態を保存できませんでした。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマーの状態を保存できませんでした。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Không thể lưu trạng thái đồng hồ vào đĩa." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "타이머 상태를 디스크에 저장할 수 없습니다." } }
       }
     },
     "menu.about" : {
@@ -214,7 +260,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "About Pomodoro" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关于 Pomodoro" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "關於 Pomodoro" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroについて" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroについて" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Giới thiệu về Pomodoro" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro 정보" } }
       }
     },
     "menu.check_for_updates" : {
@@ -223,7 +271,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Check for Updates…" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "检查更新…" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "檢查更新…" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートを確認…" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートを確認…" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Kiểm tra cập nhật…" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "업데이트 확인…" } }
       }
     },
     "menu.quit" : {
@@ -232,7 +282,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Quit Pomodoro" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "退出 Pomodoro" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束 Pomodoro" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroを終了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroを終了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Thoát Pomodoro" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro 종료" } }
       }
     },
     "menu.settings" : {
@@ -241,7 +293,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings…" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "设置…" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "設定…" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "設定…" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "設定…" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Cài đặt…" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "설정…" } }
       }
     },
     "notification_status.not_requested" : {
@@ -250,7 +304,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications not requested yet" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "尚未请求通知权限" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "尚未要求通知權限" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知は未設定です" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知は未設定です" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Chưa yêu cầu thông báo" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "알림이 아직 요청되지 않음" } }
       }
     },
     "notification_status.off" : {
@@ -259,7 +315,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications are off" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "通知已关闭" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "通知已關閉" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知はオフです" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知はオフです" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Thông báo đang tắt" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "알림 꺼짐" } }
       }
     },
     "notification_status.on" : {
@@ -268,7 +326,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications are on" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "通知已开启" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "通知已開啟" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知はオンです" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知はオンです" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Thông báo đang bật" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "알림 켜짐" } }
       }
     },
     "notification_status.unknown" : {
@@ -277,7 +337,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Notification status unknown" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "通知状态未知" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "通知狀態未知" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知の状態は不明です" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知の状態は不明です" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Không rõ trạng thái thông báo" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "알림 상태를 알 수 없음" } }
       }
     },
     "notifications.break.body" : {
@@ -286,7 +348,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Time to focus." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "该专注了。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "該專注了。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中の時間です。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中の時間です。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Sẵn sàng tập trung tiếp?" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중할 시간입니다." } }
       }
     },
     "notifications.break.title" : {
@@ -295,7 +359,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Break complete" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息完成" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息完成" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã nghỉ xong" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식 완료" } }
       }
     },
     "notifications.focus.body" : {
@@ -304,7 +370,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Time for a break." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "该休息一下了。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "該休息一下了。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩の時間です。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩の時間です。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đến giờ nghỉ." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식할 시간입니다." } }
       }
     },
     "notifications.focus.title" : {
@@ -313,7 +381,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus complete" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注完成" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注完成" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã xong phiên tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중 완료" } }
       }
     },
     "settings.appearance.black" : {
@@ -322,7 +392,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Black" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "黑色" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "黑色" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ブラック" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ブラック" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đen" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "블랙" } }
       }
     },
     "settings.appearance.light" : {
@@ -331,7 +403,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Light" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "浅色" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "淺色" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ライト" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ライト" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Sáng" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "라이트" } }
       }
     },
     "settings.appearance.system" : {
@@ -340,7 +414,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "System" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "系统" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "系統" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "システム" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "システム" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Hệ thống" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "시스템" } }
       }
     },
     "settings.appearance.theme_a11y" : {
@@ -349,7 +425,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "%@ theme" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%@主题" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%@主題" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@のテーマ" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@のテーマ" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Giao diện %@" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%@ 테마" } }
       }
     },
     "settings.back" : {
@@ -358,7 +436,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Back" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "返回" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "返回" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "戻る" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "戻る" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Quay lại" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "뒤로" } }
       }
     },
     "settings.durations.a11y_hint" : {
@@ -367,7 +447,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit a length from 1 to 180 minutes." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "编辑 1 到 180 分钟。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "編輯 1 到 180 分鐘。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "1〜180分で編集できます。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "1〜180分で編集できます。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Chỉnh thời lượng từ 1 đến 180 phút." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "1분에서 180분 사이로 시간을 편집합니다." } }
       }
     },
     "settings.durations.decrease" : {
@@ -376,7 +458,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Decrease %@" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "减少%@" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "減少%@" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@を減らす" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@を減らす" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Giảm %@" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%@ 줄이기" } }
       }
     },
     "settings.durations.help" : {
@@ -385,7 +469,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Click a number to type a length from 1 to 180 minutes." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "点击数字，输入 1 到 180 分钟。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "點擊數字，輸入 1 到 180 分鐘。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "数字をクリックして、1〜180分で入力できます。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "数字をクリックして、1〜180分で入力できます。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Nhấp vào số để nhập thời lượng từ 1 đến 180 phút." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "숫자를 클릭해 1분에서 180분 사이로 입력합니다." } }
       }
     },
     "settings.durations.increase" : {
@@ -394,7 +480,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Increase %@" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "增加%@" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "增加%@" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@を増やす" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@を増やす" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tăng %@" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%@ 늘리기" } }
       }
     },
     "settings.durations.time_header" : {
@@ -403,7 +491,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Time (minutes)" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "时间（分钟）" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "時間（分鐘）" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "時間（分）" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "時間（分）" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Thời gian (phút)" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "시간 (분)" } }
       }
     },
     "settings.durations.value" : {
@@ -412,7 +502,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld min" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分钟" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分鐘" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "%lld phút" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%lld분" } }
       }
     },
     "settings.focus.auto_break.detail" : {
@@ -421,7 +513,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Starts the recommended break after the focus chime ends." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注提示音结束后，自动开始推荐的休息。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注提示音結束後，自動開始推薦的休息。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中のチャイムが終わると、おすすめの休憩を自動で開始します。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中のチャイムが終わると、おすすめの休憩を自動で開始します。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Bắt đầu giờ nghỉ đề xuất sau chuông tập trung." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중 알림음 후 추천 휴식을 시작합니다." } }
       }
     },
     "settings.focus.auto_break.title" : {
@@ -430,7 +524,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Auto-start break" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自动开始休息" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "自動開始休息" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩を自動で開始" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩を自動で開始" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tự động bắt đầu nghỉ" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식 자동 시작" } }
       }
     },
     "settings.focus.auto_pomodoro.detail" : {
@@ -439,7 +535,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Starts the next focus when a break ends." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息结束后自动开始下一次专注。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息結束後自動開始下一次專注。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩が終わると、次の集中を自動で開始します。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩が終わると、次の集中を自動で開始します。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Bắt đầu phiên tiếp theo khi giờ nghỉ kết thúc." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식이 끝나면 다음 집중을 시작합니다." } }
       }
     },
     "settings.focus.auto_pomodoro.title" : {
@@ -448,7 +546,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Auto-start focus" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自动开始专注" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "自動開始專注" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を自動開始" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を自動開始" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tự động bắt đầu tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중 자동 시작" } }
       }
     },
     "settings.language.detail" : {
@@ -457,7 +557,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Changes apply immediately." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "更改会立即生效。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "變更會立即生效。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "変更はすぐに反映されます。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "変更はすぐに反映されます。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Thay đổi áp dụng ngay." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "변경 사항은 즉시 적용됩니다." } }
       }
     },
     "settings.language.system" : {
@@ -466,7 +568,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "System Default" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "跟随系统" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "跟隨系統" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "システム（既定）" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "システム（既定）" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Theo hệ thống" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "시스템 기본값" } }
       }
     },
     "settings.language.system_detail" : {
@@ -475,7 +579,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Follows the macOS app language." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "跟随 macOS 的应用语言。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "跟隨 macOS 的應用語言。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "macOSのアプリ言語に従います。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "macOSのアプリ言語に従います。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Theo ngôn ngữ ứng dụng của macOS." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "macOS 앱 언어를 따릅니다." } }
       }
     },
     "settings.language.title" : {
@@ -484,7 +590,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Language" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "语言" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "語言" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "言語" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "言語" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Ngôn ngữ" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "언어" } }
       }
     },
     "settings.menu_bar.minutes.detail" : {
@@ -493,7 +601,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Clock time stays hidden when this is off." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关闭后隐藏时钟时间。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "關閉後隱藏時鐘時間。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "オフにすると時刻は表示されません。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "オフにすると時刻は表示されません。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Ẩn giờ trên thanh menu khi tắt." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "끄면 시계 시간이 숨겨집니다." } }
       }
     },
     "settings.menu_bar.minutes.title" : {
@@ -502,7 +612,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Show remaining minutes" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "显示剩余分钟" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "顯示剩餘分鐘" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "残り時間を表示" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "残り時間を表示" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Hiện số phút còn lại" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "남은 시간 표시" } }
       }
     },
     "settings.notifications.denied_detail" : {
@@ -511,7 +623,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "The timer still works without notifications." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "即使没有通知，计时器仍可正常使用。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "即使沒有通知，計時器仍可正常使用。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知がなくてもタイマーは使えます。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知がなくてもタイマーは使えます。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đồng hồ vẫn chạy khi không bật thông báo." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "알림이 없어도 타이머는 계속 작동합니다." } }
       }
     },
     "settings.notifications.open" : {
@@ -520,7 +634,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Settings" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "打开系统设置" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "打開系統設定" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "システム設定を開く" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "システム設定を開く" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Mở Cài đặt" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "시스템 설정 열기" } }
       }
     },
     "settings.quit" : {
@@ -529,7 +645,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Quit Pomodoro" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "退出 Pomodoro" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束 Pomodoro" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroを終了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroを終了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Thoát Pomodoro" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro 종료" } }
       }
     },
     "settings.section.appearance" : {
@@ -538,7 +656,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "APPEARANCE" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "外观" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "外觀" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "外観" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "外観" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "GIAO DIỆN" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "화면 스타일" } }
       }
     },
     "settings.section.menu_bar" : {
@@ -547,7 +667,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "MENU BAR" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "菜单栏" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "選單列" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "メニューバー" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "メニューバー" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "THANH MENU" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "메뉴 막대" } }
       }
     },
     "settings.section.notifications" : {
@@ -556,7 +678,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "NOTIFICATIONS" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "通知" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "通知" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "THÔNG BÁO" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "알림" } }
       }
     },
     "settings.section.sound" : {
@@ -565,7 +689,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "SOUND" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "声音" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "音效" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "サウンド" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "サウンド" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "ÂM THANH" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "사운드" } }
       }
     },
     "settings.section.timer" : {
@@ -574,7 +700,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "TIMER" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "计时器" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "計時器" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマー" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマー" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "ĐỒNG HỒ" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "타이머" } }
       }
     },
     "settings.sound.chime.detail" : {
@@ -583,7 +711,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "A soft two-note chime when an interval ends." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "间隔结束时响起柔和的双音提示。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "間隔結束時響起柔和的雙音提示。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "区切りが終わると、やわらかな2音のチャイムが鳴ります。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "区切りが終わると、やわらかな2音のチャイムが鳴ります。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Hai nốt nhẹ khi kết thúc mỗi phiên." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "구간이 끝나면 부드러운 두 음이 울립니다." } }
       }
     },
     "settings.sound.chime.title" : {
@@ -592,7 +722,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Completion chime" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成提示音" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "完成提示音" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了チャイム" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了チャイム" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Âm báo hoàn thành" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "완료 알림음" } }
       }
     },
     "settings.sound.tick.detail" : {
@@ -601,7 +733,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "A quiet tick each second during focus only." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "仅在专注时每秒发出轻微滴答声。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "僅在專注時每秒發出輕微滴答聲。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中中だけ、1秒ごとに小さく時を刻みます。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中中だけ、1秒ごとに小さく時を刻みます。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tiếng tích tắc nhẹ mỗi giây khi tập trung." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중 중에만 1초마다 작게 울립니다." } }
       }
     },
     "settings.sound.tick.title" : {
@@ -610,7 +744,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Tick sound" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "滴答声" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "滴答聲" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "時計の音" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "時計の音" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tiếng tích tắc" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "시계 소리" } }
       }
     },
     "settings.subtitle" : {
@@ -619,7 +755,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "A quiet timer, nothing to manage." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "安静的计时器，无需操心。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "安靜的計時器，無需操心。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "静かなタイマー。管理するものはありません。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "静かなタイマー。管理するものはありません。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Một chiếc đồng hồ tĩnh lặng, không cần quản lý." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "관리할 것 없는 조용한 타이머." } }
       }
     },
     "settings.title" : {
@@ -628,7 +766,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "设置" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "設定" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "設定" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "設定" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Cài đặt" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "설정" } }
       }
     },
     "status_bar.a11y.break_complete" : {
@@ -637,7 +777,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Break complete" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息完成" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息完成" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩完了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã nghỉ xong" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식 완료" } }
       }
     },
     "status_bar.a11y.break_paused" : {
@@ -653,7 +795,9 @@
         },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息，剩余 %lld 分钟，已暂停" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息，剩餘 %lld 分鐘，已暫停" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩、残り%lld分、一時停止中" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩、残り%lld分、一時停止中" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Nghỉ, còn %lld phút, đã tạm dừng" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식, %lld분 남음, 일시 정지" } }
       }
     },
     "status_bar.a11y.break_running" : {
@@ -669,7 +813,9 @@
         },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息，剩余 %lld 分钟" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息，剩餘 %lld 分鐘" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩、残り%lld分" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩、残り%lld分" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Nghỉ, còn %lld phút" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식, %lld분 남음" } }
       }
     },
     "status_bar.a11y.focus_complete" : {
@@ -678,7 +824,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus complete" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注完成" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注完成" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中完了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã xong tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중 완료" } }
       }
     },
     "status_bar.a11y.focus_paused" : {
@@ -694,7 +842,9 @@
         },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注，剩余 %lld 分钟，已暂停" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注，剩餘 %lld 分鐘，已暫停" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中、残り%lld分、一時停止中" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中、残り%lld分、一時停止中" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tập trung, còn %lld phút, đã tạm dừng" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중, %lld분 남음, 일시 정지" } }
       }
     },
     "status_bar.a11y.focus_running" : {
@@ -710,7 +860,9 @@
         },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注，剩余 %lld 分钟" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注，剩餘 %lld 分鐘" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中、残り%lld分" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中、残り%lld分" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tập trung, còn %lld phút" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중, %lld분 남음" } }
       }
     },
     "status_bar.a11y.ready" : {
@@ -719,7 +871,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Ready to focus" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "准备专注" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "準備專注" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中の準備完了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中の準備完了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Sẵn sàng tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중할 준비 완료" } }
       }
     },
     "status_bar.accessibility_label" : {
@@ -728,7 +882,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro timer" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro 计时器" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro 計時器" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroタイマー" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroタイマー" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đồng hồ Pomodoro" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro 타이머" } }
       }
     },
     "status_bar.tooltip" : {
@@ -737,7 +893,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — %@" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — %@" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — %@" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — %@" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — %@" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — %@" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — %@" } }
       }
     },
     "status_bar.tooltip.ready" : {
@@ -746,7 +904,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — ready to focus" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — 准备专注" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — 準備專注" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — 集中の準備完了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — 集中の準備完了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — sẵn sàng tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro — 집중할 준비 완료" } }
       }
     },
     "timer.action.end_break" : {
@@ -755,7 +915,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "End break" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结束休息" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束休息" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩を終了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩を終了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Kết thúc nghỉ" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식 종료" } }
       }
     },
     "timer.action.end_break_hint" : {
@@ -764,7 +926,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Ends the break now" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "立即结束休息" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "立即結束休息" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩をすぐに終了します" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩をすぐに終了します" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Kết thúc giờ nghỉ ngay" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식을 지금 종료합니다" } }
       }
     },
     "timer.action.end_focus" : {
@@ -773,7 +937,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "End focus interval" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结束专注" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束專注" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を終了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中を終了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Kết thúc tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중 종료" } }
       }
     },
     "timer.action.end_focus_hint" : {
@@ -782,7 +948,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Ends the focus interval now" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "立即结束专注" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "立即結束專注" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中をすぐに終了します" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中をすぐに終了します" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Kết thúc phiên tập trung ngay" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중을 지금 종료합니다" } }
       }
     },
     "timer.action.next_mode" : {
@@ -791,7 +959,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Next mode" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "下一个模式" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "下一個模式" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "次のモード" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "次のモード" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Chế độ tiếp theo" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "다음 모드" } }
       }
     },
     "timer.action.pause" : {
@@ -800,7 +970,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Pause" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂停" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "暫停" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tạm dừng" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "일시 정지" } }
       }
     },
     "timer.action.previous_mode" : {
@@ -809,7 +981,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Previous mode" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "上一个模式" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "上一個模式" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "前のモード" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "前のモード" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Chế độ trước" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "이전 모드" } }
       }
     },
     "timer.action.start" : {
@@ -818,7 +992,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Start" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "开始" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "開始" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "開始" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "開始" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Bắt đầu" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "시작" } }
       }
     },
     "timer.a11y.break_dial" : {
@@ -827,7 +1003,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Break timer" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息计时器" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息計時器" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩タイマー" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "休憩タイマー" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đồng hồ nghỉ" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "휴식 타이머" } }
       }
     },
     "timer.a11y.long_break_dial" : {
@@ -836,7 +1014,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Long break timer" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "长休息计时器" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "長休息計時器" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩タイマー" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩タイマー" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đồng hồ nghỉ dài" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "긴 휴식 타이머" } }
       }
     },
     "timer.a11y.short_break_dial" : {
@@ -845,7 +1025,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Short break timer" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "短休息计时器" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "短休息計時器" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩タイマー" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩タイマー" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đồng hồ nghỉ ngắn" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "짧은 휴식 타이머" } }
       }
     },
     "timer.a11y.focus_chip" : {
@@ -854,7 +1036,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld-minute focus" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注 %lld 分钟" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注 %lld 分鐘" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分間の集中" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分間の集中" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "%lld phút tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%lld분 집중" } }
       }
     },
     "timer.a11y.focus_dial" : {
@@ -863,7 +1047,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus timer" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注计时器" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注計時器" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中タイマー" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中タイマー" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đồng hồ tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중 타이머" } }
       }
     },
     "timer.a11y.pause_hint" : {
@@ -872,7 +1058,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Pauses the timer" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂停计时" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "暫停計時" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマーを一時停止します" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイマーを一時停止します" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tạm dừng đồng hồ" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "타이머를 일시 정지합니다" } }
       }
     },
     "timer.a11y.paused_value" : {
@@ -881,7 +1069,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "%@, paused" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%@，已暂停" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%@，已暫停" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@、一時停止中" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@、一時停止中" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "%@, đã tạm dừng" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%@, 일시 정지" } }
       }
     },
     "timer.a11y.ready_value" : {
@@ -890,7 +1080,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld minutes, ready" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分钟，准备就绪" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%lld 分鐘，準備就緒" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分、準備完了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld分、準備完了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "%lld phút, sẵn sàng" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%lld분, 준비 완료" } }
       }
     },
     "timer.a11y.running_value" : {
@@ -899,7 +1091,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "%@, running" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%@，进行中" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%@，進行中" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@、実行中" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@、実行中" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "%@, đang chạy" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%@, 실행 중" } }
       }
     },
     "timer.a11y.start_break_hint" : {
@@ -908,7 +1102,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Starts a break interval in this popover" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "在此窗口中开始一段休息" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "在此視窗中開始一段休息" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画面で休憩を開始します" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画面で休憩を開始します" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Bắt đầu giờ nghỉ trong cửa sổ này" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "이 창에서 휴식을 시작합니다" } }
       }
     },
     "timer.a11y.start_hint" : {
@@ -917,7 +1113,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Starts a focus interval in this popover" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "在此窗口中开始一段专注" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "在此視窗中開始一段專注" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画面で集中を開始します" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画面で集中を開始します" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Bắt đầu một phiên tập trung trong cửa sổ này" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "이 창에서 집중을 시작합니다" } }
       }
     },
     "timer.break.long_with_minutes" : {
@@ -926,7 +1124,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Long break · %lld min" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "长休息 · %lld 分钟" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "長休息 · %lld 分鐘" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩 · %lld分" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩 · %lld分" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Nghỉ dài · %lld phút" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "긴 휴식 · %lld분" } }
       }
     },
     "timer.break.short_with_minutes" : {
@@ -935,7 +1135,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Short break · %lld min" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "短休息 · %lld 分钟" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "短休息 · %lld 分鐘" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩 · %lld分" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩 · %lld分" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Nghỉ ngắn · %lld phút" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "짧은 휴식 · %lld분" } }
       }
     },
     "timer.mode.focus" : {
@@ -944,7 +1146,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중" } }
       }
     },
     "timer.mode.long_break" : {
@@ -953,7 +1157,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Long break" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "长休息" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "長休息" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Nghỉ dài" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "긴 휴식" } }
       }
     },
     "timer.mode.short_break" : {
@@ -962,7 +1168,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Short break" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "短休息" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "短休息" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Nghỉ ngắn" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "짧은 휴식" } }
       }
     },
     "timer.caption.complete" : {
@@ -971,7 +1179,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "COMPLETE" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "完成" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "完成" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "HOÀN TẤT" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "완료" } }
       }
     },
     "timer.caption.paused" : {
@@ -980,7 +1190,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "PAUSED" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂停" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "暫停" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "TẠM DỪNG" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "일시 정지" } }
       }
     },
     "timer.caption.ready" : {
@@ -989,7 +1201,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "READY" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "准备" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "準備" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "準備" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "準備" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "SẴN SÀNG" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "준비" } }
       }
     },
     "timer.caption.remaining" : {
@@ -998,7 +1212,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "REMAINING" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "剩余" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "剩餘" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "残り" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "残り" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "CÒN LẠI" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "남음" } }
       }
     },
     "timer.end.confirm" : {
@@ -1007,7 +1223,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "End this focus?" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结束本次专注？" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束本次專注？" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この集中を終了しますか？" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この集中を終了しますか？" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Kết thúc phiên tập trung này?" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "이 집중을 종료할까요?" } }
       }
     },
     "timer.end.end" : {
@@ -1016,7 +1234,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "End" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结束" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "終了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "終了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Kết thúc" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "종료" } }
       }
     },
     "timer.end.keep_going" : {
@@ -1025,7 +1245,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Keep going" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "继续专注" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "繼續專注" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "続ける" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "続ける" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tiếp tục" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "계속" } }
       }
     },
     "timer.status.ends_at" : {
@@ -1034,7 +1256,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Ends at %@" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结束于 %@" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結束於 %@" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@に終了" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@に終了" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Kết thúc lúc %@" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%@에 종료" } }
       }
     },
     "timer.status.paused_remaining" : {
@@ -1043,7 +1267,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Paused · %@ remaining" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已暂停 · 剩余 %@" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "已暫停 · 剩餘 %@" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止 · 残り %@" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止 · 残り %@" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tạm dừng · còn %@" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "일시 정지 · %@ 남음" } }
       }
     },
     "timer.tip.keeps_running" : {
@@ -1052,7 +1278,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "You can close this popover; the timer keeps running." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "可以关闭此窗口，计时仍会继续。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "可以關閉此視窗，計時仍會繼續。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画面を閉じてもタイマーは動き続けます。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画面を閉じてもタイマーは動き続けます。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đóng cửa sổ này, đồng hồ vẫn chạy." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "이 창을 닫아도 타이머는 계속 실행됩니다." } }
       }
     },
     "timer.tip.paused" : {
@@ -1061,7 +1289,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "You can close this popover; the interval stays paused." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "可以关闭此窗口，计时会保持暂停。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "可以關閉此視窗，計時會保持暫停。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画面を閉じてもタイマーは一時停止のままです。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画面を閉じてもタイマーは一時停止のままです。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đóng cửa sổ này, phiên vẫn tạm dừng." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "이 창을 닫아도 일시 정지는 유지됩니다." } }
       }
     },
     "timer.tip.rhythm" : {
@@ -1070,7 +1300,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Enjoy the rhythm of focused time." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "享受专注的节奏。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "享受專注的節奏。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中できる時間のリズムを楽しみましょう。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中できる時間のリズムを楽しみましょう。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tận hưởng nhịp tập trung." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중의 리듬을 즐겨 보세요." } }
       }
     },
     "timer.title.break" : {
@@ -1079,7 +1311,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Step away" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "休息一下" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "休息一下" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ひと休み" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ひと休み" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Nghỉ một chút" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "잠시 쉬기" } }
       }
     },
     "timer.title.idle" : {
@@ -1088,7 +1322,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Ready to focus" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "准备专注" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "準備專注" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中の準備" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中の準備" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Sẵn sàng tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중할 준비" } }
       }
     },
     "timer.title.long_break" : {
@@ -1097,7 +1333,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Take a long break" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "好好休息一下" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "好好休息一下" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩をどうぞ" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "長い休憩をどうぞ" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Nghỉ dài" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "긴 휴식" } }
       }
     },
     "timer.title.paused" : {
@@ -1106,7 +1344,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Paused" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂停中" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "暫停中" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止中" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "一時停止中" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tạm dừng" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "일시 정지" } }
       }
     },
     "timer.title.running" : {
@@ -1115,7 +1355,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus in progress" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "专注进行中" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "專注進行中" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中しています" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "集中しています" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đang tập trung" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "집중 중" } }
       }
     },
     "timer.title.short_break" : {
@@ -1124,7 +1366,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Take a short break" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "短暂休息一下" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "短暫休息一下" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩をどうぞ" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "短い休憩をどうぞ" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Nghỉ ngắn" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "짧은 휴식" } }
       }
     },
     "updates.action.check_now" : {
@@ -1133,7 +1377,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Check Now" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "立即检查" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "立即檢查" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "今すぐ確認" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "今すぐ確認" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Kiểm tra ngay" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "지금 확인" } }
       }
     },
     "updates.action.install" : {
@@ -1142,7 +1388,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Install Update" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "安装更新" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "安裝更新" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートをインストール" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートをインストール" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Cài đặt bản cập nhật" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "업데이트 설치" } }
       }
     },
     "updates.action.later" : {
@@ -1151,7 +1399,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Later" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "稍后" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "稍後" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "あとで" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "あとで" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Để sau" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "나중에" } }
       }
     },
     "updates.action.later_hint" : {
@@ -1160,7 +1410,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Keeps the update available" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "保留此更新" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "保留此更新" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートを残しておきます" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートを残しておきます" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Giữ bản cập nhật để cài sau" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "업데이트를 사용할 수 있는 상태로 둡니다" } }
       }
     },
     "updates.beta.detail" : {
@@ -1169,7 +1421,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Test builds before a release land here." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "正式发布前的测试版本会出现在这里。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "正式發布前的測試版本會出現在這裡。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "正式リリース前のテスト版がここに届きます。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "正式リリース前のテスト版がここに届きます。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Bản thử nghiệm sẽ xuất hiện ở đây." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "정식 출시 전 테스트 버전이 여기에 표시됩니다." } }
       }
     },
     "updates.beta.title" : {
@@ -1178,7 +1432,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Beta updates" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "测试版更新" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "測試版更新" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ベータ版アップデート" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ベータ版アップデート" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Bản beta" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "베타 업데이트" } }
       }
     },
     "updates.dot.hint" : {
@@ -1187,7 +1443,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Shows update controls" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "显示更新控件" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "顯示更新控制項" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートの操作を表示します" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートの操作を表示します" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Hiện điều khiển cập nhật" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "업데이트 제어를 표시합니다" } }
       }
     },
     "updates.dot.label" : {
@@ -1196,7 +1454,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Update settings" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "更新设置" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "更新設定" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデート設定" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデート設定" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tùy chọn cập nhật" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "업데이트 설정" } }
       }
     },
     "updates.dot.value_available" : {
@@ -1205,7 +1465,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Update available" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "有可用更新" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "有可用更新" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートがあります" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートがあります" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Có bản cập nhật" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "업데이트 사용 가능" } }
       }
     },
     "updates.dot.value_none" : {
@@ -1214,7 +1476,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "No update available" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "没有可用更新" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "沒有可用更新" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートはありません" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデートはありません" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Không có bản cập nhật" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "사용 가능한 업데이트 없음" } }
       }
     },
     "updates.mode.a11y" : {
@@ -1223,7 +1487,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "%@ updates" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%@更新" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "%@更新" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@のアップデート" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@のアップデート" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Chế độ cập nhật: %@" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%@ 업데이트" } }
       }
     },
     "updates.mode.download.detail" : {
@@ -1232,7 +1498,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Downloads quietly and installs when Pomodoro quits." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "静默下载，并在退出 Pomodoro 时安装。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "靜默下載，並在結束 Pomodoro 時安裝。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "静かにダウンロードし、Pomodoro終了時にインストールします。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "静かにダウンロードし、Pomodoro終了時にインストールします。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tải xuống âm thầm và cài đặt khi thoát Pomodoro." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "조용히 다운로드하고 Pomodoro 종료 시 설치합니다." } }
       }
     },
     "updates.mode.download.title" : {
@@ -1241,7 +1509,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Download" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "下载" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "下載" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ダウンロード" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ダウンロード" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tải xuống" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "다운로드" } }
       }
     },
     "updates.mode.never.detail" : {
@@ -1250,7 +1520,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Automatic updates off; manual checks still work." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自动更新已关闭，仍可手动检查。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "自動更新已關閉，仍可手動檢查。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "自動アップデートはオフですが、手動で確認できます。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "自動アップデートはオフですが、手動で確認できます。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Tự động cập nhật đã tắt; vẫn có thể kiểm tra thủ công." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "자동 업데이트를 끕니다. 수동 확인은 계속 사용할 수 있습니다." } }
       }
     },
     "updates.mode.never.title" : {
@@ -1259,7 +1531,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Never" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "从不" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "從不" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "しない" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "しない" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Không bao giờ" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "안 함" } }
       }
     },
     "updates.mode.notify.detail" : {
@@ -1268,7 +1542,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Checks daily; you choose when to install." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "每天检查，由你决定何时安装。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "每天檢查，由你決定何時安裝。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "毎日確認し、インストールはあなたが選びます。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "毎日確認し、インストールはあなたが選びます。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Kiểm tra hàng ngày; bạn chọn thời điểm cài đặt." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "매일 확인하며 설치 시점은 직접 선택합니다." } }
       }
     },
     "updates.mode.notify.title" : {
@@ -1277,7 +1553,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Notify" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "通知" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "通知" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "通知" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Thông báo" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "알림" } }
       }
     },
     "updates.panel.title" : {
@@ -1286,7 +1564,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Updates" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "更新" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "更新" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデート" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アップデート" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Cập nhật" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "업데이트" } }
       }
     },
     "updates.section.automatic" : {
@@ -1295,7 +1575,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "AUTOMATIC" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自动" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "自動" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "自動" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "自動" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "TỰ ĐỘNG" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "자동" } }
       }
     },
     "updates.status.available" : {
@@ -1304,7 +1586,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Version %@ is available." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "版本 %@ 可用。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "版本 %@ 可用。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "バージョン %@ が利用できます。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "バージョン %@ が利用できます。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đã có phiên bản %@." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "버전 %@ 사용 가능." } }
       }
     },
     "updates.status.installing" : {
@@ -1313,7 +1597,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Installing version %@…" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "正在安装版本 %@…" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "正在安裝版本 %@…" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "バージョン %@ をインストール中…" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "バージョン %@ をインストール中…" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Đang cài đặt phiên bản %@…" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "버전 %@ 설치 중…" } }
       }
     },
     "updates.status.ready" : {
@@ -1322,7 +1608,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Version %@ is ready to install." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "版本 %@ 可以安装。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "版本 %@ 可以安裝。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "バージョン %@ をインストールできます。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "バージョン %@ をインストールできます。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Phiên bản %@ đã sẵn sàng để cài đặt." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "버전 %@ 설치 준비 완료." } }
       }
     },
     "updates.status.unavailable" : {
@@ -1331,7 +1619,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Updates are unavailable in this build." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "此版本不支持更新。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "此版本不支援更新。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "このビルドではアップデートを利用できません。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "このビルドではアップデートを利用できません。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Bản dựng này không hỗ trợ cập nhật." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "이 빌드에서는 업데이트를 사용할 수 없습니다." } }
       }
     },
     "updates.status.up_to_date" : {
@@ -1340,7 +1630,9 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro is up to date." } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro 已是最新版本。" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro 已是最新版本。" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroは最新です。" } }
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoroは最新です。" } },
+        "vi" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro đã là phiên bản mới nhất." } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "Pomodoro가 최신 상태입니다." } }
       }
     }
   },

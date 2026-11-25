@@ -2,6 +2,10 @@
 
 **Feature design specification**
 
+> Superseded for locale scope and geometry by
+> `2026-11-25-six-language-localization.md`; historical acceptance records
+> remain preserved.
+
 - Status: Approved; amended by the in-app language picker specification
 - Date: 2026-11-23
 - Platform: macOS 15+

@@ -27,6 +27,10 @@ let package = Package(
         .testTarget(
             name: "PomodoroCoreTests",
             dependencies: ["PomodoroCore"]
+        ),
+        .testTarget(
+            name: "PomodoroTests",
+            dependencies: ["Pomodoro"]
         )
     ],
     swiftLanguageModes: [.v6]

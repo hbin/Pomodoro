@@ -41,14 +41,15 @@ archives, checksums, and appcasts are written to `dist/`.
 
 ## Localization
 
-Supported locale identifiers are `en`, `zh-Hans`, `zh-Hant`, and `ja`.
-English is the development language and fallback. `CFBundleLocalizations` in
-`Resources/Info.plist` must list exactly those four identifiers.
+Supported locale identifiers are `en`, `zh-Hans`, `zh-Hant`, `ja`, `vi`, and
+`ko`. English is the development language and fallback.
+`CFBundleLocalizations` in `Resources/Info.plist` must list exactly those six
+identifiers in that order.
 
 Runtime strings live in `Resources/Localization/Localizable.xcstrings`.
 Info.plist strings, currently `NSHumanReadableCopyright`, live in
 `Resources/Localization/InfoPlist.xcstrings`. Both catalogs use English as
-their source language and contain all four localizations.
+their source language and contain all six localizations.
 
 Keys are semantic and grouped by surface: `common.*`, `menu.*`,
 `status_bar.*`, `timer.*`, `completion.*`, `settings.*`,
@@ -56,8 +57,8 @@ Keys are semantic and grouped by surface: `common.*`, `menu.*`,
 `announcements.*`, and `errors.*`. `InfoPlist.xcstrings` uses the plist key
 names directly, currently `NSHumanReadableCopyright`. Use whole sentences
 rather than concatenating translated fragments. English count-bearing copy uses
-String Catalog plural variations; Chinese and Japanese use a single
-grammatical form.
+String Catalog plural variations; Chinese, Japanese, Vietnamese, and Korean use
+a single grammatical form.
 
 Use `L10n.string`, `L10n.format`, or `L10n.count` from
 `Sources/Pomodoro/Localization.swift` for all runtime copy, including copy in
@@ -73,6 +74,12 @@ language captured at launch. `L10n` resolves strings from the matching
 `.lproj` bundle, and `Typo` resolves the same active language so changing the
 picker updates copy, typography, menus, and status-item accessibility without
 a relaunch.
+
+Vietnamese uses Avenir Next for interface text and Palatino for display
+serifs. Korean uses Apple SD Gothic Neo for interface text and AppleMyungjo for
+display serifs. Korean follows the CJK tracking rule (zero added tracking);
+Vietnamese keeps the Latin tracking values. Do not change
+`Typo.lineHeight`.
 
 When changing language in `TimerModel`, rebuild the app menu, refresh the
 status item, and reschedule the pending notification at the existing
@@ -93,22 +100,28 @@ The validator fails on a missing locale, empty value, unsupported plural shape,
 or format-placeholder mismatch. When adding or changing copy, update every
 localized value and rerun the debug build.
 
-The three translated catalogs are complete drafts pending native-speaker
-review. Record that state on the release checklist and keep the catalog comments
-current. Do not replace unfinished translations with English placeholders.
+The `zh-Hans`, `zh-Hant`, `ja`, `vi`, and `ko` catalogs are team-authored
+drafts. For this release, at least two team members must review the Vietnamese
+and Korean additions independently, and neither reviewer may approve copy they
+authored. The Chinese and Japanese catalogs remain internal drafts. There is no
+external native-speaker certification for any locale; do not claim
+native-speaker or professional review. Record "team internal cross-review, no
+external native-speaker certification" in the release record. Do not replace
+unfinished translations with English placeholders.
 
 Before a release:
 
-- [ ] Native-speaker review of the `zh-Hans`, `zh-Hant`, and `ja` catalogs is
-      complete; update the review state in the catalog comments.
+- [ ] Independent team cross-review of the `vi` and `ko` catalogs is complete,
+      and the release record states that no external native-speaker
+      certification was performed.
 - [ ] `swift scripts/check-localizations.swift .` passes.
-- [ ] `./scripts/build-app.sh debug` installs all four localizations.
+- [ ] `./scripts/build-app.sh debug` installs all six localizations.
 - [ ] The manual language matrix in the in-app language picker spec passes for
-      all four languages, including Light, Black, and reduced-transparency
+      all six languages, including Light, Black, and reduced-transparency
       appearances.
 
 For normal QA, launch the app and change **Settings → Appearance → Language**
-through all five choices. Each change should apply immediately, preserve any
+through all seven choices. Each change should apply immediately, preserve any
 running timer, and survive a relaunch. To test the **System Default** path with
 an explicit macOS language, first clear the app-only override, quit any running
 instance, and launch the built app with:
@@ -130,6 +143,8 @@ app and drops `--args`, so a stale instance keeps the previous language.
 | Simplified Chinese | `(zh-Hans)` | `zh_CN` |
 | Traditional Chinese | `(zh-Hant)` | `zh_TW` |
 | Japanese | `(ja)` | `ja_JP` |
+| Vietnamese | `(vi)` | `vi_VN` |
+| Korean | `(ko)` | `ko_KR` |
 
 Replace `--open-popover` with `--open-settings` to open Settings directly.
 These arguments use the same mechanism as the per-app language setting in

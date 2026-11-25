@@ -16,6 +16,7 @@ SwiftPM. The app has no Dock presence and is composed of two main targets:
   integration, timer orchestration, notifications, sounds, themes, and Sparkle
   updates.
 - `Tests/PomodoroCoreTests`: deterministic XCTest coverage for the core.
+- `Tests/PomodoroTests`: app-language resolution and language-preference tests.
 - `Resources`: bundle metadata, entitlements, and the app icon.
 - `scripts`: local build, packaging, versioning, icon, and appcast helpers.
 - `docs/superpowers/specs`: product and design specifications. Read the
@@ -123,14 +124,14 @@ nested components in the required order, and verifies entitlements.
   the title's full line height and prefer shorter Japanese copy over shrinking
   type. In Settings, text may wrap and the card height may change, but section
   hairlines, toggles, the language picker and footer controls keep their
-  horizontal slots. Check all four languages side by side.
+  horizontal slots. Check all six languages side by side.
 - There are no UI snapshot tests. For visual changes, build the app, launch it,
   and inspect the affected states in both themes.
 - Check the Settings card for overflow after every change to its content or
   layout, not only before a release. The card is 340 points wide, is 592 points
   at its shortest, and grows to the measured content plus footer, so a new row,
   a longer translation, or a notification-state line must never push the last
-  row or the footer into a scrollbar. Open Settings in all four languages, with
+  row or the footer into a scrollbar. Open Settings in all six languages, with
   notifications allowed and denied, in both themes, and confirm the footer is
   visible without a scroll indicator; a scrollbar here is a bug, not a fallback.
 - Do not regenerate the README screenshots with each UI change. Refresh
@@ -195,7 +196,8 @@ nested components in the required order, and verifies entitlements.
   follow the surrounding Swift style.
 - New user-facing copy must use a semantic key in
   `Resources/Localization/Localizable.xcstrings` and include English,
-  Simplified Chinese, Traditional Chinese, and Japanese values. Info.plist copy
+  Simplified Chinese, Traditional Chinese, Japanese, Vietnamese, and Korean
+  values (`en`, `zh-Hans`, `zh-Hant`, `ja`, `vi`, `ko`). Info.plist copy
   belongs in `InfoPlist.xcstrings`. Resolve runtime copy through `L10n` so the
   in-app language picker updates immediately. Do not hardcode English UI copy,
   use `Bundle.module`, or add a locale-specific code path. Run

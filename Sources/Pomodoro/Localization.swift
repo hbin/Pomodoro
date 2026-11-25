@@ -5,6 +5,8 @@ enum AppLanguage: String, CaseIterable, Identifiable, Sendable {
     case simplifiedChinese = "zh-Hans"
     case traditionalChinese = "zh-Hant"
     case japanese = "ja"
+    case vietnamese = "vi"
+    case korean = "ko"
 
     var id: String { rawValue }
 
@@ -14,6 +16,8 @@ enum AppLanguage: String, CaseIterable, Identifiable, Sendable {
         case .simplifiedChinese: "简体中文"
         case .traditionalChinese: "繁體中文"
         case .japanese: "日本語"
+        case .vietnamese: "Tiếng Việt"
+        case .korean: "한국어"
         }
     }
 
@@ -28,7 +32,12 @@ enum AppLanguage: String, CaseIterable, Identifiable, Sendable {
         let normalized = identifier
             .replacingOccurrences(of: "_", with: "-")
             .lowercased()
-        if normalized.hasPrefix("zh") {
+        let primaryLanguage = String(
+            normalized.prefix { $0 != "-" }
+        )
+
+        switch primaryLanguage {
+        case "zh":
             if normalized.contains("hant")
                 || normalized.hasPrefix("zh-tw")
                 || normalized.hasPrefix("zh-hk")
@@ -37,10 +46,11 @@ enum AppLanguage: String, CaseIterable, Identifiable, Sendable {
             } else {
                 self = .simplifiedChinese
             }
-        } else if normalized.hasPrefix("ja") {
-            self = .japanese
-        } else {
-            self = .english
+        case "en": self = .english
+        case "ja": self = .japanese
+        case "vi": self = .vietnamese
+        case "ko": self = .korean
+        default: self = .english
         }
     }
 }

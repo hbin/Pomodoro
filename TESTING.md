@@ -277,7 +277,7 @@ automated tests.
       from its label text.
 - [ ] The Settings card grows to fit its content: the three duration fields,
       both Auto-start rows, the notifications explanation, and the footer all
-      stay visible with no scrollbar, in all four languages, both themes, and
+      stay visible with no scrollbar, in all six languages, both themes, and
       with notifications allowed or denied. The card is never shorter than the
       timer page's card plus the settings rows.
 - [ ] Changing the mode animates the light over 850 ms; with Reduce Motion
@@ -298,17 +298,31 @@ automated tests.
 
 ### Localization
 
-- [ ] English, Simplified Chinese, Traditional Chinese, and Japanese are
-      available in the language picker.
-- [ ] The home popover and completion states fit without clipping in all four
+- [ ] English, Simplified Chinese, Traditional Chinese, Japanese, Vietnamese,
+      and Korean are available in the language picker as System Default plus
+      the six autonyms, in that order.
+- [ ] The home popover and completion states fit without clipping in all six
       languages.
-- [ ] Settings rows stay aligned across all four languages in both themes, with
+- [ ] Settings rows stay aligned across all six languages in both themes, with
       no visible scrollbar.
 - [ ] Switching language updates the popover, menus, status-item copy, and
       typography immediately without restarting the timer.
 - [ ] A pending notification is rescheduled for the existing end date after a
       language change.
-- [ ] String Catalogs contain every required key in all four localizations.
+- [ ] String Catalogs contain every required key in all six localizations,
+      including Vietnamese and Korean `InfoPlist.strings`.
+- [ ] Vietnamese titles use Palatino without mixed-font diacritics; Korean
+      titles use AppleMyungjo and interface copy uses Apple SD Gothic Neo.
+- [ ] The app menu, status-item menu, tooltip, menu-bar minutes, About
+      copyright, notifications, and VoiceOver copy are correct in all six
+      languages.
+- [ ] Settings has no scrollbar with notifications allowed and denied in all six
+      languages and both themes.
+- [ ] An explicit Vietnamese or Korean selection survives relaunch.
+- [ ] With System Default active, macOS per-app language set to Vietnamese or
+      Korean applies on the next cold launch.
+- [ ] The release record states "team internal cross-review, no external
+      native-speaker certification."
 
 ### Notifications and sound
 

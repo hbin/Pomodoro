@@ -50,7 +50,7 @@ for catalog in "$ROOT"/Resources/Localization/*.xcstrings; do
         --output-directory "$APP/Contents/Resources"
 done
 
-for locale in en zh-Hans zh-Hant ja; do
+for locale in en zh-Hans zh-Hant ja vi ko; do
     for table in Localizable.strings InfoPlist.strings; do
         if [[ ! -f "$APP/Contents/Resources/$locale.lproj/$table" ]]; then
             echo "Missing localization resource: $locale.lproj/$table" >&2

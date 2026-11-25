@@ -1,7 +1,7 @@
 #!/usr/bin/env swift
 import Foundation
 
-let supportedLocales = ["en", "zh-Hans", "zh-Hant", "ja"]
+let supportedLocales = ["en", "zh-Hans", "zh-Hant", "ja", "vi", "ko"]
 let root = URL(
     fileURLWithPath: CommandLine.arguments.count > 1
         ? CommandLine.arguments[1]

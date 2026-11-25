@@ -5,13 +5,18 @@
 - Status: Approved for implementation
 - Date: 2026-11-23
 - Platform: macOS 15+
-- Languages: System Default, English, 简体中文, 繁體中文, 日本語
+- Languages: System Default, English, 简体中文, 繁體中文, 日本語, Tiếng Việt,
+  한국어
+
+Locale scope is superseded by
+`2026-11-25-six-language-localization.md`, which is authoritative for the six
+locales and geometry. The picker decisions below remain the historical design.
 
 ## 1. Summary
 
-Pomodoro already ships complete runtime localization for English, Simplified
-Chinese, Traditional Chinese, and Japanese. Language currently follows the
-macOS app-language setting and is resolved at launch.
+Pomodoro ships complete runtime localization for English, Simplified Chinese,
+Traditional Chinese, Japanese, Vietnamese, and Korean. Language currently
+follows the macOS app-language setting and is resolved at launch.
 
 This feature adds a compact language picker to Settings. It lets people choose
 an app-only language override, applies the change immediately, and restores
@@ -26,11 +31,11 @@ preserves the existing macOS app-language behavior.
 3. Preserve timer state and the current interval's absolute end time.
 4. Fit inside the 340-point-wide Settings surface without a persistent
    scrollbar.
-5. Keep the existing four-language String Catalog as the single source of copy.
+5. Keep the six-language String Catalog as the single source of copy.
 
 ## 3. Non-goals
 
-- Adding more languages.
+- Adding languages beyond the six supported here.
 - Changing the locale used for dates, times, and number formatting.
 - Live-updating the AppKit standard About panel after launch.
 - Live-updating an already delivered notification.
@@ -54,8 +59,8 @@ Menu-button treatment:
 - `plaque` fill with the shared brass border.
 - 11.5-point medium interface font.
 - Leading globe symbol, current-language label, and trailing chevron.
-- The menu opens with **System Default**, a divider, and the four autonyms:
-  `English`, `简体中文`, `繁體中文`, `日本語`.
+- The menu opens with **System Default**, a divider, and the six autonyms:
+  `English`, `简体中文`, `繁體中文`, `日本語`, `Tiếng Việt`, `한국어`.
 - The active choice uses native menu checkmark behavior.
 - Accessibility label is the localized **Language** title; the value is the
   current choice; the hint is the localized detail text.
@@ -68,11 +73,12 @@ error or notification detail.
 ## 5. Persistence and resolution
 
 - Store an explicit choice in `UserDefaults` under
-  `PomodoroLanguagePreference` as one of `en`, `zh-Hans`, `zh-Hant`, or `ja`.
+  `PomodoroLanguagePreference` as one of `en`, `zh-Hans`, `zh-Hant`, `ja`,
+  `vi`, or `ko`.
 - Remove the key when **System Default** is selected.
 - Absence of the key means System Default.
 - Capture the macOS app language when the process launches and resolve it to
-  one of the four supported `AppLanguage` values.
+  one of the six supported `AppLanguage` values.
 - Do not add language state to `PersistedState` or the state JSON.
 - `L10n` resolves strings from the matching `.lproj` bundle; unavailable
   bundles fall back to the main bundle.
@@ -105,8 +111,9 @@ re-localize with the interface.
 - `settings.language.system`
 - `announcements.language_changed`
 
-All five keys include English, Simplified Chinese, Traditional Chinese, and
-Japanese values in `Resources/Localization/Localizable.xcstrings`.
+All five keys include English, Simplified Chinese, Traditional Chinese,
+Japanese, Vietnamese, and Korean values in
+`Resources/Localization/Localizable.xcstrings`.
 
 ## 8. Validation
 
@@ -119,7 +126,7 @@ Automated:
 
 Manual:
 
-- Switch through all five choices without relaunching.
+- Switch through all seven choices without relaunching.
 - Verify Settings, timer states, completion states, updates, app menu,
   status-item menu, menu-bar title, tooltip, accessibility copy, and recovery
   or save errors.
@@ -127,7 +134,8 @@ Manual:
   replaced with the new language.
 - Verify explicit choice and System Default both persist correctly.
 - Verify Light, Black, and reduced-transparency presentation.
-- Verify Chinese and Japanese labels fit without clipping or truncation.
+- Verify Chinese, Japanese, Vietnamese, and Korean labels fit without clipping
+  or truncation.
 - Confirm the standard About panel remains launch-localized, which is an
   accepted limitation.
 
