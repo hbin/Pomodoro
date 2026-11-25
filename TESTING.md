@@ -334,8 +334,9 @@ automated tests.
 - [ ] Notify, Download, and Never modes behave as documented.
 - [ ] Check Now and Check for Updates work and report availability correctly.
 - [ ] The update-available dot only appears in the documented states.
-- [ ] With the update panel open, clicking anywhere in the Settings content
-      area outside the panel dismisses only the panel; that click does not
+- [ ] With the update panel open, clicking anywhere on the Settings card
+      outside the panel—including the 20-point side bands and the top and
+      bottom outer edges—dismisses only the panel; that click does not
       activate the control underneath, and a second click works normally.
 - [ ] Opening the update panel while a duration is being edited ends that
       edit, and dismissing the panel leaves no Settings field receiving later

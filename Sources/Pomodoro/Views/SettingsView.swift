@@ -6,11 +6,11 @@ import UserNotifications
 struct SettingsView: View {
     @ObservedObject var model: TimerModel
     @ObservedObject var updates: UpdateController
+    @Binding var showsUpdatePanel: Bool
     let onQuit: () -> Void
     let onClose: () -> Void
     let onContentHeight: (CGFloat) -> Void
     @Environment(\.colorScheme) private var scheme
-    @State private var showsUpdatePanel = false
     @State private var editingDuration: Phase?
     @State private var scrolledHeight: CGFloat = 0
     @State private var footerHeight: CGFloat = 0

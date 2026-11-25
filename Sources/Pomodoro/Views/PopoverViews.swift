@@ -16,6 +16,7 @@ struct PopoverRootView: View {
     @ObservedObject var model: TimerModel
     @ObservedObject var updates: UpdateController
     @Environment(\.colorScheme) private var scheme
+    @State private var showsUpdatePanel = false
 
     /// The timer card is a 2:3 portrait. Settings uses the same width but
     /// keeps its own content-measured height.
@@ -85,6 +86,7 @@ struct PopoverRootView: View {
                     SettingsView(
                         model: model,
                         updates: updates,
+                        showsUpdatePanel: $showsUpdatePanel,
                         onQuit: { NSApp.terminate(nil) },
                         onClose: model.closeSettings,
                         onContentHeight: model.reportSettingsContentHeight
@@ -93,9 +95,15 @@ struct PopoverRootView: View {
                     content
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 19)
-            .padding(.bottom, 18)
+            .padding(.horizontal, SettingsCardMetrics.horizontalInset)
+            .padding(.top, SettingsCardMetrics.topInset)
+            .padding(.bottom, SettingsCardMetrics.bottomInset)
+
+            if model.isShowingSettings, showsUpdatePanel {
+                SettingsCardMarginDismissOverlay {
+                    showsUpdatePanel = false
+                }
+            }
         }
         .frame(
             width: Self.contentWidth(showingSettings: model.isShowingSettings),
@@ -105,6 +113,11 @@ struct PopoverRootView: View {
             )
         )
         .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
+        .onChange(of: model.isShowingSettings) { _, isShowing in
+            if !isShowing {
+                showsUpdatePanel = false
+            }
+        }
     }
 
     @ViewBuilder
@@ -118,6 +131,47 @@ struct PopoverRootView: View {
                 completionStartSweep: model.completionStartSweepPending
             )
         }
+    }
+}
+
+private enum SettingsCardMetrics {
+    static let horizontalInset: CGFloat = 20
+    static let topInset: CGFloat = 19
+    static let bottomInset: CGFloat = 18
+}
+
+/// Captures clicks in the card chrome outside `SettingsView`'s content bounds.
+/// The content-area overlay remains inside `SettingsView`; together they cover
+/// the whole card while leaving the update panel interactive.
+private struct SettingsCardMarginDismissOverlay: View {
+    let onDismiss: () -> Void
+
+    var body: some View {
+        Color.clear
+            .contentShape(SettingsCardMarginShape(), eoFill: true)
+            .onTapGesture(perform: onDismiss)
+            .accessibilityHidden(true)
+    }
+}
+
+private struct SettingsCardMarginShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.addRect(rect)
+        path.addRect(
+            CGRect(
+                x: rect.minX + SettingsCardMetrics.horizontalInset,
+                y: rect.minY + SettingsCardMetrics.topInset,
+                width: max(0, rect.width - SettingsCardMetrics.horizontalInset * 2),
+                height: max(
+                    0,
+                    rect.height
+                        - SettingsCardMetrics.topInset
+                        - SettingsCardMetrics.bottomInset
+                )
+            )
+        )
+        return path
     }
 }
 
