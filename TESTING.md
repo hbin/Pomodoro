@@ -11,32 +11,32 @@ automated tests.
 
 ## Release record
 
-- Version: 0.4.2
-- Build: 16
+- Version: 0.4.3
+- Build: 17
 - Channel: stable
 - Tester: Lebron James (Tech Lead); independent reviewers Jaylen Brown, VJ, and Tyrese Maxey
 - Date: 2026-11-25
 - macOS version: 27.2.1 (26B131)
-- Scope: Vietnamese and Korean localization, six-language catalogs and
-  typography, in-app language picker, and macOS per-app language. Timer,
-  persistence, updates, sound, and UI geometry are unchanged.
+- Scope: equal-duration Focus, Short Break, and Long Break mode switching still
+  animates the timer readout. Localization, persistence, updates, sound, and UI
+  geometry are unchanged.
 - Localization review: team internal cross-review, no external native-speaker
   certification.
 - Automated gate: `swift test` passed 58/58; the localization validator passed
   886 values across 6 locales; the debug build, catalog installation, signing,
   and entitlement checks passed.
-- UI gate: existing English, Simplified Chinese, Traditional Chinese, and
-  Japanese values are byte-for-byte unchanged; Vietnamese and Korean Settings,
-  Timer, language menu, and the Vietnamese update panel were inspected in Light
-  and Black. Settings remains 340 points wide with the footer visible and no
-  scrollbar.
+- UI gate: equal-duration mode switches between Focus, Short Break, and Long
+  Break were inspected in Light and Black, in English and Simplified Chinese,
+  with Reduce Motion on and off, using the arrow controls and the dot controls.
+  The 5/5/5 and 5/5/15 duration combinations and rapid consecutive switches
+  each animate the readout without a skipped or doubled transition. Settings
+  remains 340 points wide with the footer visible and no scrollbar.
 - Exceptions: the complete historical manual matrix was not repeated for
-  unchanged timer, persistence, Sparkle, sound, and accessibility paths; the
-  prior 0.4.1 stable acceptance and unchanged core tests cover regression.
-  Reduced transparency and every notification or VoiceOver state were not
-  separately re-captured this cycle.
+  unchanged localization, persistence, Sparkle, sound, notification, and
+  VoiceOver paths; the prior 0.4.2 stable acceptance and unchanged core tests
+  cover regression.
 - Screenshots: `docs/screenshots` was not refreshed because the captured idle
-  timer UI is unchanged and the new copy is not shown.
+  timer UI's visual structure and copy are unchanged.
 
 ## Before tagging
 
