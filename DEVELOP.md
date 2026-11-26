@@ -13,6 +13,24 @@
 - macOS 15 or later.
 - Xcode 16 or later with the Swift 6 toolchain.
 
+## Source layout
+
+```
+Sources/
+  Pomodoro/
+    App/           app lifecycle, menu-bar shell, popover hosting
+    Features/      Timer, Settings, and Updates model/view code
+    DesignSystem/  shared colors, typography, backgrounds, and components
+    Services/      notifications and sound
+    Localization/  language resolution and runtime string lookup
+  PomodoroCore/    UI-independent timer domain and persistence
+```
+
+Place new app-layer files in the feature or shared area that owns them. Keep
+`PomodoroCore` independent of AppKit, SwiftUI, notifications, sound, and
+persistence side effects outside its own `Persistence/` area. Test files mirror
+the production domain they cover.
+
 ## Development
 
 Run the tests:
@@ -71,11 +89,10 @@ a single grammatical form.
 Use `L10n.string`, `L10n.format`, or `L10n.count` from
 `Sources/Pomodoro/Localization/Localization.swift` for all runtime copy,
 including copy in SwiftUI views. Do not use a bare localized
-`Text("semantic.key")` for runtime
-copy because SwiftUI literals keep the language selected at launch and would
-not update with the in-app language picker. Do not pass a localized fragment
-into an English sentence, and do not use `Bundle.module`; the app bundle is
-assembled by `scripts/build-app.sh`.
+`Text("semantic.key")` for runtime copy because SwiftUI literals keep the
+language selected at launch and would not update with the in-app language
+picker. Do not pass a localized fragment into an English sentence, and do not
+use `Bundle.module`; the app bundle is assembled by `scripts/build-app.sh`.
 
 The in-app picker stores an app-only override in `UserDefaults` under
 `PomodoroLanguagePreference`. With no stored value, Pomodoro uses the macOS app
