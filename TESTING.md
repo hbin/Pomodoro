@@ -42,12 +42,15 @@ automated tests.
 
 ### Automated checks
 
+- [ ] The latest `CI` workflow run on `main` is green.
 - [ ] `swift test` passes with no failures.
 - [ ] `./scripts/build-app.sh debug` passes, including String Catalog
       validation, signing, entitlement verification, and resource installation.
 - [ ] `Resources/Info.plist` contains the intended
       `CFBundleShortVersionString` and `CFBundleVersion`.
 - [ ] `Package.resolved` is committed and matches `Package.swift`.
+- [ ] The `Release` run was approved by the product owner at the `release`
+      environment gate.
 
 ### Timer and rhythm
 
@@ -405,6 +408,8 @@ automated tests.
       move to the final build.
 - [ ] The Sparkle feed and update archive are publicly readable.
 - [ ] The appcast contains valid EdDSA signatures for the feed and enclosure.
+- [ ] `./scripts/verify-release.sh --manifest <tag>.json` reports PASS, or every
+      failing row is explained in the manifest or release ledger.
 - [ ] The disk image is notarized and stapled when the required secrets are present.
 - [ ] The GitHub release summary and release notes are correct.
 - [ ] A clean download can be installed and launched.

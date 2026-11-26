@@ -274,6 +274,36 @@ The script also accepts `VERSION`, `ZIP_PATH`, `NOTES_PATH`,
 the feed, fails if either signature is missing, and verifies the feed with
 `sign_update`.
 
+### Verifying a published release
+
+`scripts/verify-release.sh` compares a published release with its JSON release
+manifest and prints one PASS/FAIL row per expectation:
+
+```sh
+./scripts/verify-release.sh --manifest path/to/<tag>.json
+```
+
+The manifest supplies every expected value, so the script never guesses: it
+checks the release record, annotated tag, CI run, asset ids/sizes/SHA-256,
+downloads, checksums, ZIP and DMG contents, bundle metadata, appcast fields,
+both EdDSA signatures, the beta feed, `releases/latest`, and the rollback
+anchor. All GitHub calls are GETs; nothing is written remotely. It needs `gh`
+authentication and the Sparkle `sign_update` binary from `.build/artifacts`.
+
+Exit codes are `0` pass, `1` usage/manifest error, `2` environment, network, or
+unwritable report, `3` public URL failure, `4` asset mismatch, `5` artifact
+failure, and `6` release/git/CI/feed mismatch. Useful flags:
+`--check-manifest` validates the manifest offline, `--quiet` prints only
+failures, and `--report FILE` keeps the table as TSV. `--grandfathered`
+downgrades fields missing from the pre-freeze manifest to SKIP rows, but it is
+accepted only for `v0.4.2` and marks the run as `GRANDFATHERED MODE` in the
+table and TSV. When a newer release is already live, the live-feed checks
+report SKIP because those URLs no longer describe the tag being audited.
+
+For release evidence, write the report to
+`outputs/verify-release/<tag>-verify.tsv` (team records) and record that file's
+SHA-256 in the release manifest's `verification[]` or `note` field.
+
 ## Versioning
 
 The public version and internal build live in `Resources/Info.plist`.
@@ -329,6 +359,12 @@ Releases are built and published automatically by GitHub Actions. Pushing a
 version tag starts the release workflow, which builds a universal app once,
 generates release notes, packages the DMG and Sparkle ZIP, signs the appcast,
 and publishes all five assets with a generated summary and changelog.
+
+The release job targets the protected `release` environment. A tag push
+therefore pauses the workflow until the product owner approves the deployment
+in GitHub; this is the machine-enforced GO gate. Pushes to `main` and pull
+requests run the separate `CI` workflow, which runs `swift test`; a red CI run
+blocks release preparation.
 
 The annotated tag subject becomes the release summary. Keep it to one concise,
 user-facing sentence. If the tag uses the default `Pomodoro X.Y.Z` message, the

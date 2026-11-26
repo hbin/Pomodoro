@@ -553,7 +553,9 @@ both surfaces are full at the start and empty at the end.
 - State changes use a short settle rather than a bounce.
 - Changing the idle duration slides the readout toward the side the incoming
   mode sits on, clipped by the plaque; the empty ring does not move.
-- Completion uses one calm transition of the face and readout.
+- Completion cuts directly to the completion state; no face or readout
+  transition is drawn. The only readout motion is the per-second digit roll,
+  and it stops at the interval end.
 - No looping pulses, confetti, shaking, or attention-seeking effects.
 - Reduce Motion replaces interpolation and transitions with direct state
   changes.
