@@ -47,6 +47,7 @@ git tag --sort=-v:refname | head
 ./scripts/bump-version.sh --help
 gh repo view --json visibility,isPrivate
 gh secret list --json name
+gh run list --workflow CI --branch main --limit 1
 ```
 
 Read `TESTING.md`, including the release record and after-publishing section.
@@ -59,6 +60,8 @@ Done when:
 - The next semantic version and build number are known.
 - The repository is public.
 - Required secrets are known. At minimum, `SPARKLE_PRIVATE_KEY` must exist.
+- The latest `CI` run on `main` is green, or its failure is understood and does
+  not affect the candidate.
 - Every applicable pre-tag item in `TESTING.md` is checked or recorded as an
   exception with its reason.
 - The team localization cross-review state is recorded. Do not claim external
@@ -135,8 +138,13 @@ git push origin vX.Y.Z
 The tag push is the publication trigger. Do not create a GitHub release
 manually.
 
-Done when the tag exists remotely and a new `Release` workflow run starts for
-that tag.
+The `release` job targets the protected `release` environment. After the tag
+push, the run pauses at `Waiting for review`; the product owner must approve
+the deployment in GitHub before tests, packaging, or publication can start. An
+agent must not try to bypass this gate.
+
+Done when the tag exists remotely, a new `Release` workflow run starts for that
+tag, and it is waiting for environment approval.
 
 ### 5. Monitor CI
 
@@ -145,6 +153,9 @@ gh run list --workflow Release --limit 3
 gh run watch <RUN_ID> --exit-status --interval 15
 gh run view <RUN_ID> --log-failed
 ```
+
+If the run is waiting for the `release` environment, ask the product owner to
+approve it. Do not rerun the workflow to skip the gate.
 
 Done when the workflow succeeds through tests, packaging, appcast signing,
 checksum refresh, and publication.

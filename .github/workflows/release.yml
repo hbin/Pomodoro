@@ -19,6 +19,7 @@ env:
 jobs:
   release:
     runs-on: macos-15
+    environment: release
     env:
       MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
       MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
