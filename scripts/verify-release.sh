@@ -811,16 +811,18 @@ PY
     expect_eq "RELEASE" "created_at" release.created_at "$(rget created_at)" "$EXIT_METADATA"
     expect_eq "RELEASE" "published_at" release.published_at "$(rget published_at)" "$EXIT_METADATA"
     expect_eq "RELEASE" "immutable flag" release.immutable "$(rget immutable)" "$EXIT_METADATA"
-    if [[ "$(manifest_get release.immutable)" == "false" ]] && manifest_has release.created_at; then
-        created_at="$(rget created_at)"
+    if [[ "$(manifest_get release.immutable)" == "false" ]]; then
         published_at="$(rget published_at)"
         updated_at="$(rget updated_at)"
-        if [[ "$updated_at" == "$created_at" || "$updated_at" == "$published_at" ]]; then
-            ok "RELEASE" "no edit after publish (updated_at)" "$created_at or $published_at" "$updated_at" \
-                "immutable=false; overwrite detection comes from asset id/sha256/uploaded_at equality"
+        if [[ -z "$published_at" ]]; then
+            skip_row "RELEASE" "no edit after publish (updated_at)" "publication time" "${updated_at:-<missing>}" \
+                "draft; publication time not set"
+        elif [[ "$updated_at" == "$published_at" ]]; then
+            ok "RELEASE" "no edit after publish (updated_at)" "$published_at" "$updated_at" \
+                "an edit to the release body or settings after publication pushes updated_at past published_at; asset overwrite is covered by asset id/sha256/uploaded_at"
         else
-            bad "RELEASE" "no edit after publish (updated_at)" "$created_at or $published_at" "$updated_at" \
-                "updated_at moved past publication, which means the release entry changed later"
+            bad "RELEASE" "no edit after publish (updated_at)" "$published_at" "$updated_at" \
+                "updated_at crossed published_at; the release body or settings changed after publication"
             set_exit "$EXIT_METADATA"
         fi
     fi
