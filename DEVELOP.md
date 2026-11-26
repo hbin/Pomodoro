@@ -69,8 +69,9 @@ String Catalog plural variations; Chinese, Japanese, Vietnamese, and Korean use
 a single grammatical form.
 
 Use `L10n.string`, `L10n.format`, or `L10n.count` from
-`Sources/Pomodoro/Localization.swift` for all runtime copy, including copy in
-SwiftUI views. Do not use a bare localized `Text("semantic.key")` for runtime
+`Sources/Pomodoro/Localization/Localization.swift` for all runtime copy,
+including copy in SwiftUI views. Do not use a bare localized
+`Text("semantic.key")` for runtime
 copy because SwiftUI literals keep the language selected at launch and would
 not update with the in-app language picker. Do not pass a localized fragment
 into an English sentence, and do not use `Bundle.module`; the app bundle is

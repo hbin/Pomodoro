@@ -83,8 +83,9 @@ nested components in the required order, and verifies entitlements.
 - `TimerModel` is the `@MainActor` bridge between `TimerEngine`, `StateStore`,
   platform services, and SwiftUI. Route UI actions through it and publish
   committed engine state as immutable snapshots.
-- Keep platform integration in its existing ownership areas: app lifecycle in
-  `App/`, notifications and sound in `Services/`, and presentation in `Views/`.
+- Keep platform integration in its existing ownership areas: app lifecycle and
+  menu-bar shell in `App/`, notifications and sound in `Services/`, features in
+  `Features/`, and shared design tokens/components in `DesignSystem/`.
 - The app is menu-bar-only (`LSUIElement`). Do not add a normal Dock/window
   lifecycle unless the task explicitly requires it.
 - Preserve sleep/wake handling, notification cancellation/rescheduling, and
