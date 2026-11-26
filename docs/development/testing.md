@@ -397,6 +397,81 @@ automated tests.
 - [ ] If the home popover UI changed, `README.md` copy and screenshots are updated.
 - [ ] `../../DEVELOP.md` reflects any changed build, signing, localization, or release steps.
 
+## Motion baseline (60 fps)
+
+This gate covers the timer-readout transition. Run it for any change to mode
+switching, the readout animation, timer-card layout, popover sizing, or the
+arrow and dot controls. A motion change is not complete while this gate is
+`SKIP`; record the reason and do not ship it on the strength of a final-state
+check alone.
+
+### Tooling
+
+- `scripts/record-motion-baseline.sh [app-bundle] [output-dir]` records four
+  60 fps clips — 5/5/5 and 5/5/15, Light and Black — extracts per-frame
+  readout metrics, and writes one `.verdict.txt` per clip plus `summary.tsv`.
+- The recording terminal needs Screen Recording permission. The script also
+  needs `swiftc`, `ffmpeg`, `ffprobe`, `screencapture`, `osascript`, `pgrep`,
+  `pkill`, `shasum`, and `rg`.
+- The script quits Pomodoro first, backs up the real `state.json`, and restores
+  it on exit. Do not run it with an active timer you care about.
+- It refuses an output directory that already contains `.mov` files, and it
+  uses `/tmp/pomodoro-motion.lock` to prevent two runs at once.
+- Per clip it writes `.mov`, `.frames.tsv`, `.ffprobe.txt`,
+  `.after-dial.txt`, and `.verdict.txt`.
+
+### Procedure
+
+1. Build the candidate and note the commit SHA. Pass the app bundle explicitly
+   so a stale build cannot be recorded:
+   `./scripts/record-motion-baseline.sh build/Pomodoro.app <output-dir>`.
+2. Keep the output directory with the task evidence; it contains the clips and
+   the machine verdicts.
+3. Require `PASS` on all four rows of `summary.tsv`.
+4. Watch the four clips once at full speed and once frame by frame. The old
+   readout must leave to the left and the new readout enter from the right,
+   with exactly one transition per switch, no cross-fade ghost, no vertical
+   jump, and no width pop.
+5. Fill the interpretation record below and keep it with the evidence.
+
+### Frame checklist
+
+`MotionAnalysis` fails a clip outside these bounds; they are regression guards,
+not targets:
+
+- Transition duration 280–450 ms.
+- One contiguous transition cluster of 17–26 frames (baseline 20).
+- 1–4 blank frames at the hand-over.
+- End center delta ≤ 0.75.
+- Max width ratio ≤ 1.35.
+- Direction reported as `old-left/new-right`.
+- No vertical movement across the transition (`y_min_variation` and
+  `y_max_variation` both 0).
+- Frames recorded at ~59.94 fps (`ffprobe` `r_frame_rate` 60000/1001).
+
+### Interpretation record
+
+Baseline recorded 2026-11-26 on `4222dce` (the code is unchanged in `442cb93`,
+which only bumps the version). Evidence:
+`.workspace/tasks/2026-11-26-motion-qa-baseline/baseline-run-2/`.
+
+| Clip | Frames | FPS | Duration | Blank | Y min/max | End delta | Width ratio | Direction | Verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `555-light` | 239 | 59.94 | 333.7 ms | 1 | 0 / 0 | 0.084 | 1.000 | `old-left/new-right` | PASS |
+| `555-dark` | 239 | 59.94 | 333.7 ms | 1 | 0 / 0 | 0.038 | 1.000 | `old-left/new-right` | PASS |
+| `5515-light` | 239 | 59.94 | 333.7 ms | 1 | 0 / 0 | 0.079 | 1.013 | `old-left/new-right` | PASS |
+| `5515-dark` | 239 | 59.94 | 333.7 ms | 1 | 0 / 0 | 0.129 | 1.000 | `old-left/new-right` | PASS |
+
+Copy this table for each candidate and add the commit SHA, date, verifier, and
+the evidence path. A candidate that reuses the baseline values without new
+clips is not a verified run.
+
+- [ ] All four clips recorded on the candidate commit at 60 fps.
+- [ ] `summary.tsv` shows four `PASS` rows.
+- [ ] Frame-by-frame review found one transition, correct direction, and no
+  geometry drift.
+- [ ] Interpretation record filled in and stored with the clips.
+
 ## After publishing
 
 - [ ] The tag matches `v` plus `CFBundleShortVersionString`.
