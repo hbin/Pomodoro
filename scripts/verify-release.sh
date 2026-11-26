@@ -1123,7 +1123,9 @@ if [[ -f "$zip_path" ]]; then
         set_exit "$EXIT_ARTIFACT"
     fi
 
-    rm -rf "$WORKDIR/app"
+    if [[ -d "$WORKDIR/app" ]]; then
+        rm -r "$WORKDIR/app"
+    fi
     mkdir -p "$WORKDIR/app"
     if ditto -x -k "$zip_path" "$WORKDIR/app" 2>"$WORKDIR/ditto.err"; then
         ok "ARTIFACT" "zip extract" "Pomodoro.app" "Pomodoro.app"
@@ -1382,7 +1384,7 @@ if (( FAILURES == 0 )); then
     if (( KEEP == 1 )); then
         print -r -- "artifacts: $WORKDIR"
     else
-        rm -rf "$WORKDIR"
+        rm -r "$WORKDIR"
     fi
     exit 0
 fi
