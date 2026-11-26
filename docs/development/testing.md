@@ -35,7 +35,7 @@ automated tests.
   unchanged localization, persistence, Sparkle, sound, notification, and
   VoiceOver paths; the prior 0.4.2 stable acceptance and unchanged core tests
   cover regression.
-- Screenshots: `docs/screenshots` was not refreshed because the captured idle
+- Screenshots: `docs/assets/readme` was not refreshed because the captured idle
   timer UI's visual structure and copy are unchanged.
 
 ## Before tagging
@@ -395,7 +395,7 @@ automated tests.
 ### Documentation
 
 - [ ] If the home popover UI changed, `README.md` copy and screenshots are updated.
-- [ ] `DEVELOP.md` reflects any changed build, signing, localization, or release steps.
+- [ ] `../../DEVELOP.md` reflects any changed build, signing, localization, or release steps.
 
 ## After publishing
 

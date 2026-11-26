@@ -3,9 +3,10 @@
 Use this runbook for every Pomodoro release, version bump, tag, publication, or
 release-repair request. It is the operating procedure for an AI agent.
 
-`TESTING.md` owns the manual behavior checklist. `DEVELOP.md` owns the release
-tooling reference. This file owns the order of operations, gates, and recovery
-decisions. Do not duplicate those documents here.
+[`testing.md`](testing.md) owns the manual behavior checklist.
+[`DEVELOP.md`](../../DEVELOP.md) owns the release tooling reference. This file
+owns the order of operations, gates, and recovery decisions. Do not duplicate
+those documents here.
 
 ## Start conditions
 
@@ -50,9 +51,10 @@ gh secret list --json name
 gh run list --workflow CI --branch main --limit 1
 ```
 
-Read `TESTING.md`, including the release record and after-publishing section.
-Read the release sections of `DEVELOP.md`. Execute every applicable pre-tag
-item in `TESTING.md`; record exceptions instead of silently skipping them.
+Read [`testing.md`](testing.md), including the release record and after-publishing
+section. Read the release sections of [`DEVELOP.md`](../../DEVELOP.md). Execute
+every applicable pre-tag item in [`testing.md`](testing.md); record exceptions
+instead of silently skipping them.
 
 Done when:
 
@@ -62,8 +64,8 @@ Done when:
 - Required secrets are known. At minimum, `SPARKLE_PRIVATE_KEY` must exist.
 - The latest `CI` run on `main` is green, or its failure is understood and does
   not affect the candidate.
-- Every applicable pre-tag item in `TESTING.md` is checked or recorded as an
-  exception with its reason.
+- Every applicable pre-tag item in [`testing.md`](testing.md) is checked or
+  recorded as an exception with its reason.
 - The team localization cross-review state is recorded. Do not claim external
   native-speaker certification that did not happen.
 
@@ -92,8 +94,8 @@ hdiutil verify Pomodoro.dmg
 ```
 
 For UI changes, launch the built app and inspect the affected states in both
-themes and all six languages. Refresh `docs/screenshots` only during release
-preparation, following `DEVELOP.md`.
+themes and all six languages. Refresh `docs/assets/readme` only during release
+preparation, following [`DEVELOP.md`](../../DEVELOP.md).
 
 Done when:
 
@@ -118,7 +120,7 @@ Review the diff and commit only release-owned changes:
 ```sh
 git diff --check
 git status --short
-git add Resources/Info.plist docs/screenshots
+git add Resources/Info.plist docs/assets/readme
 git commit -m "Bump version to X.Y.Z"
 ```
 

@@ -163,7 +163,7 @@ The implementation request accepted the recommended values for all four.
       and §9.4 (long-break accent) when the code lands.
 - [x] Update the Long break row in `docs/design/ambient-motion.md`: brass is
       the ambient light/trim, the mode accent and Start button are deep green.
-- [x] Add or update the three-mode recognition entry in `TESTING.md`.
+- [x] Add or update the three-mode recognition entry in `docs/development/testing.md`.
 - [x] Amend `2026-11-24-session-dial-design.md` when the code lands: the thin
       inner ring and thick brass rim are superseded by the empty channel and
       mode-colored arc; update its acceptance criteria for the empty channel,
@@ -211,7 +211,7 @@ The implementation request accepted the recommended values for all four.
 
 - [x] Report the changed files, test/build results and inspected states.
 - [ ] Do not commit, tag, push or publish unless explicitly requested.
-- [ ] If a release is requested, update `docs/screenshots` at that point.
+- [ ] If a release is requested, update `docs/assets/readme` at that point.
 - [x] The design, code, localization, docs and verification items above are done.
 
 ### Definition of done

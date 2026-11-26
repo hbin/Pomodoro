@@ -30,13 +30,13 @@ Focus 25 upper left, Short break 5 overhead, Long break 15 upper right.
 ## Black theme
 
 <p align="center">
-  <img src="ambient-motion-black.gif" width="420" alt="Black theme ambient motion">
+  <img src="../assets/design/ambient-motion-black.gif" width="420" alt="Black theme ambient motion">
 </p>
 
 ## Light theme
 
 <p align="center">
-  <img src="ambient-motion-light.gif" width="420" alt="Light theme ambient motion">
+  <img src="../assets/design/ambient-motion-light.gif" width="420" alt="Light theme ambient motion">
 </p>
 
 ## Motion anatomy
@@ -131,8 +131,8 @@ interval needs no button-color transition.
   glow, and shade while keeping the opaque dial and paper.
 
 The native app was inspected at Focus 25, Short break 5, and Long break 15 in
-Light and Black. The committed `docs/screenshots/light-theme.png` and
-`black-theme.png` show the Focus 25 upper-left pose.
+Light and Black. The committed `docs/assets/readme/light-theme.png` and
+`docs/assets/readme/black-theme.png` show the Focus 25 upper-left pose.
 
 ## Verification
 

@@ -229,7 +229,7 @@ replaces the running and paused caption with the mode name. The break running
 title also names the mode; Focus keeps `Focus in progress`, paused keeps
 `Paused`, and the primary button copy is unchanged.
 
-![The small caption inside the dial](images/dial-caption-location.webp)
+![The small caption inside the dial](../../assets/specs/dial-caption-location.webp)
 
 | State | Before | Implemented |
 | --- | --- | --- |
@@ -251,11 +251,11 @@ It used to read `Step away` for both breaks; the implementation names the mode
 there (`Short break` / `Long break`, reusing `timer.mode.*`), which is more
 direct than a bezel tint and adds no new visible copy.
 
-![Running break title: Step away versus Short break / Long break](images/running-title-compare.webp)
+![Running break title: Step away versus Short break / Long break](../../assets/specs/running-title-compare.webp)
 
 ### 4.3 Suggested idle treatment
 
-![Recommended idle treatment: Focus, short break and long break in Light and Black](images/mode-colors-start-green.webp)
+![Recommended idle treatment: Focus, short break and long break in Light and Black](../../assets/specs/mode-colors-start-green.webp)
 
 The Start button is the large mode signal. In Light, Short is leaf and Long is
 deep sage. In Black, Short is leaf and Long is forest. The mode label and
@@ -264,7 +264,7 @@ focus/short/long pose, with brass remaining a material light for Long.
 
 ### 4.4 Brass or deep green for Long break
 
-![Long break comparison: brass versus deep green](images/mode-colors-long-compare.webp)
+![Long break comparison: brass versus deep green](../../assets/specs/mode-colors-long-compare.webp)
 
 Brass is slightly more distinct at a glance, but it reads as a third category
 or a reward color. Deep green is semantically true to “both are breaks” and
@@ -274,7 +274,7 @@ distinction. The recommended direction is deep green.
 
 ### 4.5 Active interval
 
-![Pause and paused Start: the chosen filled mode color, with the earlier ink-key proposal for comparison](images/mode-colors-active.webp)
+![Pause and paused Start: the chosen filled mode color, with the earlier ink-key proposal for comparison](../../assets/specs/mode-colors-active.webp)
 
 The left column is the chosen treatment: the mode fill stays on the primary
 when it becomes Pause, so the button color always matches the mode. The label
@@ -299,7 +299,7 @@ is introduced.
   colors update in place.
 - No pulsing, breathing or colored glow is added to the button.
 
-![Start to Pause: the fill stays the mode color; only the label and glyph change](images/start-pause-transition.webp)
+![Start to Pause: the fill stays the mode color; only the label and glyph change](../../assets/specs/start-pause-transition.webp)
 
 The top row is the chosen A rule. The bottom row is the earlier ink-key
 proposal: it changed the fill at Start, so it would have needed a 200–250 ms
@@ -335,13 +335,13 @@ Four options were studied:
    plaque and time remain. This is the cleanest progress/mode surface, but the
    empty dial loses the instrument frame and may read as unfinished.
 
-![Chosen: empty channel with thin brass edges, a mode-colored remaining arc, and a fixed 60-tick ring; only 12, 3, 6 and 9 o'clock are larger](images/bezel-channel.webp)
+![Chosen: empty channel with thin brass edges, a mode-colored remaining arc, and a fixed 60-tick ring; only 12, 3, 6 and 9 o'clock are larger](../../assets/specs/bezel-channel.webp)
 
 The study image shows a wider arc filling more of the channel. The production
 dial uses a narrower inlay with a visible cream moat on both sides; that keeps
 the 1x edge crisp and gives the groove a readable depth.
 
-![Flush color arc with vanishing equal ticks: 100%, 50%, 25% and 0%; not chosen](images/bezel-ticks.webp)
+![Flush color arc with vanishing equal ticks: 100%, 50%, 25% and 0%; not chosen](../../assets/specs/bezel-ticks.webp)
 
 The chosen treatment uses option 2's frame; the ticks are not tied to the arc.
 The channel is the gauge: idle and completion leave it empty; starting paints the
@@ -433,7 +433,7 @@ Pause uses a stable ink key with a mode rail.
 
 Use the ink key with a mode rail at idle and completion too.
 
-![Alternative: one constant ink key at every state](images/mode-colors-rail.webp)
+![Alternative: one constant ink key at every state](../../assets/specs/mode-colors-rail.webp)
 
 - **Strengths:** one target, one shape, maximum continuity; very quiet and
   instrument-like; the Start labels still name the mode.
@@ -577,7 +577,7 @@ No timer, persistence, notification, sound or update behavior changes.
    - Update the long-break row in `docs/design/ambient-motion.md`: brass stays
      as the ambient light/trim while the mode accent and Start button are deep
      green.
-   - Add a `TESTING.md` entry for three-mode recognition. Do not regenerate
+   - Add a `docs/development/testing.md` entry for three-mode recognition. Do not regenerate
      the README screenshots mid-cycle; tell the user they are stale until the
      next release.
 7. **No other files.** The menu-bar icon is a template image and stays
@@ -620,7 +620,7 @@ No timer, persistence, notification, sound or update behavior changes.
   change does not add content, but the check catches regressions.
 - All four languages are checked; the existing runtime picker updates the
   reused copy without a relaunch.
-- `TESTING.md` has the new checklist entry.
+- `docs/development/testing.md` has the new checklist entry.
 
 **Local verification note:** on the current macOS seed, `open --args` can drop
 the launch arguments if an instance is already running. Quit it first; `open -n

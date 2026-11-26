@@ -1,5 +1,13 @@
 # Developing Pomodoro
 
+## Documentation map
+
+- This file: local development, localization, updates, signing, and versioning.
+- [`docs/development/testing.md`](docs/development/testing.md): release-only
+  manual behavior checklist.
+- [`docs/development/release-runbook.md`](docs/development/release-runbook.md):
+  ordered release procedure, gates, and recovery.
+
 ## Requirements
 
 - macOS 15 or later.
@@ -14,7 +22,7 @@ swift test
 ```
 
 Before preparing a release, complete the release-only coverage checklist in
-[`TESTING.md`](TESTING.md).
+[`docs/development/testing.md`](docs/development/testing.md).
 
 Resolve the exact Sparkle dependency after changing `Package.swift`:
 
@@ -331,7 +339,7 @@ series; do not tag a final release that reuses a beta build number.
 
 ### README screenshots
 
-`docs/screenshots` is refreshed only when preparing a release, not with each UI
+`docs/assets/readme` is refreshed only when preparing a release, not with each UI
 change. Rebuild the app, then quit Pomodoro and wait for the process to exit
 before each launch; `open` drops the launch arguments when an instance is
 already running:
@@ -341,14 +349,14 @@ already running:
 pkill -x Pomodoro 2>/dev/null || true
 while pgrep -x Pomodoro >/dev/null; do sleep 0.2; done
 open build/Pomodoro.app --args --open-popover --force-light
-# Capture docs/screenshots/light-theme.png, then quit before the next launch.
+# Capture docs/assets/readme/light-theme.png, then quit before the next launch.
 pkill -x Pomodoro 2>/dev/null || true
 while pgrep -x Pomodoro >/dev/null; do sleep 0.2; done
 open build/Pomodoro.app --args --open-popover --force-dark
 ```
 
 Capture the popover window with ⇧⌘4 then Space and replace
-`docs/screenshots/light-theme.png` and `docs/screenshots/black-theme.png`. The
+`docs/assets/readme/light-theme.png` and `docs/assets/readme/black-theme.png`. The
 timer card is 340×510; downscale a Retina capture with `sips -z 510 340`
 before replacing them. The committed screenshots are stale until the next
 release.

@@ -37,7 +37,7 @@
 
 Focus 与 Break 运行时点击结束键都直接结束，不显示确认行或弹窗。Focus 提前结束后进入下一段 Short 或 Long Break；Break 提前结束后进入下一段 Focus。下一段立即显示 Ready 或运行界面，是否自动开始由对应的 Auto-start 设置决定。
 
-![计时页主按钮与结束键布局规范](images/2026-11-24-pause-end-control-layout.png)
+![计时页主按钮与结束键布局规范](../../assets/specs/2026-11-24-pause-end-control-layout.png)
 
 本图只描述控制区和它所在的 340 pt 卡片宽度，不代表当前计时盘样式。实现时保留仓库中当前的 `DialView`，不得重画或修改表盘。
 
@@ -592,7 +592,7 @@ private enum ControlMetrics {
 
 实现必须同时：
 
-- 在 `TESTING.md` 增加对应回归项，覆盖固定宽度、居中、结束键位置、暂停态无结束入口、点击区、辅助功能、四轮节奏、1 秒交接、提示音与通知。
+- 在 `docs/development/testing.md` 增加对应回归项，覆盖固定宽度、居中、结束键位置、暂停态无结束入口、点击区、辅助功能、四轮节奏、1 秒交接、提示音与通知。
 - 在相关旧规格中补充本规格的引用，避免后续 AI 继续把红色 `stop.fill` 当作当前设计。
 - 在旧规格中删除“提前结束回到原模式 Idle、不推进节奏、不自动开始”的冲突描述。
 - 不重新生成 README 截图；等发布准备阶段再更新。
@@ -624,4 +624,4 @@ private enum ControlMetrics {
 - 运行中结束键只作为右侧覆盖层出现。
 - 结束键按四轮循环进入下一段，节奏、提示音、通知和持久化符合本规格。
 - `swift test` 与 `./scripts/build-app.sh debug` 通过。
-- 已完成 `TESTING.md`、所需主题/语言/辅助功能检查。
+- 已完成 `docs/development/testing.md`、所需主题/语言/辅助功能检查。

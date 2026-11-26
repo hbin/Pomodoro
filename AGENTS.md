@@ -135,7 +135,7 @@ nested components in the required order, and verifies entitlements.
   notifications allowed and denied, in both themes, and confirm the footer is
   visible without a scroll indicator; a scrollbar here is a bug, not a fallback.
 - Do not regenerate the README screenshots with each UI change. Refresh
-  `docs/screenshots` only when preparing a release, and tell the user the
+  `docs/assets/readme` only when preparing a release, and tell the user the
   screenshots are stale instead of updating them mid-cycle.
 - Do not touch the README hero copy (the centered title block) unless the task
   explicitly asks for it. Never add usage or Settings instructions to the
@@ -165,10 +165,11 @@ nested components in the required order, and verifies entitlements.
   checks signing and required entitlements.
 - Do not describe a visual change as verified unless the built app was
   launched and inspected.
-- `TESTING.md` is the coverage checklist for releases. Every feature or bug fix
-  must add or update its checklist entry before the change is complete, and
-  keep that entry while the behavior exists. Run the full checklist only when
-  preparing a release; routine changes still require `swift test` and targeted
+- `docs/development/testing.md` is the coverage checklist for releases. Every
+  feature or bug fix must add or update its checklist entry before the change
+  is complete, and keep that entry while the behavior exists. Run the full
+  checklist only when preparing a release; routine changes still require
+  `swift test` and targeted
   verification for the affected area.
 - Keep unrelated test or build failures separate from the current change
   rather than fixing them incidentally.
@@ -176,12 +177,13 @@ nested components in the required order, and verifies entitlements.
 ## Versions, generated files, and releases
 
 - Before any version bump, tag, publication, or release-repair request, read
-  and follow `RELEASE_RUNBOOK.md` in full.
+  and follow `docs/development/release-runbook.md` in full.
 - Normal feature and bug-fix work should not change
   `CFBundleShortVersionString` or `CFBundleVersion` in `Resources/Info.plist`.
 - Use `scripts/bump-version.sh` for release version changes. A release tag must
   be exactly `v` plus the `CFBundleShortVersionString`.
-- Before creating a release tag, complete the pre-tag checks in `TESTING.md`.
+- Before creating a release tag, complete the pre-tag checks in
+  `docs/development/testing.md`.
   After publishing, complete the artifact checks in the same file.
 - Releases are tag-driven through `.github/workflows/release.yml`. Do not
   create or push a release tag unless explicitly requested.

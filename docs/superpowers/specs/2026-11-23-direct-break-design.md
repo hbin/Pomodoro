@@ -369,7 +369,7 @@ mode label names the state, and break start is not animated.
 **Black theme**
 
 <p align="center">
-  <img src="../../design/ambient-motion-black.gif" width="420" alt="Black theme ambient motion from Pomodoro to Short Break to Long Break and back to Pomodoro">
+  <img src="../../assets/design/ambient-motion-black.gif" width="420" alt="Black theme ambient motion from Pomodoro to Short Break to Long Break and back to Pomodoro">
 </p>
 
 <p align="center"><em>Pomodoro → Short Break → Long Break → Pomodoro. The top rim, dial face, plaque, and inner shade move together.</em></p>
@@ -377,7 +377,7 @@ mode label names the state, and break start is not animated.
 **Light theme**
 
 <p align="center">
-  <img src="../../design/ambient-motion-light.gif" width="420" alt="Light theme ambient motion from Pomodoro to Short Break to Long Break and back to Pomodoro">
+  <img src="../../assets/design/ambient-motion-light.gif" width="420" alt="Light theme ambient motion from Pomodoro to Short Break to Long Break and back to Pomodoro">
 </p>
 
 <p align="center"><em>Pomodoro → Short Break → Long Break → Pomodoro. The paper angle, dial face, plaque, and cast shadow share one light direction.</em></p>
@@ -473,7 +473,7 @@ Black. The repeatable study measurements are in the
 - The former 15/25/45 focus-length chips and the separate break-button pair are
   absent.
 - No keyboard shortcut, task behavior, or history is added.
-- `TESTING.md` gains coverage for direct short breaks, direct long breaks,
+- `docs/development/testing.md` gains coverage for direct short breaks, direct long breaks,
   rhythm neutrality, restoration, and mode-selector visibility.
 - Because the home popover changes, `README.md` and its screenshots are updated.
 - The feature spec includes both ambient-motion GIFs and the light-position
@@ -533,5 +533,5 @@ These affect the idle visual study, not the direct-break behavior:
 - Parent roadmap: `2026-11-23-interaction-milestones-design.md` (main
   repository)
 - [Ambient motion study](../../design/ambient-motion.md)
-- Generated assets: [`ambient-motion-black.gif`](../../design/ambient-motion-black.gif),
-  [`ambient-motion-light.gif`](../../design/ambient-motion-light.gif)
+- Generated assets: [`ambient-motion-black.gif`](../../assets/design/ambient-motion-black.gif),
+  [`ambient-motion-light.gif`](../../assets/design/ambient-motion-light.gif)

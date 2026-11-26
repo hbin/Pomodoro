@@ -448,7 +448,7 @@ For the implementer, the design requires changes in exactly these areas:
 - `Resources/Localization/Localizable.xcstrings` and `InfoPlist.xcstrings`.
 - `scripts/check-localizations.swift` and `scripts/build-app.sh`: six supported
   locales and the `.lproj` verification loop.
-- `TESTING.md`: six-language checklist entries.
+- `docs/development/testing.md`: six-language checklist entries.
 
 No changes to `PomodoroCore`, timer math, persistence, notification scheduling
 logic, or update logic are implied by the design. The existing runtime

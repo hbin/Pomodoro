@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="https://github.com/hbin/Pomodoro"><img src="docs/images/icon.png" alt="Pomodoro app icon" width="128" height="128"></a><br>
+  <a href="https://github.com/hbin/Pomodoro"><img src="docs/assets/brand/icon.png" alt="Pomodoro app icon" width="128" height="128"></a><br>
   Pomodoro
 </h1>
 
@@ -20,8 +20,8 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshots/light-theme.png" width="320" alt="Pomodoro in Light theme">
-  <img src="docs/screenshots/black-theme.png" width="320" alt="Pomodoro in Black theme">
+  <img src="docs/assets/readme/light-theme.png" width="320" alt="Pomodoro in Light theme">
+  <img src="docs/assets/readme/black-theme.png" width="320" alt="Pomodoro in Black theme">
 </p>
 
 ## Install
