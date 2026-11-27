@@ -9,6 +9,17 @@ If you are a named member of the Pomodoro agent team, read `team/AGENTS.md`
 first: it holds the dispatch, handoff, and gate rules. `team/` is machine-local
 and ignored by git.
 
+## Interaction mode
+
+- Ideas, questions, and exploratory requests are discussion, not consent to
+  act. Unless the user explicitly asks for a change, command, or deliverable,
+  answer and analyze only; do not edit files, commit, or run mutating commands.
+- Do not persist discussion drafts, provisional conclusions, preferences, or
+  decisions anywhere. Discuss until the result is clear, then wait for explicit
+  approval before implementation.
+- If intent is ambiguous, ask; never infer permission to act from a proposal or
+  an unanswered question.
+
 ## Project overview
 
 Pomodoro is a native macOS 15+ menu-bar focus timer built with Swift 6 and
