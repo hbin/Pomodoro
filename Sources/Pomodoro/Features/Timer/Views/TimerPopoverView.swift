@@ -1,5 +1,10 @@
 import SwiftUI
 
+private enum ModeSelectorMetrics {
+    static let hitSize: CGFloat = 44
+    static let spacing: CGFloat = 4
+}
+
 struct TimerPopoverView: View {
     @ObservedObject var model: TimerModel
     let ambient: AmbientPose
@@ -144,24 +149,12 @@ struct TimerPopoverView: View {
 
     private var modeSelector: some View {
         VStack(spacing: 6) {
-            HStack(spacing: 6) {
+            HStack(spacing: ModeSelectorMetrics.spacing) {
                 ForEach(IdleMode.allCases) { mode in
-                    Button {
-                        guard mode != idleMode else { return }
-                        // The modes are ordered left to right on screen, so a
-                        // jump to a later one slides the strip left.
-                        readoutFlow = mode.rawValue > idleMode.rawValue ? -1 : 1
-                        model.selectIdlePhase(mode.phase)
-                    } label: {
-                        Capsule()
-                            .fill(accent)
-                            .frame(width: mode == idleMode ? 14 : 5, height: 5)
-                            .frame(height: 12)
-                            .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(mode.accessibilityLabel(in: model.durations))
-                    .accessibilityAddTraits(mode == idleMode ? [.isSelected] : [])
+                    Capsule()
+                        .fill(accent)
+                        .frame(width: mode == idleMode ? 14 : 5, height: 5)
+                        .frame(width: ModeSelectorMetrics.hitSize, height: 12)
                 }
             }
             Text(idleMode.selectorLabel)
@@ -170,9 +163,41 @@ struct TimerPopoverView: View {
                 .textCase(.uppercase)
                 .lineLimit(1)
                 .foregroundStyle(accent)
+                .allowsHitTesting(false)
         }
         .frame(height: 28)
+        // The visible dots occupy 44-point slots so their centers stay at
+        // -48 / 0 / +48 without changing the row's height. The transparent
+        // buttons add the full-height hit regions without participating in
+        // layout.
+        .overlay {
+            HStack(spacing: ModeSelectorMetrics.spacing) {
+                ForEach(IdleMode.allCases) { mode in
+                    Button {
+                        selectMode(mode)
+                    } label: {
+                        Color.clear
+                            .frame(
+                                width: ModeSelectorMetrics.hitSize,
+                                height: ModeSelectorMetrics.hitSize
+                            )
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(mode.accessibilityLabel(in: model.durations))
+                    .accessibilityAddTraits(mode == idleMode ? [.isSelected] : [])
+                }
+            }
+        }
         .animation(reduceMotion ? nil : .easeOut(duration: 0.3), value: idleMode)
+    }
+
+    private func selectMode(_ mode: IdleMode) {
+        guard mode != idleMode else { return }
+        // The modes are ordered left to right on screen, so a jump to a later
+        // one slides the strip left.
+        readoutFlow = mode.rawValue > idleMode.rawValue ? -1 : 1
+        model.selectIdlePhase(mode.phase)
     }
 
     private func modeArrow(offset: Int) -> some View {

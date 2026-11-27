@@ -212,9 +212,13 @@ automated tests.
       through both the arrows and dots. Reduce Motion swaps it without motion.
 - [ ] Rapid mode changes leave no stuck or duplicated readout: each swap
       replaces the previous one, and the duration always settles centered.
-- [ ] All three mode dots use the mode accent at full opacity; only the active
-      dot is wider. A single current-mode label below the dots names the mode;
-      the 32-point arrows expose hover help and announce the current mode.
+- [ ] All three mode dots use the mode accent at full opacity; the active
+      capsule is 14×5 and inactive capsules are 5×5. Their visual centers sit
+      at −48 / 0 / +48 points with three true 44×44 hit regions separated by
+      4 points. The hit regions do not overlap the 44×44 arrows or the 190×49
+      primary, and the 28-point row and centered label baseline stay fixed. A
+      single current-mode label below the dots names the mode; the 32-point
+      arrows expose hover help and announce the current mode.
 - [ ] The primary uses the active mode fill in every state: Focus brick,
       Short break leaf, Long break deep sage. Start, Pause, and completion share
       the fill; labels pass 4.5:1 and there is no second ink-key or rail style.
@@ -277,8 +281,11 @@ automated tests.
       the offered duration, and its primary uses the offered mode fill.
 - [ ] The menu-bar icon keeps its hand, cup, pause glyph, and remaining-time arc.
 - [ ] A paused interval shows the paused status line and the paused footer tip.
-- [ ] Idle mode labels and footer tips reach 4.5:1 against the popover in both
-      themes; light mode uses the deeper mode accents.
+- [ ] Secondary text—footer tips, running/paused status, dial caption, Settings
+      details, section labels, and error notes—reaches 4.5:1 against the
+      popover in both themes. Light uses `mutedInk` `#6B5E4E` at full opacity,
+      Black keeps `mutedInk` `#A69782`, and the dial caption applies no extra
+      opacity. Idle mode labels continue to use the deeper mode accents.
 - [ ] Settings uses the plain card background; no ambient rim, glow, or shade
       is visible there.
 - [ ] The Settings back control returns to the timer without closing the popover.
