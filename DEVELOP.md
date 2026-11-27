@@ -432,11 +432,12 @@ generates release notes, packages the DMG and Sparkle ZIP, signs the appcast,
 and publishes all six assets, including `build-info.txt`, with a generated
 summary and changelog.
 
-The release job targets the protected `release` environment. A tag push
-therefore pauses the workflow until the product owner approves the deployment
-in GitHub; this is the machine-enforced GO gate. Pushes to `main` and pull
-requests run the separate `CI` workflow, which runs `swift test`; a red CI run
-blocks release preparation.
+The release job targets the protected `release` environment. A tag push runs
+the read-only `preflight` and `build` jobs first; only `publish` waits for the
+product owner to approve the deployment in GitHub, and that approval is the
+machine-enforced GO gate. The separate `CI` workflow runs `test` (`swift test`)
+and `localization` on pull requests, and pushes to `main` additionally run
+`app-bundle`; a red CI run blocks release preparation.
 
 The annotated tag subject becomes the release summary. Keep it to one concise,
 user-facing sentence. If the tag uses the default `Pomodoro X.Y.Z` message, the
