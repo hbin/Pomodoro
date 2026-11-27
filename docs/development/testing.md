@@ -482,10 +482,34 @@ clips is not a verified run.
   geometry drift.
 - [ ] Interpretation record filled in and stored with the clips.
 
+## Fail-closed release gate
+
+- [ ] The release tag is annotated, matches `v` plus
+      `CFBundleShortVersionString`, and its peeled commit is reachable from
+      `origin/main`.
+- [ ] `preflight` accepts the tag and records the version, build, channel, tag
+      object, peeled commit, and `main` snapshot.
+- [ ] A stable build fails when any of `SPARKLE_PRIVATE_KEY`,
+      `MACOS_CERTIFICATE`, `MACOS_CERTIFICATE_PASSWORD`, `APPLE_ID`,
+      `APPLE_TEAM_ID`, or `APPLE_APP_PASSWORD` is absent.
+- [ ] A stable build uses a Developer ID Application identity and staples
+      notarization on both the app and the DMG.
+- [ ] The build job is read-only, uploads one recorded artifact, and its summary
+      shows the exact DMG SHA-256.
+- [ ] `RELEASE_APPROVED_DIGEST` equals that DMG SHA-256 before the protected
+      `release` environment is approved.
+- [ ] `publish` downloads the recorded artifact, verifies every digest,
+      signature, staple, ZIP/DMG, app, and appcast, and never rebuilds.
+- [ ] A beta ad-hoc build is allowed only when all five Developer ID/notary
+      secrets are absent; its notes and summary say `Signing: ad-hoc`.
+- [ ] A missing/mismatched stable digest, partial beta signing configuration, or
+      any verification failure stops before release mutation.
+
 ## After publishing
 
-- [ ] The tag matches `v` plus `CFBundleShortVersionString`.
-- [ ] CI publishes `Pomodoro.dmg`, `Pomodoro.dmg.sha256`,
+- [ ] The annotated tag matches `v` plus `CFBundleShortVersionString`, and its
+      peeled commit is reachable from `origin/main`.
+- [ ] The Release `publish` job publishes `Pomodoro.dmg`, `Pomodoro.dmg.sha256`,
       `Pomodoro-VERSION.zip`, its `.sha256`, and `appcast.xml`.
 - [ ] A `-beta.N` tag publishes a pre-release and refreshes the rolling `beta`
       release without changing what `releases/latest` serves.
@@ -495,7 +519,8 @@ clips is not a verified run.
 - [ ] The appcast contains valid EdDSA signatures for the feed and enclosure.
 - [ ] `./scripts/verify-release.sh --manifest <tag>.json` reports PASS, or every
       failing row is explained in the manifest or release ledger.
-- [ ] The disk image is notarized and stapled when the required secrets are present.
+- [ ] The stable app and disk image are Developer ID signed, notarized, and
+      stapled; beta ad-hoc output is labeled and not described as notarized.
 - [ ] The GitHub release summary and release notes are correct.
 - [ ] A clean download can be installed and launched.
 
