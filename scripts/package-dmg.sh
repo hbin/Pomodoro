@@ -5,6 +5,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CONFIG="${CONFIG:-release}"
 UNIVERSAL="${UNIVERSAL:-0}"
 SIGN_IDENTITY="${SIGN_IDENTITY:--}"
+SKIP_BUILD="${SKIP_BUILD:-0}"
 OUTPUT_DIR="${OUTPUT_DIR:-$ROOT/dist}"
 APP_NAME="Pomodoro"
 APP="$ROOT/build/$APP_NAME.app"
@@ -17,7 +18,15 @@ DMG="$OUTPUT_DIR/$DMG_NAME"
 ZIP_NAME="$APP_NAME-$VERSION.zip"
 ZIP="$OUTPUT_DIR/$ZIP_NAME"
 
-UNIVERSAL="$UNIVERSAL" SIGN_IDENTITY="$SIGN_IDENTITY" "$ROOT/scripts/build-app.sh" "$CONFIG"
+if [[ "$SKIP_BUILD" == "1" ]]; then
+    if [[ ! -d "$APP" ]]; then
+        echo "SKIP_BUILD=1 requires a prebuilt app at $APP" >&2
+        exit 1
+    fi
+    echo "Using prebuilt app at $APP"
+else
+    UNIVERSAL="$UNIVERSAL" SIGN_IDENTITY="$SIGN_IDENTITY" "$ROOT/scripts/build-app.sh" "$CONFIG"
+fi
 
 rm -rf "$STAGE"
 mkdir -p "$STAGE" "$OUTPUT_DIR"

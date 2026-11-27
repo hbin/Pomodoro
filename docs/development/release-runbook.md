@@ -61,7 +61,11 @@ Done when:
 - `main` matches `origin/main` and the worktree is clean.
 - The next semantic version and build number are known.
 - The repository is public.
-- Required secrets are known. At minimum, `SPARKLE_PRIVATE_KEY` must exist.
+- `SPARKLE_PRIVATE_KEY` exists. A stable release also requires
+  `MACOS_CERTIFICATE`, `MACOS_CERTIFICATE_PASSWORD`, `APPLE_ID`,
+  `APPLE_TEAM_ID`, and `APPLE_APP_PASSWORD`. A beta release may omit the five
+  Developer ID/notary values only as a complete set; partial configuration is
+  rejected.
 - The latest `CI` run on `main` is green, or its failure is understood and does
   not affect the candidate.
 - Every applicable pre-tag item in [`testing.md`](testing.md) is checked or
@@ -129,7 +133,7 @@ Do not include `.build/`, `build/`, or `dist/`.
 Done when the commit contains the intended version, build number, and release
 assets, and the worktree is clean.
 
-### 4. Tag and trigger the workflow
+### 4. Tag and start the protected build
 
 ```sh
 git tag -a vX.Y.Z -m "<one-sentence user-facing summary>"
@@ -137,18 +141,49 @@ git push origin main
 git push origin vX.Y.Z
 ```
 
-The tag push is the publication trigger. Do not create a GitHub release
-manually.
+The tag must be annotated. Its peeled commit must be reachable from
+`origin/main`. The tag push runs read-only `preflight` and `build` jobs; neither
+uses the protected environment, so the build can complete and expose the exact
+artifact digest. Do not create a GitHub release manually.
 
-The `release` job targets the protected `release` environment. After the tag
-push, the run pauses at `Waiting for review`; the product owner must approve
-the deployment in GitHub before tests, packaging, or publication can start. An
-agent must not try to bypass this gate.
+Stable builds fail before producing an artifact when any Developer ID or notary
+secret is missing. Beta builds are ad-hoc only when all five Developer
+ID/notary secrets are absent; if they are present they use the same signed path.
+Partial beta configuration fails.
 
-Done when the tag exists remotely, a new `Release` workflow run starts for that
-tag, and it is waiting for environment approval.
+Done when the annotated tag exists remotely, its peeled commit is on `main`, and
+the `preflight` and `build` jobs pass.
 
-### 5. Monitor CI
+### 5. Approve the exact stable digest
+
+For a stable release:
+
+1. Open the successful `Release` run and read `DMG SHA-256` from the `build`
+   job's **Release artifacts ready** summary.
+2. Set the repository variable to that exact value:
+
+   ```sh
+   DIGEST="<paste the 64-character DMG SHA-256>"
+   gh variable set RELEASE_APPROVED_DIGEST --body "$DIGEST"
+   ```
+
+3. In GitHub, approve the `release` environment deployment for the `publish`
+   job.
+
+The `publish` job downloads the same recorded Actions artifact, recomputes every
+digest, verifies the signatures and notarization, and only then creates,
+uploads, and publishes a draft release. A missing or mismatched
+`RELEASE_APPROVED_DIGEST` stops before any release mutation. Do not rebuild
+between digest approval and publication.
+
+Beta releases do not use `RELEASE_APPROVED_DIGEST`, but their `publish` job still
+requires the protected `release` environment approval.
+
+Done when the stable variable equals the build summary digest and the `publish`
+deployment is approved. If the build was rerun, copy the new digest and set the
+variable again.
+
+### 6. Monitor the publish gate
 
 ```sh
 gh run list --workflow Release --limit 3
@@ -157,12 +192,13 @@ gh run view <RUN_ID> --log-failed
 ```
 
 If the run is waiting for the `release` environment, ask the product owner to
-approve it. Do not rerun the workflow to skip the gate.
+approve it only after the stable digest has been set. Do not rerun the workflow
+to skip the gate.
 
-Done when the workflow succeeds through tests, packaging, appcast signing,
-checksum refresh, and publication.
+Done when `publish` succeeds through artifact verification, draft upload, and
+publication without rebuilding.
 
-### 6. Verify publication
+### 7. Verify publication
 
 Set the release variables from the tagged commit, then run:
 
@@ -211,17 +247,21 @@ Also verify:
 
 - The stable release is the latest non-prerelease.
 - All five assets exist and are uploaded.
+- The stable DMG SHA-256 equals `RELEASE_APPROVED_DIGEST`.
 - The appcast contains the expected version, build, download URL, length, and
   signatures.
 - The beta feed serves the same stable appcast after a stable release.
 - The GitHub body starts with the tag summary and includes the Full Changelog.
+- A stable release identifies Developer ID signing and stapled notarization. A
+  beta ad-hoc release says `Signing: ad-hoc` in both the body and the workflow
+  summary.
 - The public unauthenticated API resolves
   `repos/hbin/Pomodoro/releases/latest`.
 
 Done when every public URL returns `200`, both SHA-256 checks pass, both EdDSA
 signatures verify, and the beta feed points at the published build.
 
-### 7. Install and launch check
+### 8. Install and launch check
 
 Do this when the user requested installation or hands-on verification.
 
@@ -244,14 +284,18 @@ and exposes the expected update controls.
 
 | Failure | Action |
 | --- | --- |
-| Tests fail before any GitHub release exists | Fix the root cause on `main`, rerun all gates, move the local tag to the final release commit, then force-push that tag. Confirm `gh release view` still returns not found before moving it. |
-| Tests fail after a GitHub release exists | Never rewrite the published tag. Land the fix and publish the next patch version. |
+| Stable preflight reports missing signing/notary secrets | Stop before build. Add the missing repository secrets through the separately authorized credential process, then rerun the tag workflow. Never substitute an ad-hoc stable build. |
+| Tag is lightweight, off `main`, malformed, or mismatches the plist | Stop. Do not bypass preflight or create a release manually. If nothing was published, correct the tag only through an explicitly authorized tag-repair action. |
+| Build or tests fail before any GitHub release exists | Fix the root cause on `main`; after review, tag the corrected commit through the normal authorized flow. Do not rewrite a pushed tag without explicit CEO approval. |
+| Build or tests fail after a GitHub release exists | Never rewrite the published tag. Land the fix and publish the next patch version. |
+| Stable publish is blocked by `RELEASE_APPROVED_DIGEST` | Copy the DMG SHA-256 from the same successful build summary, update `RELEASE_APPROVED_DIGEST`, and rerun only the failed `publish` job. Do not rerun `build`; a rerun creates a new artifact and digest. |
 | Public downloads return `404` | Check repository visibility first. A private repository makes every release and appcast URL inaccessible. Recheck after changing visibility. |
 | Workflow is queued with no runner or steps | This is infrastructure, not a code failure. Rerun the same workflow. macOS runner queues can exceed 15 minutes. |
-| Workflow fails after uploading some assets | Rerun the same tag workflow. The workflow uses `--clobber` and is designed to repair partial publication. |
-| Signing and notarization steps are skipped | If `MACOS_CERTIFICATE`, `MACOS_CERTIFICATE_PASSWORD`, `APPLE_ID`, `APPLE_TEAM_ID`, or `APPLE_APP_PASSWORD` is absent, the build is ad hoc. Report that Gatekeeper may require Open Anyway; do not claim notarization. |
+| Publish fails after uploading some assets | The release is still a draft. Rerun only `publish` against the same artifact; it updates draft assets with `--clobber` before publishing. If the whole workflow is rerun, set `RELEASE_APPROVED_DIGEST` to the new build digest first. |
+| Stable signing or notarization is missing | Stable is fail-closed: do not publish and do not claim notarization. Beta may produce an ad-hoc artifact only when all five Developer ID/notary secrets are absent, and both notes and summary must say `Signing: ad-hoc`. |
+| Publish reports a digest, signature, staple, `spctl`, ZIP, or DMG verification failure | Stop before release mutation. Rebuild only after fixing the cause, then approve the new digest. Never replace the artifact in place. |
 | Local build passes but CI fails to compile | Use the CI error as authoritative. Prefer Swift syntax supported by the package's Swift 6.0 toolchain. For `Animatable` conformances, `@preconcurrency` is compatible when `@MainActor` on the conformance is not. |
-| The tag or release summary is wrong and nothing was published | Fix the tag locally, force-push it, and verify the new workflow run. |
+| The tag or release summary is wrong and nothing was published | Stop and obtain explicit approval for tag repair; then verify a fresh preflight/build. Never rewrite a published release. |
 
 ## Final report
 
@@ -260,10 +304,13 @@ Report these facts:
 - Version, build, release URL, and whether it is latest.
 - Tests and local packaging result.
 - Public URL, checksum, and signature verification result.
+- The approved `RELEASE_APPROVED_DIGEST` and whether it matched the published
+  DMG.
 - Whether the beta feed was updated.
 - Installed version and launch result, if installation was requested.
 - Repository visibility.
-- Signing/notarization status and any missing secrets.
+- Signing/notarization status, including app and DMG stapling, and any missing
+  secrets.
 - Any release exception, including the team cross-review limitation and the
   absence of external native-speaker certification.
 

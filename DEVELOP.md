@@ -248,6 +248,44 @@ The EdDSA public key is stored as `SUPublicEDKey` in `Resources/Info.plist`.
 Update metadata lives only in release bundles, so local debug builds show
 updates as unavailable.
 
+### Release workflow gate
+
+A `v*` tag must be annotated and peel to a commit reachable from `origin/main`.
+`scripts/release-preflight.sh` validates the tag, plist version/build, ancestry,
+and secret presence before any build starts.
+
+The Release workflow runs in this order:
+
+1. Read-only `preflight` records the version, build, channel, tag object,
+   peeled commit, and `main` snapshot.
+2. Read-only `build` tests once, signs with Developer ID, notarizes and staples
+   the app, packages the DMG from that app, notarizes and staples the DMG,
+   generates the appcast, and writes `dist/build-info.txt`. It uploads `dist/`
+   as the recorded Actions artifact.
+3. A stable build summary prints the exact `DMG SHA-256`. Set the repository
+   variable before approving publication:
+
+   ```sh
+   gh variable set RELEASE_APPROVED_DIGEST --body "<build-summary-dmg-sha256>"
+   ```
+
+4. The protected `release` environment approves the `publish` job.
+5. `publish` downloads that same artifact, verifies every digest, signature,
+   staple, ZIP/DMG, app, and appcast, then creates/uploads/publishes a draft
+   release. It never rebuilds.
+
+Stable releases require `SPARKLE_PRIVATE_KEY`, `MACOS_CERTIFICATE`,
+`MACOS_CERTIFICATE_PASSWORD`, `APPLE_ID`, `APPLE_TEAM_ID`, and
+`APPLE_APP_PASSWORD`. Missing values block stable before build.
+
+Beta releases require `SPARKLE_PRIVATE_KEY`. The five Developer ID/notary
+values may be absent as a complete set; that path is ad-hoc and both release
+notes and the workflow summary say `Signing: ad-hoc`. A partial set fails.
+
+To roll back before publication, revert the workflow PR and delete
+`RELEASE_APPROVED_DIGEST` if it was created only for this gate. Never rewrite a
+published tag or release; ship the next patch instead.
+
 ### Signing key and secret
 
 The dedicated Sparkle key uses the keychain account `com.hb.pomodoro`. The
@@ -275,7 +313,9 @@ The private key is also stored in the public repository's
 ```
 
 The printed public key must match `SUPublicEDKey` in `Resources/Info.plist`.
-The release workflow fails early when `SPARKLE_PRIVATE_KEY` is missing.
+The release workflow fails early when `SPARKLE_PRIVATE_KEY` is missing, and a
+stable release additionally fails unless all five Developer ID/notary secrets
+are present.
 
 ### Packaging an appcast
 
@@ -283,6 +323,11 @@ The release workflow fails early when `SPARKLE_PRIVATE_KEY` is missing.
 
 - `dist/Pomodoro.dmg` and `dist/Pomodoro.dmg.sha256` for manual installs.
 - `dist/Pomodoro-VERSION.zip` and its `.sha256` for Sparkle.
+
+Set `SKIP_BUILD=1` to package an existing `build/Pomodoro.app` without
+rebuilding; the script fails if that app is absent. The release build uses this
+path after notarizing and stapling the app so the ZIP and DMG contain the exact
+same bundle.
 
 After release notes are written, generate and verify the appcast:
 
@@ -435,13 +480,16 @@ points the beta feed at the new stable appcast.
 
 ## Code signing and notarization
 
-By default, the workflow creates an ad-hoc signed build. macOS may warn users
-on first launch; they can allow it in **System Settings → Privacy & Security**.
-Sparkle verifies update archives and the appcast with EdDSA signatures, so
-update authenticity does not depend on a paid Developer ID certificate.
+Stable releases are fail-closed: they require Developer ID signing plus
+notarization and stapling for both the app and the DMG. The workflow never
+publishes an ad-hoc stable build.
 
-For a warning-free download, add these repository secrets and re-run the
-release from the Actions tab:
+Beta releases may remain ad-hoc only when all five Developer ID/notary secrets
+are absent. That output is labeled `Signing: ad-hoc` in release notes and the
+workflow summary. If only some of the five values exist, the beta fails closed.
+
+Add these repository secrets through the separately authorized credential
+process:
 
 - `MACOS_CERTIFICATE`: base64-encoded Developer ID Application `.p12`.
 - `MACOS_CERTIFICATE_PASSWORD`: password for the `.p12`.
