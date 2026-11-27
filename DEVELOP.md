@@ -429,7 +429,8 @@ release.
 Releases are built and published automatically by GitHub Actions. Pushing a
 version tag starts the release workflow, which builds a universal app once,
 generates release notes, packages the DMG and Sparkle ZIP, signs the appcast,
-and publishes all five assets with a generated summary and changelog.
+and publishes all six assets, including `build-info.txt`, with a generated
+summary and changelog.
 
 The release job targets the protected `release` environment. A tag push
 therefore pauses the workflow until the product owner approves the deployment

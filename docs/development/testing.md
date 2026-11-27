@@ -500,6 +500,10 @@ clips is not a verified run.
       `release` environment is approved.
 - [ ] `publish` downloads the recorded artifact, verifies every digest,
       signature, staple, ZIP/DMG, app, and appcast, and never rebuilds.
+- [ ] Before any release mutation, `publish` rechecks that the live tag object,
+      its peeled commit, and its main ancestry still match `build-info.txt`.
+- [ ] The `build` job keeps secrets at step scope; `swift test` and the app
+      build cannot read signing or notary credentials.
 - [ ] A beta ad-hoc build is allowed only when all five Developer ID/notary
       secrets are absent; its notes and summary say `Signing: ad-hoc`.
 - [ ] A missing/mismatched stable digest, partial beta signing configuration, or
@@ -510,7 +514,9 @@ clips is not a verified run.
 - [ ] The annotated tag matches `v` plus `CFBundleShortVersionString`, and its
       peeled commit is reachable from `origin/main`.
 - [ ] The Release `publish` job publishes `Pomodoro.dmg`, `Pomodoro.dmg.sha256`,
-      `Pomodoro-VERSION.zip`, its `.sha256`, and `appcast.xml`.
+      `Pomodoro-VERSION.zip`, its `.sha256`, `appcast.xml`, and `build-info.txt`.
+- [ ] `build-info.txt` persists the tag object, peeled commit, main snapshot,
+      signing kind, and the DMG/ZIP/appcast digests the release shipped.
 - [ ] A `-beta.N` tag publishes a pre-release and refreshes the rolling `beta`
       release without changing what `releases/latest` serves.
 - [ ] A stable release updates the `beta` release appcast so beta testers can

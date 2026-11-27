@@ -213,7 +213,8 @@ for url in \
   "https://github.com/hbin/Pomodoro/releases/download/$TAG/Pomodoro-$VERSION.zip" \
   "https://github.com/hbin/Pomodoro/releases/download/$TAG/Pomodoro-$VERSION.zip.sha256" \
   "https://github.com/hbin/Pomodoro/releases/download/$TAG/Pomodoro.dmg" \
-  "https://github.com/hbin/Pomodoro/releases/download/$TAG/Pomodoro.dmg.sha256"; do
+  "https://github.com/hbin/Pomodoro/releases/download/$TAG/Pomodoro.dmg.sha256" \
+  "https://github.com/hbin/Pomodoro/releases/download/$TAG/build-info.txt"; do
   curl -fsSL -o /dev/null -w "%{http_code} $url\n" "$url"
 done
 ```
@@ -246,7 +247,9 @@ PY
 Also verify:
 
 - The stable release is the latest non-prerelease.
-- All five assets exist and are uploaded.
+- All six assets exist and are uploaded, including `build-info.txt`.
+- `build-info.txt` records the tag object, peeled commit, main snapshot, signing
+  kind, and DMG/ZIP/appcast digests that match the uploaded files.
 - The stable DMG SHA-256 equals `RELEASE_APPROVED_DIGEST`.
 - The appcast contains the expected version, build, download URL, length, and
   signatures.
