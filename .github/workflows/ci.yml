@@ -35,3 +35,57 @@ jobs:
 
       - name: Run tests
         run: swift test
+
+  localization:
+    if: github.event_name == 'pull_request' || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: macos-15
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Validate localization resources
+        run: |
+          set -euo pipefail
+
+          swift scripts/check-localizations.swift .
+
+          OUTPUT_DIR="$(mktemp -d)"
+          trap 'rm -rf "$OUTPUT_DIR"' EXIT
+
+          for catalog in Resources/Localization/*.xcstrings; do
+            xcrun xcstringstool compile "$catalog" \
+              --output-directory "$OUTPUT_DIR"
+          done
+
+          table_count=0
+          for locale in en zh-Hans zh-Hant ja vi ko; do
+            for table in Localizable InfoPlist; do
+              resource="$OUTPUT_DIR/$locale.lproj/$table.strings"
+              if [[ ! -f "$resource" ]]; then
+                echo "Missing localization resource: $locale.lproj/$table.strings" >&2
+                exit 1
+              fi
+              table_count=$((table_count + 1))
+            done
+          done
+
+          if (( table_count != 12 )); then
+            echo "Expected 12 localization tables, checked $table_count." >&2
+            exit 1
+          fi
+
+          echo "Validated $table_count localization tables."
+
+  app-bundle:
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Build the app bundle
+        run: ./scripts/build-app.sh debug
