@@ -268,7 +268,7 @@ struct DialView: View {
                     .font(Typo.label(max(7.4, diameter * 0.047)))
                     .tracking(Typo.tracking(diameter * 0.011))
                     .textCase(.uppercase)
-                    .foregroundStyle(palette.mutedInk.opacity(0.95))
+                    .foregroundStyle(palette.mutedInk)
             }
             .offset(y: -diameter * 0.012)
         }

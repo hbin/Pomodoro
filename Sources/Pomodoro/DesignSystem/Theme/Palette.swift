@@ -73,7 +73,7 @@ struct Palette {
             paper: Color(hex: 0xECE2D2),
             plaque: Color(hex: 0xFCF7ED),
             ink: Color(hex: 0x2B2520),
-            mutedInk: Color(hex: 0x756858),
+            mutedInk: Color(hex: 0x6B5E4E),
             tomato: Color(hex: 0xC6533F),
             deepTomato: Color(hex: 0xA53D2E),
             brass: Color(hex: 0xB48A58),
