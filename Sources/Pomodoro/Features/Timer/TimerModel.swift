@@ -107,6 +107,7 @@ final class TimerModel: ObservableObject {
 
     private let store: StateStore
     private let notifications: any NotificationScheduling
+    private let notificationReconciler: NotificationReconciler
     private let sounds: SoundPlayer
     private let ticker: any TickerScheduling
     private let dateProvider: @Sendable () -> Date
@@ -117,7 +118,6 @@ final class TimerModel: ObservableObject {
     private var lastTickSecond: Int?
     private var lastTickDate: Date?
     private var lastWakeRecovery: Date?
-    private var hasRequestedAuthorization = false
     private var needsInitialSave = false
 
     init(
@@ -130,8 +130,10 @@ final class TimerModel: ObservableObject {
         let languagePreference = LanguagePreferenceStore.load()
         L10n.setActiveLanguage(languagePreference.effectiveLanguage)
 
+        let notificationReconciler = NotificationReconciler(scheduler: notifications)
         self.store = store
         self.notifications = notifications
+        self.notificationReconciler = notificationReconciler
         self.sounds = sounds
         self.ticker = ticker
         self.dateProvider = now
@@ -164,6 +166,9 @@ final class TimerModel: ObservableObject {
         case nil: nil
         }
         self.needsInitialSave = restoredEvent != nil
+        notificationReconciler.onAuthorizationResolved = { [weak self] _ in
+            self?.refreshNotificationStatus()
+        }
 
         if engine.state.runState == .running {
             self.lastTickSecond = engine.displaySeconds(at: currentDate)
@@ -191,6 +196,10 @@ final class TimerModel: ObservableObject {
 
     func saveNow() {
         save()
+    }
+
+    func settleNotifications() async {
+        await notificationReconciler.settle()
     }
 
     func reportSettingsContentHeight(_ height: CGFloat) {
@@ -392,7 +401,11 @@ final class TimerModel: ObservableObject {
         save()
         updateMenuBar(force: true)
         announce(L10n.string("announcements.focus_started"))
-        scheduleNotification(endDate: endDate, phase: .focus)
+        scheduleNotification(
+            endDate: endDate,
+            phase: .focus,
+            requestingAuthorization: true
+        )
     }
 
     /// Starts the break offered by the completion screen.
@@ -417,7 +430,11 @@ final class TimerModel: ObservableObject {
         save()
         updateMenuBar(force: true)
         announce(L10n.string("announcements.break_started"))
-        scheduleNotification(endDate: endDate, phase: snapshot.phase)
+        scheduleNotification(
+            endDate: endDate,
+            phase: snapshot.phase,
+            requestingAuthorization: true
+        )
     }
 
     func startBreak(_ phase: Phase) {
@@ -429,7 +446,11 @@ final class TimerModel: ObservableObject {
         save()
         updateMenuBar(force: true)
         announce(L10n.string("announcements.break_started"))
-        scheduleNotification(endDate: endDate, phase: snapshot.phase)
+        scheduleNotification(
+            endDate: endDate,
+            phase: snapshot.phase,
+            requestingAuthorization: true
+        )
     }
 
     /// Starts the focus offered by the completion screen.
@@ -455,7 +476,11 @@ final class TimerModel: ObservableObject {
         save()
         updateMenuBar(force: true)
         announce(L10n.string("announcements.focus_started"))
-        scheduleNotification(endDate: endDate, phase: .focus)
+        scheduleNotification(
+            endDate: endDate,
+            phase: .focus,
+            requestingAuthorization: true
+        )
     }
 
     func consumeCompletionStartSweep() {
@@ -472,7 +497,7 @@ final class TimerModel: ObservableObject {
             snapshot = engine.state
             now = dateProvider()
             lastTickSecond = nil
-            notifications.cancel()
+            notificationReconciler.cancel()
             syncTicker()
             save()
             updateMenuBar(force: true)
@@ -487,7 +512,11 @@ final class TimerModel: ObservableObject {
             save()
             updateMenuBar(force: true)
             announce(L10n.string("announcements.focus_resumed"))
-            scheduleNotification(endDate: endDate, phase: snapshot.phase)
+            scheduleNotification(
+                endDate: endDate,
+                phase: snapshot.phase,
+                requestingAuthorization: true
+            )
         }
     }
 
@@ -504,7 +533,7 @@ final class TimerModel: ObservableObject {
         now = dateProvider()
         lastTickSecond = nil
         lastTickDate = nil
-        notifications.cancel()
+        notificationReconciler.cancel()
         if chimeEnabled {
             sounds.playChime(for: endedPhase)
         }
@@ -518,7 +547,11 @@ final class TimerModel: ObservableObject {
                         : "announcements.focus_started"
                 )
             )
-            scheduleNotification(endDate: endDate, phase: transition.nextPhase)
+            scheduleNotification(
+                endDate: endDate,
+                phase: transition.nextPhase,
+                requestingAuthorization: true
+            )
         } else {
             announce(L10n.string("announcements.interval_ended"))
         }
@@ -541,7 +574,7 @@ final class TimerModel: ObservableObject {
         completionStartSweepPending = false
         snapshot = engine.state
         now = dateProvider()
-        notifications.cancel()
+        notificationReconciler.cancel()
         syncTicker()
         save()
         updateMenuBar(force: true)
@@ -655,7 +688,7 @@ final class TimerModel: ObservableObject {
         lastTickSecond = nil
         lastTickDate = nil
         completionStartSweepPending = false
-        notifications.cancel()
+        notificationReconciler.cancel()
         updateMenuBar(force: true)
         save()
 
@@ -726,23 +759,26 @@ final class TimerModel: ObservableObject {
         }
     }
 
-    private func scheduleNotification(endDate: Date, phase: Phase) {
-        Task {
-            if !hasRequestedAuthorization {
-                hasRequestedAuthorization = true
-                _ = await notifications.requestAuthorization()
-                notificationStatus = await notifications.authorizationStatus()
-            }
-            await notifications.schedule(at: endDate, phase: phase)
-        }
+    private func scheduleNotification(
+        endDate: Date,
+        phase: Phase,
+        requestingAuthorization: Bool
+    ) {
+        notificationReconciler.schedule(
+            at: endDate,
+            phase: phase,
+            requestingAuthorization: requestingAuthorization
+        )
     }
 
     private func scheduleNotificationForCurrentInterval() {
         guard let endDate = engine.state.endDate else { return }
         let phase = engine.state.phase
-        Task {
-            await notifications.schedule(at: endDate, phase: phase)
-        }
+        notificationReconciler.schedule(
+            at: endDate,
+            phase: phase,
+            requestingAuthorization: false
+        )
     }
 
     private func announce(_ message: String) {
