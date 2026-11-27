@@ -368,6 +368,11 @@ automated tests.
       menu bar to the running break state.
 - [ ] Starting, pausing, resuming, ending, and switching language keep the
       pending notification consistent with the timer.
+- [ ] The notification race matrix passes: Start→Pause, Start→End,
+      Start→Pause→Resume, delayed authorization followed by Pause, sleep/wake
+      completion, and auto-start each leave only the latest intent pending; no
+      stale notification is installed, authorization is requested at most once,
+      and auto-start never creates a second ticker.
 - [ ] Chime and ticking settings behave as labeled.
 - [ ] Focus completion plays the rising chime; break completion plays the lower
       descending mirror; the single Completion chime switch mutes both.
