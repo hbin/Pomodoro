@@ -5,6 +5,10 @@ repository. Keep it focused on how to develop and verify this project. Put
 user-facing documentation in `README.md` and detailed workflow notes in
 `DEVELOP.md`.
 
+If you are a named member of the Pomodoro agent team, read `team/AGENTS.md`
+first: it holds the dispatch, handoff, and gate rules. `team/` is machine-local
+and ignored by git.
+
 ## Project overview
 
 Pomodoro is a native macOS 15+ menu-bar focus timer built with Swift 6 and
