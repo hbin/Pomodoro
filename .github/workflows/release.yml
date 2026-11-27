@@ -71,12 +71,6 @@ jobs:
       PEELED_SHA: ${{ needs.preflight.outputs.peeled_sha }}
       MAIN_SNAPSHOT: ${{ needs.preflight.outputs.main_snapshot }}
       SIGNING_KIND: ${{ needs.preflight.outputs.signing_kind }}
-      SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
-      MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
-      MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
-      APPLE_ID: ${{ secrets.APPLE_ID }}
-      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
 
     steps:
       - name: Check out the tag
@@ -87,6 +81,9 @@ jobs:
 
       - name: Import Developer ID certificate
         if: env.SIGNING_KIND == 'developer-id'
+        env:
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
         run: |
           set -euo pipefail
 
@@ -219,6 +216,10 @@ jobs:
 
       - name: Notarize and staple the app
         if: env.SIGNING_KIND == 'developer-id'
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
         run: |
           set -euo pipefail
 
@@ -246,6 +247,10 @@ jobs:
 
       - name: Notarize and staple the disk image
         if: env.SIGNING_KIND == 'developer-id'
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
         run: |
           set -euo pipefail
 
@@ -459,6 +464,40 @@ jobs:
             echo "DMG_SHA256=$DMG_SHA256"
           } >> "$GITHUB_ENV"
 
+      - name: Recheck the live tag before mutation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          info() {
+            awk -F= -v key="$1" '$1 == key { sub(/^[^=]*=/, ""); print; exit }' dist/build-info.txt
+          }
+
+          TAG_OBJECT_SHA="$(info TAG_OBJECT_SHA)"
+          PEELED_SHA="$(info PEELED_SHA)"
+          [[ -n "$TAG_OBJECT_SHA" && -n "$PEELED_SHA" ]] \
+            || { echo "::error::build-info.txt is missing the tag object or peeled commit."; exit 1; }
+
+          LIVE_TAG_SHA="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$GITHUB_REF_NAME" --jq .object.sha)"
+          LIVE_TAG_TYPE="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$GITHUB_REF_NAME" --jq .object.type)"
+          [[ "$LIVE_TAG_TYPE" == "tag" ]] \
+            || { echo "::error::Live tag $GITHUB_REF_NAME is not an annotated tag object (type: $LIVE_TAG_TYPE)."; exit 1; }
+          [[ "$LIVE_TAG_SHA" == "$TAG_OBJECT_SHA" ]] \
+            || { echo "::error::Live tag object moved since build: $LIVE_TAG_SHA != $TAG_OBJECT_SHA."; exit 1; }
+
+          LIVE_COMMIT_SHA="$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$LIVE_TAG_SHA" --jq .object.sha)"
+          [[ "$LIVE_COMMIT_SHA" == "$PEELED_SHA" ]] \
+            || { echo "::error::Live tag peels to $LIVE_COMMIT_SHA, not $PEELED_SHA."; exit 1; }
+
+          COMPARE_STATUS="$(gh api "repos/$GITHUB_REPOSITORY/compare/${PEELED_SHA}...main" --jq .status)"
+          if [[ "$COMPARE_STATUS" != "ahead" && "$COMPARE_STATUS" != "identical" ]]; then
+            echo "::error::Peeled tag commit is not reachable from main (compare status: $COMPARE_STATUS)."
+            exit 1
+          fi
+
+          echo "Live tag recheck passed: $GITHUB_REF_NAME -> $LIVE_TAG_SHA -> $PEELED_SHA (main: $COMPARE_STATUS)."
+
       - name: Create, upload, and publish the release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -471,6 +510,7 @@ jobs:
             "dist/Pomodoro-$VERSION.zip"
             "dist/Pomodoro-$VERSION.zip.sha256"
             dist/appcast.xml
+            dist/build-info.txt
           )
           NOTES="dist/Pomodoro-$VERSION.md"
           RELEASE_FLAGS=()
