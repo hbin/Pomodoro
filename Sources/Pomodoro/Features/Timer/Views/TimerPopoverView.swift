@@ -144,24 +144,12 @@ struct TimerPopoverView: View {
 
     private var modeSelector: some View {
         VStack(spacing: 6) {
-            HStack(spacing: 6) {
+            HStack(spacing: 4) {
                 ForEach(IdleMode.allCases) { mode in
-                    Button {
-                        guard mode != idleMode else { return }
-                        // The modes are ordered left to right on screen, so a
-                        // jump to a later one slides the strip left.
-                        readoutFlow = mode.rawValue > idleMode.rawValue ? -1 : 1
-                        model.selectIdlePhase(mode.phase)
-                    } label: {
-                        Capsule()
-                            .fill(accent)
-                            .frame(width: mode == idleMode ? 14 : 5, height: 5)
-                            .frame(height: 12)
-                            .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(mode.accessibilityLabel(in: model.durations))
-                    .accessibilityAddTraits(mode == idleMode ? [.isSelected] : [])
+                    Capsule()
+                        .fill(accent)
+                        .frame(width: mode == idleMode ? 14 : 5, height: 5)
+                        .frame(width: 44, height: 12)
                 }
             }
             Text(idleMode.selectorLabel)
@@ -170,8 +158,31 @@ struct TimerPopoverView: View {
                 .textCase(.uppercase)
                 .lineLimit(1)
                 .foregroundStyle(accent)
+                .allowsHitTesting(false)
         }
         .frame(height: 28)
+        // The hit targets overlay the row so their 44-point height leaves the
+        // selector's 28-point layout and the label baseline untouched.
+        .overlay {
+            HStack(spacing: 4) {
+                ForEach(IdleMode.allCases) { mode in
+                    Button {
+                        guard mode != idleMode else { return }
+                        // The modes are ordered left to right on screen, so a
+                        // jump to a later one slides the strip left.
+                        readoutFlow = mode.rawValue > idleMode.rawValue ? -1 : 1
+                        model.selectIdlePhase(mode.phase)
+                    } label: {
+                        Color.clear
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(mode.accessibilityLabel(in: model.durations))
+                    .accessibilityAddTraits(mode == idleMode ? [.isSelected] : [])
+                }
+            }
+        }
         .animation(reduceMotion ? nil : .easeOut(duration: 0.3), value: idleMode)
     }
 
