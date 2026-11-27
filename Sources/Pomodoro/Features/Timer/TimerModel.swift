@@ -3,6 +3,34 @@ import Foundation
 import PomodoroCore
 import UserNotifications
 
+@MainActor
+protocol TickerScheduling: AnyObject {
+    func start(handler: @escaping @MainActor () -> Void)
+    func stop()
+}
+
+@MainActor
+final class RunLoopTicker: TickerScheduling {
+    private static let interval: TimeInterval = 0.2
+    private var timer: Timer?
+
+    func start(handler: @escaping @MainActor () -> Void) {
+        guard timer == nil else { return }
+        let timer = Timer(timeInterval: Self.interval, repeats: true) { _ in
+            MainActor.assumeIsolated {
+                handler()
+            }
+        }
+        RunLoop.main.add(timer, forMode: .common)
+        self.timer = timer
+    }
+
+    func stop() {
+        timer?.invalidate()
+        timer = nil
+    }
+}
+
 struct MenuBarDescriptor: Equatable {
     var showsRemainingMinutes: Bool
     var isActive: Bool
@@ -78,10 +106,11 @@ final class TimerModel: ObservableObject {
     var onLanguageChange: (() -> Void)?
 
     private let store: StateStore
-    private let notifications: NotificationService
+    private let notifications: any NotificationScheduling
     private let sounds: SoundPlayer
+    private let ticker: any TickerScheduling
+    private let dateProvider: @Sendable () -> Date
     private var engine: TimerEngine
-    private var ticker: Timer?
     private var powerObservers: [NSObjectProtocol] = []
     private var timerActivity: NSObjectProtocol?
     private var lastMenuBarDescriptor: MenuBarDescriptor?
@@ -89,13 +118,14 @@ final class TimerModel: ObservableObject {
     private var lastTickDate: Date?
     private var lastWakeRecovery: Date?
     private var hasRequestedAuthorization = false
-    private var tickerStarted = false
     private var needsInitialSave = false
 
     init(
         store: StateStore = StateStore(directory: StateStore.defaultDirectory()),
-        notifications: NotificationService = NotificationService(),
-        sounds: SoundPlayer = SoundPlayer()
+        notifications: any NotificationScheduling = NotificationService(),
+        sounds: SoundPlayer = SoundPlayer(),
+        ticker: any TickerScheduling = RunLoopTicker(),
+        now: @escaping @Sendable () -> Date = { Date() }
     ) {
         let languagePreference = LanguagePreferenceStore.load()
         L10n.setActiveLanguage(languagePreference.effectiveLanguage)
@@ -103,16 +133,20 @@ final class TimerModel: ObservableObject {
         self.store = store
         self.notifications = notifications
         self.sounds = sounds
+        self.ticker = ticker
+        self.dateProvider = now
 
         let loaded = store.load()
         var engine = TimerEngine(
             state: loaded.state.timer,
-            durations: loaded.state.durations
+            durations: loaded.state.durations,
+            now: now
         )
         let restoredEvent = engine.restore()
+        let currentDate = now()
         self.engine = engine
         self.snapshot = engine.state
-        self.now = Date()
+        self.now = currentDate
         self.chimeEnabled = loaded.state.chimeEnabled
         self.tickEnabled = loaded.state.tickEnabled
         self.showMenuBarMinutes = loaded.state.showMenuBarMinutes
@@ -132,16 +166,17 @@ final class TimerModel: ObservableObject {
         self.needsInitialSave = restoredEvent != nil
 
         if engine.state.runState == .running {
-            self.lastTickSecond = engine.displaySeconds(at: now)
-            self.lastTickDate = now
+            self.lastTickSecond = engine.displaySeconds(at: currentDate)
+            self.lastTickDate = currentDate
         }
     }
 
     // MARK: - Lifecycle
 
     func activate() {
-        startTicker()
         startObservingPowerEvents()
+        tick()
+        syncTicker()
         syncTimerActivity()
         refreshNotificationStatus()
         updateMenuBar(force: true)
@@ -163,23 +198,14 @@ final class TimerModel: ObservableObject {
         settingsContentHeight = height
     }
 
-    private func startTicker() {
-        guard !tickerStarted else { return }
-        tickerStarted = true
-        let timer = Timer(timeInterval: 0.2, repeats: true) { [weak self] _ in
-            MainActor.assumeIsolated {
+    private func syncTicker() {
+        if engine.state.runState == .running {
+            ticker.start { [weak self] in
                 self?.tick()
             }
+        } else {
+            ticker.stop()
         }
-        RunLoop.main.add(timer, forMode: .common)
-        ticker = timer
-    }
-
-    private func restartTicker() {
-        ticker?.invalidate()
-        ticker = nil
-        tickerStarted = false
-        startTicker()
     }
 
     private func startObservingPowerEvents() {
@@ -212,8 +238,8 @@ final class TimerModel: ObservableObject {
         sounds.prepareForSleep()
     }
 
-    private func recoverAfterWake() {
-        let date = Date()
+    func recoverAfterWake() {
+        let date = dateProvider()
         if let lastWakeRecovery, date.timeIntervalSince(lastWakeRecovery) < 2 {
             return
         }
@@ -221,14 +247,14 @@ final class TimerModel: ObservableObject {
         sounds.resumeAfterWake()
         lastTickSecond = nil
         lastTickDate = nil
-        restartTicker()
         tick()
+        syncTicker()
         updateMenuBar(force: true)
     }
 
     private func tick() {
         if engine.state.runState == .running {
-            now = Date()
+            now = dateProvider()
         }
         if let event = engine.refresh() {
             handle(event: event)
@@ -236,6 +262,9 @@ final class TimerModel: ObservableObject {
         }
         if engine.state != snapshot {
             snapshot = engine.state
+        }
+        if engine.state.runState != .running {
+            syncTicker()
         }
         updateTickSound()
         updateMenuBar()
@@ -356,9 +385,10 @@ final class TimerModel: ObservableObject {
     func startFocus() {
         guard let endDate = engine.startFocus() else { return }
         snapshot = engine.state
-        now = Date()
+        now = dateProvider()
         lastTickSecond = nil
         lastTickDate = nil
+        syncTicker()
         save()
         updateMenuBar(force: true)
         announce(L10n.string("announcements.focus_started"))
@@ -381,8 +411,9 @@ final class TimerModel: ObservableObject {
             completionStartSweepPending = true
         }
         snapshot = engine.state
-        now = Date()
+        now = dateProvider()
         lastTickSecond = nil
+        syncTicker()
         save()
         updateMenuBar(force: true)
         announce(L10n.string("announcements.break_started"))
@@ -392,8 +423,9 @@ final class TimerModel: ObservableObject {
     func startBreak(_ phase: Phase) {
         guard let endDate = engine.startBreak(phase) else { return }
         snapshot = engine.state
-        now = Date()
+        now = dateProvider()
         lastTickSecond = nil
+        syncTicker()
         save()
         updateMenuBar(force: true)
         announce(L10n.string("announcements.break_started"))
@@ -416,9 +448,10 @@ final class TimerModel: ObservableObject {
             completionStartSweepPending = true
         }
         snapshot = engine.state
-        now = Date()
+        now = dateProvider()
         lastTickSecond = nil
         lastTickDate = nil
+        syncTicker()
         save()
         updateMenuBar(force: true)
         announce(L10n.string("announcements.focus_started"))
@@ -437,18 +470,20 @@ final class TimerModel: ObservableObject {
                 return
             }
             snapshot = engine.state
-            now = Date()
+            now = dateProvider()
             lastTickSecond = nil
             notifications.cancel()
+            syncTicker()
             save()
             updateMenuBar(force: true)
             announce(L10n.string("announcements.focus_paused"))
         } else if engine.state.runState == .paused {
             guard let endDate = engine.resume() else { return }
             snapshot = engine.state
-            now = Date()
+            now = dateProvider()
             lastTickSecond = engine.displaySeconds(at: now)
             lastTickDate = now
+            syncTicker()
             save()
             updateMenuBar(force: true)
             announce(L10n.string("announcements.focus_resumed"))
@@ -466,7 +501,7 @@ final class TimerModel: ObservableObject {
             idlePhase = transition.nextPhase
         }
         snapshot = engine.state
-        now = Date()
+        now = dateProvider()
         lastTickSecond = nil
         lastTickDate = nil
         notifications.cancel()
@@ -487,6 +522,7 @@ final class TimerModel: ObservableObject {
         } else {
             announce(L10n.string("announcements.interval_ended"))
         }
+        syncTicker()
     }
 
     func skipBreak() {
@@ -504,8 +540,9 @@ final class TimerModel: ObservableObject {
         idlePhase = .focus
         completionStartSweepPending = false
         snapshot = engine.state
-        now = Date()
+        now = dateProvider()
         notifications.cancel()
+        syncTicker()
         save()
         updateMenuBar(force: true)
     }
@@ -614,7 +651,7 @@ final class TimerModel: ObservableObject {
 
     private func handle(event: TimerEvent) {
         snapshot = engine.state
-        now = Date()
+        now = dateProvider()
         lastTickSecond = nil
         lastTickDate = nil
         completionStartSweepPending = false
@@ -653,6 +690,7 @@ final class TimerModel: ObservableObject {
                 }
             }
         }
+        syncTicker()
     }
 
     private func updateTickSound() {

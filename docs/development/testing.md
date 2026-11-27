@@ -56,6 +56,11 @@ automated tests.
 
 - [ ] Starting a focus uses an absolute end date and displays the full duration.
 - [ ] Pause freezes the remaining time; resume schedules the remaining time.
+- [ ] The 5 Hz ticker runs only while an interval is running: Start, Resume,
+      launch/activation, and wake with a running interval start exactly one
+      ticker; Pause, completion with Auto-start off, End/Done/Skip to a ready
+      screen, and idle stop it; repeated activation or wake never creates a
+      second ticker.
 - [ ] Pausing at zero completes the interval once without double-counting.
 - [ ] Natural completion increments the focus count and moves the popover to the
       recommended break ready to start while Auto-start break is off.
